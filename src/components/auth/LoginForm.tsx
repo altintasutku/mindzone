@@ -1,0 +1,62 @@
+"use client";
+
+import { LoginType, loginValidator } from "@/lib/validators/auth";
+import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Input } from "../ui/input";
+import CustomFormField from "./CustomFormField";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
+const LoginForm = () => {
+  const { mutate: login } = useMutation({
+    mutationFn: async ({ username, password }: LoginType) => {
+      const { data } = await axios.post(
+        (process.env.NEXT_PUBLIC_API_URL as string) + "/auth/authentication",
+        {
+          username,
+          password,
+        }
+      );
+      console.log("🚀 ~ mutationFn: ~ data:", data)
+
+      return data;
+    },
+  });
+
+  const form = useForm<LoginType>({
+    resolver: zodResolver(loginValidator),
+    defaultValues: {},
+  });
+
+  function onSubmit(values: LoginType) {
+    login(values);
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="gap-2 flex flex-col sm:grid grid-cols-2 w-full sm:w-auto"
+      >
+        <CustomFormField form={form} name="username">
+          {({ field }) => <Input placeholder="Kullanıcı Adı" {...field} />}
+        </CustomFormField>
+        <CustomFormField form={form} name="password">
+          {({ field }) => (
+            <Input placeholder="Şifre" type="password" {...field} />
+          )}
+        </CustomFormField>
+
+        <Button type="submit" className="col-span-2">
+          Giriş Yap
+        </Button>
+      </form>
+    </Form>
+  );
+};
+
+export default LoginForm;
