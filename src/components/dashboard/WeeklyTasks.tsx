@@ -40,7 +40,7 @@ const WeeklyTasks = () => {
   return (
     <section className="bg-white shadow p-4 text-center space-y-3">
         <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
-        <ul className="grid grid-cols-3 gap-4">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {weeks.map((week, index) => (
             <li
               className="col-span-1 bg-white shadow p-4 rounded-md"
