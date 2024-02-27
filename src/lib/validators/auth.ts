@@ -12,7 +12,6 @@ export const registerValidator = z.object({
   physicalCondition: z.string(),
   chronicIllness: z.string().optional(),
   psychologicalHistory: z.string().optional(),
-  approveJoining: z.boolean(),
 });
 
 export type RegisterType = z.infer<typeof registerValidator>;

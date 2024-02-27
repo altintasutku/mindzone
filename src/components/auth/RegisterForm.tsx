@@ -1,7 +1,7 @@
 "use client";
 
 import { RegisterType, registerValidator } from "@/lib/validators/auth";
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -35,17 +35,14 @@ const RegisterForm = () => {
           performanceAssessmentCompleted: true,
         }
       );
-      console.log("🚀 ~ mutationFn: ~ data:", data);
-
       return data;
     },
   });
 
+  const [formAccepted, setFormAccepted] = useState(false);
+
   const form = useForm<RegisterType>({
     resolver: zodResolver(registerValidator),
-    defaultValues: {
-      approveJoining: false,
-    },
   });
 
   function onSubmit(values: RegisterType) {
@@ -158,8 +155,8 @@ const RegisterForm = () => {
           {({ field }) => (
             <div className="flex justify-center items-center p-2 gap-2 bg-white">
               <Checkbox
-                checked={field.value}
-                onCheckedChange={() => field.onChange(!field.value)}
+                checked={formAccepted}
+                onCheckedChange={() => setFormAccepted(!formAccepted)}
               />
               <div className="space-y-1 leading-none">
                 <FormLabel>Çalışmaya katılmayı kabul ediyorum</FormLabel>
@@ -172,7 +169,11 @@ const RegisterForm = () => {
           )}
         </CustomFormField>
 
-        <Button type="submit" className="col-span-2">
+        <Button
+          disabled={!formAccepted || !form.formState.isValid}
+          type="submit"
+          className="col-span-2"
+        >
           Kayıt Ol
         </Button>
       </form>
