@@ -71,7 +71,7 @@ const DigitspanPage = () => {
   ]);
 
   return (
-    <div className="flex justify-center items-center h-96">
+    <div className="flex justify-center items-center min-h-96">
       {round === 0 ? (
         <div className="flex flex-col gap-5">
           <p>
