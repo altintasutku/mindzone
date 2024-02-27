@@ -19,7 +19,7 @@ const Questions = () => {
   return (
     <section className="bg-white shadow p-4 text-center space-y-3">
       <h1 className="font-semibold text-xl">Anketler</h1>
-      <ul className="flex gap-3">
+      <ul className="flex flex-col sm:flex-row gap-3">
         {questionProgressList.map((question, index) => (
           <Link as={"li"} href={`/question/${index}`}
             className="bg-white shadow p-4 rounded-md flex-1 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out"

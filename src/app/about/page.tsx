@@ -4,6 +4,7 @@ import imageDilruba from "@/images/dilruba-sonmez.png";
 import imageTimothy from "@/images/timothy-r-jordan.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 const AboutPage = () => {
   return (
@@ -45,7 +46,7 @@ const AboutPage = () => {
               <span>Klinik Psikoloji</span>
               <span className="font-semibold">Türkiye</span>
             </div>
-            <hr />
+            <Separator />
             <div>
               <b>Yüksek Lisans</b>: 2018-2020
             </div>
@@ -64,7 +65,7 @@ const AboutPage = () => {
             </div>
           </li>
         </ul>
-        <hr />
+        <Separator />
         <p>
           Dilruba Sönmez, İstanbul Şehir Üniversitesi Psikoloji bölümünden
           yüksek onur derecesiyle mezun olmuştur. Ardından tam burslu olarak İbn
@@ -107,7 +108,7 @@ const AboutPage = () => {
               <span>Psychology/Cognitive Psychology</span>
               <span className="font-semibold">İngiltere</span>
             </div>
-            <hr />
+            <Separator />
             <div>
               <b>Doktora</b>: 1981-1985
             </div>
@@ -121,7 +122,7 @@ const AboutPage = () => {
               <span>Psychology</span>
               <span className="font-semibold">İngiltere</span>
             </div>
-            <hr />
+            <Separator />
             <div>
               <b>Lisans</b>: 1978-1981
             </div>
