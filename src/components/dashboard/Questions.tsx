@@ -1,19 +1,7 @@
 import React from "react";
 import { Progress } from "../ui/progress";
 import Link from "next/link";
-
-const questionProgressList = [
-  {
-    done: true,
-    locked: false,
-    progress: 100,
-  },
-  {
-    done: false,
-    locked: false,
-    progress: 20,
-  },
-];
+import { questionProgressList } from "@/assets/mockdata/questionProgress";
 
 const Questions = () => {
   return (
@@ -21,7 +9,9 @@ const Questions = () => {
       <h1 className="font-semibold text-xl">Anketler</h1>
       <ul className="flex flex-col sm:flex-row gap-3">
         {questionProgressList.map((question, index) => (
-          <Link as={"li"} href={`/question/${index}`}
+          <Link
+            as={"li"}
+            href={`/question/${index}`}
             className="bg-white shadow p-4 rounded-md flex-1 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out"
             key={`question${index}`}
           >

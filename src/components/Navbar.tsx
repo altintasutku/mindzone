@@ -8,7 +8,7 @@ import { Separator } from "./ui/separator";
 
 const Navbar = () => {
   return (
-    <nav className="w-full flex justify-between items-center md:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground">
+    <nav className="w-full flex justify-between items-center lg:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground">
       <Link href="/">
         <h1 className="text-2xl font-semibold col-span-1">MindZone</h1>
         <small className="text-xs opacity-70">
@@ -16,7 +16,10 @@ const Navbar = () => {
         </small>
       </Link>
 
-      <div className="hidden md:flex items-center justify-center gap-1 col-span-1">
+      <div className="hidden lg:flex items-center justify-center gap-1 col-span-1">
+        <Link href={"/"}>
+          <Button variant={"ghost"}>Ana Sayfa</Button>
+        </Link>
         <Link href={"/about"}>
           <Button variant={"ghost"}>Hakkımızda</Button>
         </Link>
@@ -25,7 +28,7 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="hidden md:flex justify-end items-center gap-1 col-span-1">
+      <div className="hidden md:flex justify-end items-center gap-1 col-span-1 flex-1">
         <Link href={"/register"}>
           <Button variant={"ghost"}>Kayıt Ol</Button>
         </Link>
@@ -35,15 +38,21 @@ const Navbar = () => {
         <LanguageSelector />
       </div>
 
-      <div className="flex md:hidden items-center">
+      <div className="flex lg:hidden items-center">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant={"ghost"}>
               <MenuIcon size={24} />
             </Button>
           </SheetTrigger>
-          <SheetContent side={"right"} className="w-[200px] flex flex-col">
+          <SheetContent side={"right"} className="w-[200px] sm:w-[500px] flex flex-col">
             <h1 className="text-2xl font-semibold text-center mt-5">MindZone</h1>
+            <Link href={"/"}>
+              <Button variant={"ghost"} className="w-full">
+                Ana Sayfa
+              </Button>
+            </Link>
+            <Separator />
             <Link href={"/register"}>
               <Button variant={"ghost"} className="w-full">
                 Kayıt Ol

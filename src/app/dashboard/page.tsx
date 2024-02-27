@@ -20,7 +20,7 @@ const DashboardPage = () => {
         </p>
         <small className="opacity-70 text-red-500">
           Haftalık görevlere başlamadan önce birinci anketi bitirmelisiniz,
-          sonrasında performans görevlerini ve anket ikiyi sırasıyla yapın.
+          sonrasında performans görevlerini ve ikinci anketi sırasıyla yapın.
         </small>
       </section>
 
