@@ -19,9 +19,14 @@ import { Checkbox } from "../ui/checkbox";
 import CustomFormField from "./CustomFormField";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { Loader2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
-  const { mutate: register } = useMutation({
+
+  const router = useRouter();
+
+  const { mutate: register, isPending } = useMutation({
     mutationFn: async (values: RegisterType) => {
       const { data } = await axios.post(
         (process.env.NEXT_PUBLIC_API_URL as string) + "/user",
@@ -36,6 +41,9 @@ const RegisterForm = () => {
         }
       );
       return data;
+    },
+    onSuccess: () => {
+      router.push("/login");
     },
   });
 
@@ -170,11 +178,11 @@ const RegisterForm = () => {
         </CustomFormField>
 
         <Button
-          disabled={!formAccepted || !form.formState.isValid}
+          disabled={!formAccepted || !form.formState.isValid || isPending}
           type="submit"
           className="col-span-2"
         >
-          Kayıt Ol
+          {isPending ? <Loader2Icon className="animate-spin" /> : "Kayıt Ol"}
         </Button>
       </form>
     </Form>

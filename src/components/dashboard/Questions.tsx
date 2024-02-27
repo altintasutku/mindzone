@@ -10,8 +10,7 @@ const Questions = () => {
       <ul className="flex flex-col sm:flex-row gap-3">
         {questionProgressList.map((question, index) => (
           <Link
-            as={"li"}
-            href={`/question/${index}`}
+            href={`/question/${index + 1}`}
             className="bg-white shadow p-4 rounded-md flex-1 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out"
             key={`question${index}`}
           >

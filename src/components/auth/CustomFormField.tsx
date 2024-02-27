@@ -2,12 +2,7 @@ import { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { FormControl, FormField, FormItem } from "../ui/form";
 import { cn } from "@/lib/utils";
 
-const CustomFormField = ({
-  form,
-  name,
-  small = false,
-  children,
-}: {
+type Props = Readonly<{
   form: any;
   name: string;
   small?: boolean;
@@ -16,7 +11,14 @@ const CustomFormField = ({
   }: {
     field: ControllerRenderProps<FieldValues>;
   }) => React.ReactNode;
-}) => {
+}>
+
+const CustomFormField = ({
+  form,
+  name,
+  small = false,
+  children,
+}: Props) => {
   return (
     <FormField
       control={form.control}

@@ -10,9 +10,10 @@ import { Input } from "../ui/input";
 import CustomFormField from "./CustomFormField";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { Loader2Icon } from "lucide-react";
 
 const LoginForm = () => {
-  const { mutate: login } = useMutation({
+  const { mutate: login, isPending } = useMutation({
     mutationFn: async ({ username, password }: LoginType) => {
       const { data } = await axios.post(
         (process.env.NEXT_PUBLIC_API_URL as string) + "/auth/authentication",
@@ -51,8 +52,8 @@ const LoginForm = () => {
           )}
         </CustomFormField>
 
-        <Button type="submit" className="col-span-2">
-          Giriş Yap
+        <Button type="submit" className="col-span-2" disabled={isPending || !form.formState.isValid}>
+          {isPending ? <Loader2Icon className="animate-spin" /> : "Giriş Yap"}
         </Button>
       </form>
     </Form>
