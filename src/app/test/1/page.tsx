@@ -18,7 +18,7 @@ enum Rules {
 }
 
 const myLoader = ({ src }: { src: string }) => {
-  return `http://localhost:3000/images/test_one_images/${src}.jpg`;
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/test_one_images/${src}.jpg`;
 };
 
 const answers = [
