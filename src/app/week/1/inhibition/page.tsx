@@ -1,12 +1,12 @@
 "use client";
 
+import FinishScreen from "@/components/game/FinishScreen";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { CheckIcon, XCircle, XCircleIcon } from "lucide-react";
-import Link from "next/link";
+import { CheckIcon, XCircleIcon } from "lucide-react";
 import React, { useState } from "react";
+import IntroductionInh from "./_introductions";
 
 type Color = {
   name: string;
@@ -29,6 +29,15 @@ enum CorrectState {
 }
 
 const CORRECT_DURATION = 600;
+
+const answers = [
+  { color: "green", text: "Yeşil" },
+  { color: "blue", text: "Mavi" },
+  { color: "red", text: "Kırmızı" },
+  { color: "yellow", text: "Sarı" },
+  { color: "pink", text: "Pembe" },
+  { color: "orange", text: "Turuncu" },
+];
 
 const InhibitionPage = () => {
   const [round, setRound] = useState<number>(0);
@@ -75,50 +84,14 @@ const InhibitionPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div>
       {round >= 10 ? (
-        <div>
-          <p>
-            <strong>Tebrikler!</strong> Egzersizi tamamladınız.
-            <br />
-            Bir sonraki egzersize geçebilirsiniz.
-          </p>
-          <Button asChild className="my-3">
-            <Link href="/week/1/director-task">Sonraki Egzersize Geç</Link>
-          </Button>
-        </div>
+        <FinishScreen url="/week/1/director-task" />
       ) : round === 0 ? (
         <div className="flex flex-col">
-          <p>
-            Şimdi size bazı kelimeler göstereceğiz.  &apos;Başlayın&apos;
-            dedikten hemen sonra, sizden, bu kartlarda yazılı olan kelimelerin
-            hangi renkte yazıldığını aşağıdaki butona bakarak olabildiğince
-            hızlı yanıtlamanız gerekmektedir.
-            <br />
-            Renk ve kelimeler uyumsuz olduğunda cevap vermek zor olabilir, o
-            yüzden odaklanarak dikkatli ve hızlı yanıtlamaya çalışın.
-            <br />
-          </p>
-          <ul>
-            <li className="text-yellow-400">
-              YEŞİL - (sarı)’ya tıklamanız gerekmektedir.
-            </li>
-            <li className="text-green-400">
-              MAVİ – (yeşil)’e tıkmalamanız gerekmektedir.
-            </li>
-            <li className="text-blue-400">
-              KIRMIZI – Maviye tıklamanız gerekmektedir.{" "}
-            </li>
-            <li className="text-red-400">
-              SARI - (kırmızıya) tıklamanız gerekmektedir.{" "}
-            </li>
-            <li className="text-pink-400">
-              MOR – pembe ye tıklaması gerekmektedir.
-            </li>
-            <li className="text-orange-400">
-              PEMBE - turuncuya tıklaması gerekmektedir
-            </li>
-          </ul>
+          <IntroductionInh />
+          <Separator className="my-5" />
+
           <div className="flex justify-center my-5">
             <Button onClick={handleNext}>Başla</Button>
           </div>
@@ -141,48 +114,17 @@ const InhibitionPage = () => {
             </span>
           )}
           <div className="flex flex-col sm:flex-row w-full justify-center gap-1 sm:gap-4">
-            <Button
-              className="shadow"
-              variant={"secondary"}
-              onClick={() => handleAnswer("green")}
-            >
-              Yeşil
-            </Button>
-            <Button
-              className="shadow"
-              variant={"secondary"}
-              onClick={() => handleAnswer("blue")}
-            >
-              Mavi
-            </Button>
-            <Button
-              className="shadow"
-              variant={"secondary"}
-              onClick={() => handleAnswer("red")}
-            >
-              Kırmızı
-            </Button>
-            <Button
-              className="shadow"
-              variant={"secondary"}
-              onClick={() => handleAnswer("yellow")}
-            >
-              Sarı
-            </Button>
-            <Button
-              className="shadow"
-              variant={"secondary"}
-              onClick={() => handleAnswer("pink")}
-            >
-              Pembe
-            </Button>
-            <Button
-              className="shadow"
-              variant={"secondary"}
-              onClick={() => handleAnswer("orange")}
-            >
-              Turuncu
-            </Button>
+            {answers.map((answer) => (
+                <Button
+                    key={answer.color}
+                    className="shadow"
+                    variant={"secondary"}
+                    onClick={() => handleAnswer(answer.color)}
+                >
+                    {answer.text}
+                </Button>
+                
+            ))}
           </div>
         </div>
       ) : (

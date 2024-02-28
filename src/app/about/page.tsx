@@ -5,6 +5,7 @@ import imageTimothy from "@/images/timothy-r-jordan.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import { dilrubaEmail } from "@/assets/contactInfos";
 
 const AboutPage = () => {
   return (
@@ -20,9 +21,9 @@ const AboutPage = () => {
           araştırmacıya{" "}
           <a
             className="text-blue-600 underline"
-            href="mailto:dilruba.sonmez@stu.ihu.edu.tr"
+            href={`mailto:${dilrubaEmail}`}
           >
-            dilruba.sonmez@stu.ihu.edu.tr
+            {dilrubaEmail}
           </a>{" "}
           adresinden ulaşabilirsiniz.
         </p>
