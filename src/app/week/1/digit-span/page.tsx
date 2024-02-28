@@ -75,8 +75,8 @@ const DigitspanPage = () => {
       {round === 0 ? (
         <div className="flex flex-col gap-5">
           <p>
-            Bu egzersizde ekranda gördüğünüz sayıları ezberlemeye
-            çalışacaksınız.
+            Bu egzersizde ekranda gördüğünüz sayıları{" "}
+            <strong>ezberlemeye çalışacaksınız.</strong>
             <br />
             Tüm sayılar 0 ile 9 arasındadır.
             <br />
@@ -84,11 +84,12 @@ const DigitspanPage = () => {
             <br />
             Birbiri ardına bir dizi rakam göreceksiniz.
             <br />
-            Rakamları hatırladıktan sonra sizlerden o rakamları sırayla
+            Rakamları hatırladıktan sonra sizlerden o rakamları{" "}
+            <strong>sırayla</strong>
             yazmanızı isteyeceğiz.
-            <br />
-            Ör. 1 – 2- 3- 4 = 1234 yazmanız gerekmektedir.
-            <br />
+            <ul className="list-disc my-2">
+              <li>Ör. 1 – 2- 3- 4 = 1234 yazmanız gerekmektedir.,</li>
+            </ul>
             Tüm sayıları girdikten sonra “Devam” butonuna tıklayarak sonraki
             adıma geçeceksiniz.
             <br />
