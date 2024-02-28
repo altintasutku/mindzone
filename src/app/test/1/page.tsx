@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import React from "react";
 import IntroductionsTestOne from "./_introductions";
+import { Progress } from "@/components/ui/progress";
 
 const imageColors = ["red", "green", "blue", "yellow"];
 const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
@@ -18,7 +19,7 @@ enum Rules {
 }
 
 const myLoader = ({ src }: { src: string }) => {
-  return `http://localhost:3000/images/test_one_images/${src}.jpg`;
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/test_one_images/${src}.jpg`;
 };
 
 const answers = [
@@ -44,25 +45,29 @@ const answers = [
   },
 ];
 
+const TOTAL_ROUNDS = 360;
+
+const CORRECT_DURATION = 1000;
+
 const PerformanceTestOnePage = () => {
   const { toast } = useToast();
 
+  const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
+
   const correctToats = () => {
-    toast({
-      title: "Correct Answer",
-      description: "You have answered correctly.",
-      variant: "success",
-      duration: 2000,
-    });
+    setIsCorrect(true);
+    setTimeout(() => {
+      setIsCorrect(null);
+      nextRound();
+    }, CORRECT_DURATION);
   };
 
   const wrongToats = () => {
-    toast({
-      title: "Wrong Answer",
-      description: "You have answered wrong.",
-      variant: "destructive",
-      duration: 2000,
-    });
+    setIsCorrect(false);
+    setTimeout(() => {
+      setIsCorrect(null);
+      nextRound();
+    }, CORRECT_DURATION);
 
     setStats((prev) => ({
       ...prev,
@@ -93,7 +98,7 @@ const PerformanceTestOnePage = () => {
   const [isFinished, setIsFinished] = React.useState<boolean>(false);
 
   const nextRound = () => {
-    if (round >= 100) {
+    if (round >= TOTAL_ROUNDS) {
       toast({
         title: "Test Finished",
         description: "You have finished the test.",
@@ -123,8 +128,6 @@ const PerformanceTestOnePage = () => {
       if (answers[answerIndex].number === currentShape?.number) correctToats();
       else wrongToats();
     }
-
-    nextRound();
   };
 
   return (
@@ -133,16 +136,16 @@ const PerformanceTestOnePage = () => {
         <FinishScreen url="/test/2" />
       ) : round === 0 ? (
         <div className="flex flex-col">
-        <IntroductionsTestOne />
-        <Separator className="my-5" />
+          <IntroductionsTestOne />
+          <Separator className="my-5" />
 
-        <div className="flex justify-center my-5">
-          <Button onClick={nextRound}>Başla</Button>
+          <div className="flex justify-center my-5">
+            <Button onClick={nextRound}>Başla</Button>
+          </div>
         </div>
-      </div>
       ) : (
         <>
-          {currentShape && (
+          {isCorrect === null && currentShape ? (
             <Image
               className="border border-stone-200 rounded-md"
               loader={myLoader}
@@ -151,10 +154,18 @@ const PerformanceTestOnePage = () => {
               width={100}
               height={100}
             />
-          )}
+          ) : isCorrect === true ? (
+            <div className="text-green-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center">
+              Doğru
+            </div>
+          ) : isCorrect === false ? (
+            <div className="text-red-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center">
+              Yanlış
+            </div>
+          ) : null}
           <Separator className="my-5 opacity-50" />
           <small className="test-sm opacity-65 mb-2">Seçenekler</small>
-          <div className="flex gap-4">
+          <div className="grid grid-cols-2 sm:flex gap-4">
             {answers.map((answer, index) => (
               <Image
                 key={index}
@@ -168,6 +179,7 @@ const PerformanceTestOnePage = () => {
               />
             ))}
           </div>
+          <Progress className="mt-7" value={(100 * round) / TOTAL_ROUNDS} />
         </>
       )}
     </div>

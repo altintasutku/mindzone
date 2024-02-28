@@ -1,18 +1,29 @@
 "use client";
 
 import FinishScreen from "@/components/game/FinishScreen";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckIcon, DeleteIcon, RefreshCwIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import IntroductionDS from "./_introductions";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 const SHOWING_TIME = 500;
 
 const DigitspanPage = () => {
   const [randomNumber, setRandomNumber] = useState<number[]>([]);
-  console.log("🚀 ~ DigitspanPage ~ randomNumber:", randomNumber);
   const [round, setRound] = useState<number>(0);
 
   const [isShowing, setIsShowing] = useState<boolean>(false);
@@ -25,7 +36,7 @@ const DigitspanPage = () => {
 
   useEffect(() => {
     setRandomNumber([]);
-    for (let i = 0; i < round + 1; i++) {
+    for (let i = 0; i < Math.ceil(round / 10) + 1; i++) {
       const generatedNum = generateRandomNumber();
       setRandomNumber((prev) => [...prev, generatedNum]);
     }
@@ -98,6 +109,8 @@ const DigitspanPage = () => {
   );
 };
 
+const CORRECT_DURATION = 1000;
+
 const NumPad = ({
   randomNumber,
   handleNext,
@@ -108,6 +121,7 @@ const NumPad = ({
   handleStart: () => void;
 }) => {
   const [userInput, setUserInput] = useState<number[]>([]);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const { toast } = useToast();
 
@@ -124,20 +138,17 @@ const NumPad = ({
   const handleCheck = () => {
     const isCorrect = userInput.join("") === randomNumber.join("");
     if (isCorrect) {
-      toast({
-        title: "Doğru!",
-        description: "Cevabınız Doğru Tebrikler",
-        duration: 3000,
-        variant: "success",
-      });
-      handleNext();
+      setIsCorrect(true);
+      setTimeout(() => {
+        setIsCorrect(null);
+        handleNext();
+      }, CORRECT_DURATION);
     } else {
-      toast({
-        title: "Yanlış",
-        description: "Tekrar deneyin",
-        duration: 3000,
-        variant: "destructive",
-      });
+      setIsCorrect(false);
+      setTimeout(() => {
+        setIsCorrect(null);
+        handleNext();
+      }, CORRECT_DURATION);
     }
   };
 
@@ -153,11 +164,17 @@ const NumPad = ({
   return (
     <div>
       <div className="flex items-center justify-center mb-6 gap-2">
-        {userInput.map((num, index) => (
-          <Button variant={"outline"} key={index}>
-            {num}
-          </Button>
-        ))}
+        {isCorrect === null ? (
+          userInput.map((num, index) => (
+            <Button variant={"outline"} key={index}>
+              {num}
+            </Button>
+          ))
+        ) : isCorrect ? (
+          <span className="text-green-500">Doğru</span>
+        ) : (
+          <span className="text-red-500">Yanlış</span>
+        )}
       </div>
 
       <Separator className="my-6" />
@@ -202,10 +219,31 @@ const NumPad = ({
           <DeleteIcon size={18} className="mr-0 sm:mr-2" />
           <span className="hidden sm:block">Sil</span>
         </Button>
-        <Button variant={"ghost"} onClick={resetHandle}>
-          <RefreshCwIcon size={18} className="mr-0 sm:mr-2" />
-          <span className="hidden sm:block">Sıfırla</span>
-        </Button>
+        <Dialog>
+          <DialogTrigger
+            className={cn(buttonVariants({ variant: "ghost" }), "mr-0 sm:mr-2")}
+          >
+            <RefreshCwIcon size={18} />
+            <span className="hidden sm:block">Sıfırla</span>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Emin misin?</DialogTitle>
+              <DialogDescription>
+                Bu işlem oyununuzu sıfırlayacak ve tüm ilerlemeniz baştan
+                başlayacaktır. Emin misiniz?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button">İptal</Button>
+              </DialogClose>
+              <Button type="button" variant={"secondary"} onClick={resetHandle}>
+                Evet
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <Button
           onClick={handleCheck}
           disabled={randomNumber.length !== userInput.length}
@@ -214,6 +252,8 @@ const NumPad = ({
           <span className="hidden sm:block">Kontrol Et</span>
         </Button>
       </div>
+
+      <Progress value={(100 * (randomNumber.length - 1)) / 80} />
     </div>
   );
 };

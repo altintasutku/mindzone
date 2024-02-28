@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import IntroductionCF from "./_intorductions";
+import { Progress } from "@/components/ui/progress";
 
 const ALPABET = [
   "A",
@@ -46,7 +47,9 @@ enum CorrectState {
   None = "None",
 }
 
-const CORRECT_DURATION = 600;
+const CORRECT_DURATION = 800;
+
+const TOTAL_ROUNDS = 200;
 
 const CognitiveFlexibilityPage = () => {
   const itemEls = useRef<any>({});
@@ -65,12 +68,11 @@ const CognitiveFlexibilityPage = () => {
   useEffect(() => {
     for (const key in itemEls.current) {
       const element = itemEls.current[key];
-      console.log(element);
     }
   }, [itemEls]);
 
   const handleNewRound = () => {
-    if (round >= 10) {
+    if (round >= TOTAL_ROUNDS) {
       return setCurrentItem(null);
     } else {
       setCurrentItem({
@@ -119,7 +121,7 @@ const CognitiveFlexibilityPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-5">
-      {round >= 10 ? (
+      {round >= TOTAL_ROUNDS ? (
         <FinishScreen url="/week/1/inhibition" />
       ) : !currentItem ? (
         <div>
@@ -134,12 +136,10 @@ const CognitiveFlexibilityPage = () => {
         <>
           <div
             className={cn(
-              "grid grid-cols-2 grid-rows-2 dviide-slate-200 min-h-40 w-full transition-all duration-100 ease-in-out",
+              "grid grid-cols-2 grid-rows-2 divide-slate-200 min-h-40 w-full transition-all duration-200 ease-in-out",
               {
-                "border-2 border-green-500":
-                  correctState === CorrectState.Correct,
-                "border-2 border-red-500":
-                  correctState === CorrectState.Incorrect,
+                " border-2 border-green-500": correctState === CorrectState.Correct,
+                " border-2 border-red-500": correctState === CorrectState.Incorrect,
               }
             )}
           >
@@ -170,6 +170,8 @@ const CognitiveFlexibilityPage = () => {
               Y
             </Button>
           </div>
+
+          <Progress value={(100 * round) / TOTAL_ROUNDS} />
         </>
       )}
     </div>
