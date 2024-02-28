@@ -95,7 +95,7 @@ const PerformanceTestPageThree = () => {
               <span></span>
             )}
           </div>
-          <Button className="px-10" onClick={handleClick}>
+          <Button className="px-10" onClick={handleClick} disabled={current === GO_NOGO.NONE}>
             GIT
           </Button>
           <Separator className="my-5" />
