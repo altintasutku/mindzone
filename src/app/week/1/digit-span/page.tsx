@@ -1,13 +1,12 @@
 "use client";
 
+import FinishScreen from "@/components/game/FinishScreen";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckIcon, DeleteIcon, RefreshCwIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { set } from "zod";
+import IntroductionDS from "./_introductions";
 
 const SHOWING_TIME = 500;
 
@@ -75,30 +74,9 @@ const DigitspanPage = () => {
     <div className="flex justify-center items-center min-h-96">
       {round === 0 ? (
         <div className="flex flex-col gap-5">
-          <p>
-            Bu egzersizde ekranda gördüğünüz sayıları{" "}
-            <strong>ezberlemeye çalışacaksınız.</strong>
-            <br />
-            Tüm sayılar 0 ile 9 arasındadır.
-            <br />
-            Bu tür sayılara rakam diyoruz.
-            <br />
-            Birbiri ardına bir dizi rakam göreceksiniz.
-            <br />
-            Rakamları hatırladıktan sonra sizlerden o rakamları{" "}
-            <strong>sırayla</strong>
-            yazmanızı isteyeceğiz.
-            <ul className="list-disc my-2">
-              <li>Ör. 1 – 2- 3- 4 = 1234 yazmanız gerekmektedir.,</li>
-            </ul>
-            Tüm sayıları girdikten sonra “Devam” butonuna tıklayarak sonraki
-            adıma geçeceksiniz.
-            <br />
-            Rakamları girdikten sonra yanıtınızın doğru olup olmadığı
-            söylenecektir.
-            <br />
-            Hadi başlayalım!
-          </p>
+          <IntroductionDS />
+          <Separator className="my-5" />
+
           <div className="flex justify-center">
             <Button onClick={handleStart}>Başlat</Button>
           </div>
@@ -106,16 +84,7 @@ const DigitspanPage = () => {
       ) : null}
 
       {isFinished ? (
-        <div>
-          <p>
-            <strong>Tebrikler!</strong> Tüm raundları başarıyla tamamladınız.
-            <br />
-            Bir sonraki egzersize geçebilirsiniz.
-          </p>
-          <Button asChild className="my-3">
-            <Link href="/week/1/cognitive-flexibility">Sonraki Egzersize Geç</Link>
-          </Button>
-        </div>
+        <FinishScreen url="/week/1/cognitive-flexibility" />
       ) : isShowing ? (
         <span>{currentShowingNumber}</span>
       ) : round !== 0 ? (

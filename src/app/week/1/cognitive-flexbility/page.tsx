@@ -1,10 +1,11 @@
 "use client";
 
+import FinishScreen from "@/components/game/FinishScreen";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import IntroductionCF from "./_intorductions";
 
 const ALPABET = [
   "A",
@@ -119,70 +120,10 @@ const CognitiveFlexibilityPage = () => {
   return (
     <div className="flex flex-col items-center gap-5">
       {round >= 10 ? (
-        <div>
-          <p>
-            <strong>Tebrikler!</strong> Egzersizi tamamladınız.
-            <br />
-            Bir sonraki egzersize geçebilirsiniz.
-          </p>
-          <Button asChild className="my-3">
-            <Link href="/week/1/inhibition">Sonraki Egzersize Geç</Link>
-          </Button>
-        </div>
+        <FinishScreen url="/week/1/inhibition" />
       ) : !currentItem ? (
         <div>
-          <p>
-            Bu egzersizde ekranda harfler ve sayılar göreceksiniz. Takip etmeniz
-            gereken birkaç kural belirledik ve bunlara göre yanıtlamanız
-            gerekmektedir.
-            <br />
-            4’e bölünmüş ekran göreceksiniz.
-            <br />
-            Bu ekranda <strong>harflerin yukarıda</strong> olması,{" "}
-            <strong>sayıların aşağıda</strong> olması gerekmektedir.
-            <br />
-            <strong>Sessiz harf ve tek sayı ise ise X</strong> butonuna basmanız
-            gerekirken,
-            <br />
-            <strong>Sesli harf ve çift sayı ise Y</strong> butonuna basılması
-            gerekmektedir.
-          </p>
-          <ul className="list-disc my-2">
-            <li>
-              Örn: G8 ekranda göründüğünde sol yukarıda ise X tuşuna
-              basılacaktır. Sağ aşağıda görüldüyse bu sefer çift sayı 8 olduğu
-              için ona odaklanılarak Y tuşuna basılacaktır.
-            </li>
-            <li>
-              Ör: G8 sayısı üstte göründüyse harfe odaklanılacak ve X ye
-              basılacaktır. Ama aşağıda görünürse çift sayı olduğu için Y
-              basılacaktır.
-            </li>
-            <li>
-              Tek harf örneği (15 Tane) ŞİMDİ DAHA İYİ ANLAMAK İÇİN SADECE
-              HARFLERİ DENEYELİM. SESSİZ HARF İSE X, SESLİ HARF İSE Y’YE BASIN.
-            </li>
-            <li>
-              Tek sayı örneği (15 Tane) ŞİMDİ DAHA İYİ ANLAMAK İÇİN SADECE
-              SAYILARI DENEYELİM. TEK SAYI İSE X, ÇİFT SAYI İSE Y’YE BASIN.
-            </li>
-          </ul>
-          <p>
-            Şimdi ikisi birlikte tekrar kuralı hatırlayalım.
-            <br />
-            Bu ekranda <strong>harflerin yukarıda</strong> olması,
-            <strong>sayıların aşağıda</strong> olması gerekmektedir.
-            <br />
-            <strong>Sessiz harf ve tek sayı ise ise X</strong> butonuna basmanız
-            gerekirken,
-            <br />
-            <strong>Sesli harf ve çift sayı ise Y</strong> butonuna basılması
-            gerekmektedir.
-            <br />
-            Örn: G8 ekranda göründüğünde sol yukarıda ise X tuşuna basılacaktır.
-            Sağ aşağıda görüldüyse bu sefer çift sayı 8 olduğu için ona
-            odaklanılarak Y tuşuna basılacaktır.
-          </p>
+          <IntroductionCF />
           <Separator className="my-5" />
 
           <div className="flex justify-center items-center">
