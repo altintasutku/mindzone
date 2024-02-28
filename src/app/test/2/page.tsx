@@ -8,6 +8,8 @@ import { log } from "console";
 import { EyeIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
+import { set } from "zod";
+import { cn } from "@/lib/utils";
 
 const TOTAL_ROUNDS = 450;
 
@@ -43,26 +45,27 @@ const PerformanceTestPageTwo = () => {
   const [correctAnswers, setCorrectAnswers] = useState<number>(0);
   const [wrongAnswers, setWrongAnswers] = useState<number>(0);
   const [correctsInTest, setCorrectsInTest] = useState<number>(0);
+  const [correctState, setCorrectState] = useState<boolean | null>(false);
 
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
-  const correctToats = () => {
-    toast({
-      title: "Doğru Cevap",
-      description: "Tebrikler! doğru yanıtladınız.",
-      variant: "success",
-      duration: 2000,
-    });
-  };
+  // const correctToats = () => {
+  //   toast({
+  //     title: "Doğru Cevap",
+  //     description: "Tebrikler! doğru yanıtladınız.",
+  //     variant: "success",
+  //     duration: 2000,
+  //   });
+  // };
 
-  const wrongToats = () => {
-    toast({
-      title: "Yanlış Cevap",
-      description: "Üzgünüz! yanlış yanıtladınız.",
-      variant: "destructive",
-      duration: 2000,
-    });
-  };
+  // const wrongToats = () => {
+  //   toast({
+  //     title: "Yanlış Cevap",
+  //     description: "Üzgünüz! yanlış yanıtladınız.",
+  //     variant: "destructive",
+  //     duration: 2000,
+  //   });
+  // };
 
   useEffect(() => {
     if (selectedLetters[0] === selectedLetters[2]) {
@@ -75,6 +78,7 @@ const PerformanceTestPageTwo = () => {
       setIsFinished(true);
     } else {
       setRound((prev) => prev + 1);
+      setCorrectState(null);
       const randomLetter = selectRandomLetter();
       setSelectedLetters((prev) => [prev[1], prev[2], randomLetter]);
 
@@ -104,10 +108,12 @@ const PerformanceTestPageTwo = () => {
 
   const checkAnswer = () => {
     if (selectedLetters[0] === selectedLetters[2]) {
-      correctToats();
+      // correctToats();
+      setCorrectState(true);
       setCorrectAnswers((prev) => prev + 1);
     } else {
-      wrongToats();
+      // wrongToats();
+      setCorrectState(false);
       setWrongAnswers((prev) => prev + 1);
     }
   };
@@ -132,7 +138,11 @@ const PerformanceTestPageTwo = () => {
           </div>
           <div className=' w-full'>
             <Button
-              className=' w-full'
+              className={cn("w-full ", {
+                "bg-green-500 hover:bg-green-500": correctState === true,
+                "bg-red-500 hover:bg-red-500": correctState === false,
+                "": correctState === null,
+              })}
               variant={"outline"}
               onClick={checkAnswer}
             >
