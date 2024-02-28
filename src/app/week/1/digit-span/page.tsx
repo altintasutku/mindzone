@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckIcon, DeleteIcon, RefreshCwIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { set } from "zod";
@@ -107,11 +108,13 @@ const DigitspanPage = () => {
       {isFinished ? (
         <div>
           <p>
-            Tebrikler! Tüm raundları başarıyla tamamladınız.
+            <strong>Tebrikler!</strong> Tüm raundları başarıyla tamamladınız.
             <br />
-            Yeniden başlamak için &quot;Yeniden Başla&quot; butonuna tıklayın.
+            Bir sonraki egzersize geçebilirsiniz.
           </p>
-          <Button onClick={handleStart}>Yeniden Başla</Button>
+          <Button asChild className="my-3">
+            <Link href="/week/1/cognitive-flexibility">Sonraki Egzersize Geç</Link>
+          </Button>
         </div>
       ) : isShowing ? (
         <span>{currentShowingNumber}</span>
