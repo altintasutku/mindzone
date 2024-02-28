@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button";
 import { log } from "console";
 import { EyeIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Progress } from "@/components/ui/progress";
+
+const TOTAL_ROUNDS = 450;
+
+const time = 2000;
 
 const LETTERS = [
   "A",
@@ -66,18 +71,29 @@ const PerformanceTestPageTwo = () => {
   }, [selectedLetters]);
 
   const nextRound = () => {
-    if (round === 450) {
+    if (round >= TOTAL_ROUNDS) {
       setIsFinished(true);
     } else {
       setRound((prev) => prev + 1);
       const randomLetter = selectRandomLetter();
       setSelectedLetters((prev) => [prev[1], prev[2], randomLetter]);
 
-      setTimeout(() => {
-        nextRound();
-      }, 2000);
+      // setTimeout(() => {
+      //   nextRound();
+      // }, 1);
     }
   };
+
+  useEffect(() => {
+    if (round === 0) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      nextRound();
+    }, time);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round]);
 
   const selectRandomLetter = () => {
     const randomIndex = Math.floor(Math.random() * LETTERS.length);
@@ -111,11 +127,21 @@ const PerformanceTestPageTwo = () => {
         </div>
       ) : (
         <div className='flex flex-col gap-7 justify-center items-center'>
-          <div>{selectedLetters[1]}</div>
+          <div>
+            <p className=' text-4xl'>{selectedLetters[1]}</p>
+          </div>
           <div>
             <Button variant={"outline"} onClick={checkAnswer}>
               <EyeIcon />
             </Button>
+          </div>
+          <div className=' w-40 '>
+            <Progress
+              max={round}
+              indicatorColor='bg-blue-500'
+              className='h-2 text-yellow-300'
+              value={round}
+            />
           </div>
         </div>
       )}
