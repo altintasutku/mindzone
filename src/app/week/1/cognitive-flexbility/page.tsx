@@ -52,8 +52,6 @@ const CORRECT_DURATION = 800;
 const TOTAL_ROUNDS = 200;
 
 const CognitiveFlexibilityPage = () => {
-  const itemEls = useRef<any>({});
-
   const [correctState, setCorrectState] = useState<CorrectState>(
     CorrectState.None
   );
@@ -65,20 +63,26 @@ const CognitiveFlexibilityPage = () => {
 
   const [round, setRound] = useState(0);
 
-  useEffect(() => {
-    for (const key in itemEls.current) {
-      const element = itemEls.current[key];
-    }
-  }, [itemEls]);
-
   const handleNewRound = () => {
     if (round >= TOTAL_ROUNDS) {
       return setCurrentItem(null);
     } else {
-      setCurrentItem({
-        item: randomAlphabet() + randomNumber(),
-        box: randomBox(),
-      });
+      if (round <= 16) {
+        setCurrentItem({
+          item: randomAlphabet(),
+          box: randomBox(1, 2),
+        });
+      } else if (round <= 32) {
+        setCurrentItem({
+          item: randomNumber().toString(),
+          box: randomBox(3, 4),
+        });
+      } else {
+        setCurrentItem({
+          item: randomAlphabet() + randomNumber(),
+          box: randomBox(),
+        });
+      }
       setRound((prev) => prev + 1);
     }
   };
@@ -103,12 +107,21 @@ const CognitiveFlexibilityPage = () => {
     if (!currentItem) return;
 
     if (currentItem?.box === 1 || currentItem?.box === 2) {
+      console.log("if");
       if (!VOWELS.includes(currentItem.item[0]) && button === "X") {
         return correctAnswer();
       } else if (VOWELS.includes(currentItem.item[0]) && button === "Y") {
         return correctAnswer();
       }
+    } else if (round <= 32) {
+      console.log("else if");
+      if (ODD_NUMBERS.includes(currentItem.item[0]) && button === "X") {
+        return correctAnswer();
+      } else if (!ODD_NUMBERS.includes(currentItem.item[0]) && button === "Y") {
+        return correctAnswer();
+      }
     } else {
+      console.log("else");
       if (ODD_NUMBERS.includes(currentItem.item[1]) && button === "X") {
         return correctAnswer();
       } else if (!ODD_NUMBERS.includes(currentItem.item[0]) && button === "Y") {
@@ -126,27 +139,70 @@ const CognitiveFlexibilityPage = () => {
       ) : !currentItem ? (
         <div>
           <IntroductionCF />
-          <Separator className="my-5" />
 
-          <div className="flex justify-center items-center">
-            <Button onClick={handleNewRound}>Başla</Button>
+          <div className="flex justify-center items-center mt-5">
+            <Button onClick={handleNewRound}>Devam</Button>
           </div>
         </div>
+      ) : round === 1 ? (
+        <div>
+          <p className="pt-10">
+            ŞİMDİ DAHA İYİ ANLAMAK İÇİN SADECE HARFLERİ DENEYELİM. SESSİZ HARF
+            İSE X, SESLİ HARF İSE Y’YE BASIN.
+          </p>
+          <div className="flex justify-center items-center mt-5">
+            <Button onClick={handleNewRound}>Başlat</Button>
+          </div>
+        </div>
+      ) : round === 17 ? (
+        <div>
+          <p className="pt-10">
+            ŞİMDİ DAHA İYİ ANLAMAK İÇİN SADECE SAYILARI DENEYELİM. TEK SAYI İSE
+            X, ÇİFT SAYI İSE Y’YE BASIN.
+          </p>
+          <div className="flex justify-center items-center mt-5">
+            <Button onClick={handleNewRound}>Başlat</Button>
+          </div>
+        </div>
+      ) : round === 33 ? (
+        <>
+          <div>
+            <p>
+              Şimdi ikisi birlikte tekrar kuralı hatırlayalım.
+              <br />
+              Bu ekranda <strong>harflerin yukarıda</strong> olması,
+              <strong>sayıların aşağıda</strong> olması gerekmektedir.
+              <br />
+              <strong>Sessiz harf ve tek sayı ise ise X</strong> butonuna
+              basmanız gerekirken,
+              <br />
+              <strong>Sesli harf ve çift sayı ise Y</strong> butonuna basılması
+              gerekmektedir.
+              <br />
+              Örn: G8 ekranda göründüğünde sol yukarıda ise X tuşuna
+              basılacaktır. Sağ aşağıda görüldüyse bu sefer çift sayı 8 olduğu
+              için ona odaklanılarak Y tuşuna basılacaktır.
+            </p>
+            <Separator className="my-5" />
+            <div className="flex justify-center items-center">
+              <Button onClick={handleNewRound}>Başlat</Button>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <div
             className={cn(
-              "grid grid-cols-2 grid-rows-2 divide-slate-200 min-h-40 w-full transition-all duration-200 ease-in-out",
+              "grid grid-cols-2 grid-rows-2 divide-slate-200 min-h-40 w-full transition-all duration-100 ease-in-out border-2",
               {
-                " border-2 border-green-500": correctState === CorrectState.Correct,
-                " border-2 border-red-500": correctState === CorrectState.Incorrect,
+                "border-green-500": correctState === CorrectState.Correct,
+                "border-red-500": correctState === CorrectState.Incorrect,
               }
             )}
           >
             {[1, 2, 3, 4].map((ref, index) => (
               <div
                 key={index}
-                ref={(element) => (itemEls.current[index] = element)}
                 className="col-span-1 flex justify-center items-center text-xl border-2 border-slate-200"
               >
                 {currentItem?.box === ref ? currentItem.item : ""}
@@ -182,8 +238,8 @@ const randomAlphabet = () => {
   return ALPABET[Math.floor(Math.random() * ALPABET.length)];
 };
 
-const randomBox = () => {
-  return Math.floor(Math.random() * 4) + 1;
+const randomBox = (min = 1, max = 4) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 const randomNumber = () => {
