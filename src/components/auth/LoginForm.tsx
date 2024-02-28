@@ -22,8 +22,6 @@ const LoginForm = () => {
           password,
         }
       );
-      console.log("🚀 ~ mutationFn: ~ data:", data)
-
       return data;
     },
   });

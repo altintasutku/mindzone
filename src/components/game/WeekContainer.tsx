@@ -21,7 +21,7 @@ const WeekContainer = ({ children, games }: Props) => {
         {children}
         <Separator className="my-4" />
         <h2 className="text-center my-4 font-semibold">
-          Hafta {games[0].week} oyunları
+          Hafta {games[0].week} egzersizleri
         </h2>
         <div className="flex gap-3 flex-wrap justify-center">
           {games.map((game, index) =>

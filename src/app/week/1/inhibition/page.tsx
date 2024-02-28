@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { CheckIcon, XCircleIcon } from "lucide-react";
 import React, { useState } from "react";
 import IntroductionInh from "./_introductions";
+import { Progress } from "@/components/ui/progress";
 
 type Color = {
   name: string;
@@ -28,7 +29,9 @@ enum CorrectState {
   None = "None",
 }
 
-const CORRECT_DURATION = 600;
+const CORRECT_DURATION = 1000;
+
+const TOTAL_ROUNDS = 200;
 
 const answers = [
   { color: "green", text: "Yeşil" },
@@ -51,7 +54,7 @@ const InhibitionPage = () => {
   const { toast } = useToast();
 
   const handleNext = () => {
-    if (round >= 10) {
+    if (round >= TOTAL_ROUNDS) {
       toast({
         title: "Oyun Bitti",
         description: "Oyun bitti.",
@@ -85,7 +88,7 @@ const InhibitionPage = () => {
 
   return (
     <div>
-      {round >= 10 ? (
+      {round >= TOTAL_ROUNDS ? (
         <FinishScreen url="/week/1/director-task" />
       ) : round === 0 ? (
         <div className="flex flex-col">
@@ -97,7 +100,7 @@ const InhibitionPage = () => {
           </div>
         </div>
       ) : currentColor ? (
-        <div className="flex flex-col items-center py-16">
+        <div className="flex flex-col items-center pt-16">
           {correctState === CorrectState.None ? (
             <span
               className={`text-4xl mb-14 font-bold ${currentColor.textColor}`}
@@ -115,17 +118,18 @@ const InhibitionPage = () => {
           )}
           <div className="flex flex-col sm:flex-row w-full justify-center gap-1 sm:gap-4">
             {answers.map((answer) => (
-                <Button
-                    key={answer.color}
-                    className="shadow"
-                    variant={"secondary"}
-                    onClick={() => handleAnswer(answer.color)}
-                >
-                    {answer.text}
-                </Button>
-                
+              <Button
+                key={answer.color}
+                className="shadow"
+                variant={"secondary"}
+                onClick={() => handleAnswer(answer.color)}
+              >
+                {answer.text}
+              </Button>
             ))}
           </div>
+
+          <Progress value={(100 * round) / TOTAL_ROUNDS} className="mt-20" />
         </div>
       ) : (
         <div className="flex flex-col items-center">
