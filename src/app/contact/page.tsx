@@ -2,7 +2,7 @@ import {
   ahmetYusufEmail,
   dilrubaEmail,
   utkuEmail,
-} from "@/assets/contactInfos";
+} from "@/config/contactInfos";
 import React from "react";
 
 const ContactPage = () => {
