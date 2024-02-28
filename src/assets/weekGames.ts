@@ -1,18 +1,18 @@
 export const weekOneGames: Game[] = [
     {
-      title: "Digit Span",
+      title: "🧠",
       isCompleted: false,
       slug: "digit-span",
       week: "1",
     },
     {
-      title: "Cognitive Flexibility",
+      title: "↔️",
       isCompleted: false,
       slug: "cognitive-flexbility",
       week: "1",
     },
     {
-      title: "Inhibition",
+      title: "🟥",
       isCompleted: false,
       slug: "inhibition",
       week: "1",
