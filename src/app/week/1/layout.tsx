@@ -1,9 +1,9 @@
 import { weekOneGames } from "@/assets/weekGames";
-import Container from "@/components/game/Container";
+import WeekContainer from "@/components/game/WeekContainer";
 import React from "react";
 
 const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  return <Container games={weekOneGames}>{children}</Container>;
+  return <WeekContainer games={weekOneGames}>{children}</WeekContainer>;
 };
 
 export default Layout;

@@ -5,7 +5,7 @@ import imageTimothy from "@/images/timothy-r-jordan.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { dilrubaEmail } from "@/assets/contactInfos";
+import { dilrubaEmail } from "@/config/contactInfos";
 
 const AboutPage = () => {
   return (

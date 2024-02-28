@@ -1,4 +1,4 @@
-import { dilrubaEmail } from "@/assets/contactInfos";
+import { dilrubaEmail } from "@/config/contactInfos";
 import React from "react";
 
 const WhatIs = () => {

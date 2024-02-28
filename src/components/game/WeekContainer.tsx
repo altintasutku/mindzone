@@ -6,19 +6,18 @@ import Link from "next/link";
 import { Separator } from "../ui/separator";
 import { CheckIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 
 type Props = Readonly<{
   children: React.ReactNode;
   games: Game[];
 }>;
 
-const Container = ({ children, games }: Props) => {
+const WeekContainer = ({ children, games }: Props) => {
   const pathname = usePathname();
 
   return (
     <div className="flex justify-center items-center">
-      <div className="bg-white m-5 p-4 rounded-md shadow">
+      <div className="bg-white m-5 p-4 rounded-md shadow max-w-[60%]">
         {children}
         <Separator className="my-4" />
         <h2 className="text-center my-4 font-semibold">
@@ -55,4 +54,4 @@ const Container = ({ children, games }: Props) => {
   );
 };
 
-export default Container;
+export default WeekContainer;
