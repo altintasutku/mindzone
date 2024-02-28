@@ -48,8 +48,8 @@ const PerformanceTestPageTwo = () => {
 
   const correctToats = () => {
     toast({
-      title: "Correct Answer",
-      description: "You have answered correctly.",
+      title: "Doğru Cevap",
+      description: "Tebrikler! doğru yanıtladınız.",
       variant: "success",
       duration: 2000,
     });
@@ -57,8 +57,8 @@ const PerformanceTestPageTwo = () => {
 
   const wrongToats = () => {
     toast({
-      title: "Wrong Answer",
-      description: "You have answered wrong.",
+      title: "Yanlış Cevap",
+      description: "Üzgünüz! yanlış yanıtladınız.",
       variant: "destructive",
       duration: 2000,
     });
@@ -130,12 +130,16 @@ const PerformanceTestPageTwo = () => {
           <div>
             <p className=' text-4xl'>{selectedLetters[1]}</p>
           </div>
-          <div>
-            <Button variant={"outline"} onClick={checkAnswer}>
+          <div className=' w-full'>
+            <Button
+              className=' w-full'
+              variant={"outline"}
+              onClick={checkAnswer}
+            >
               <EyeIcon />
             </Button>
           </div>
-          <div className=' w-40 '>
+          <div className='w-40'>
             <Progress
               max={round}
               indicatorColor='bg-blue-500'
