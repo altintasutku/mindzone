@@ -2,19 +2,14 @@
 
 import { stepTwoQuestions } from "@/assets/mockdata/questions";
 import { Button } from "@/components/ui/button";
-import {
-  CheckCheckIcon,
-  CheckIcon,
-  ChevronsDownIcon,
-  ChevronsLeftRightIcon,
-} from "lucide-react";
+import { FrownIcon, LaughIcon, MehIcon, SmileIcon } from "lucide-react";
 import React from "react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
 } from "@/components/ui/pagination";
+import { Progress } from "@/components/ui/progress";
 
 const options = [
   "Kesinlikle Katılıyorum",
@@ -57,13 +52,13 @@ const QuestionTestTwo = () => {
                     }
                   >
                     {index === 0 ? (
-                      <CheckCheckIcon />
+                      <LaughIcon size={18} className="mr-2" />
                     ) : index === 1 ? (
-                      <CheckIcon />
+                      <SmileIcon size={18} className="mr-2" />
                     ) : index === 2 ? (
-                      <ChevronsLeftRightIcon />
+                      <MehIcon size={18} className="mr-2" />
                     ) : (
-                      <ChevronsDownIcon />
+                      <FrownIcon size={18} className="mr-2" />
                     )}
                     <small className="text-sm">{option}</small>
                   </Button>
@@ -72,97 +67,38 @@ const QuestionTestTwo = () => {
             </li>
           ))}
       </ul>
-      <Pagination className="mt-10">
-        <PaginationContent className=" flex-wrap">
-          <PaginationItem>
-            <Button
-              variant="secondary"
-              disabled={pages === 1}
-              onClick={() => setPages((prev) => prev - 1)}
-            >
-              Geri
-            </Button>
-          </PaginationItem>
+      <Progress
+        className="my-5 max-w-96"
+        value={(Object.keys(answers).length * 100) / stepTwoQuestions.length}
+      />
 
-          {pages < 3 ? (
-            <>
-              {Array.from({ length: 3 }, (_, index) => (
-                <PaginationItem key={index}>
-                  <Button
-                    onClick={() => setPages(index + 1)}
-                    variant={pages === index + 1 ? "default" : "secondary"}
-                  >
-                    {index + 1}
-                  </Button>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            </>
-          ) : pages > 8 ? (
-            <>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              {Array.from({ length: 3 }, (_, index) => (
-                <PaginationItem key={index}>
-                  <Button
-                    onClick={() => setPages(index + 8)}
-                    variant={pages === index + 8 ? "default" : "secondary"}
-                  >
-                    {index + 8}
-                  </Button>
-                </PaginationItem>
-              ))}
-            </>
-          ) : (
-            <>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              {Array.from({ length: 3 }, (_, index) => (
-                <PaginationItem key={index}>
-                  <Button
-                    onClick={() => setPages(pages + index - 1)}
-                    variant={
-                      pages === pages + index - 1 ? "default" : "secondary"
-                    }
-                  >
-                    {pages + index - 1}
-                  </Button>
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            </>
-          )}
-
-          <PaginationItem>
-            <Button
-              variant="secondary"
-              disabled={pages === 10}
-              onClick={() => setPages((prev) => prev + 1)}
-            >
-              İleri
-            </Button>
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
-      <div className="flex justify-end w-full py-10">
+      <nav role="navigation" className="grid grid-cols-3 gap-4">
+        <Button
+          variant="outline"
+          className="flex-1 sm:flex-none"
+          disabled={pages === 1}
+          onClick={() => setPages((prev) => prev - 1)}
+        >
+          Geri
+        </Button>
+        <Button
+          variant="outline"
+          className="flex-1 sm:flex-none"
+          disabled={pages === 10}
+          onClick={() => setPages((prev) => prev + 1)}
+        >
+          İleri
+        </Button>
         <Button
           variant="default"
           onClick={() => {
-            console.log(answers);
+            console.log(answers); //TODO: Send answers to the server
           }}
           disabled={Object.keys(answers).length !== stepTwoQuestions.length}
         >
           Tamamla
         </Button>
-      </div>
+      </nav>
     </div>
   );
 };
