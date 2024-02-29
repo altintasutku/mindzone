@@ -4,7 +4,7 @@ const Welcome = () => {
   return (
     <section className="bg-white p-4 shadow-md rounded-md w-full">
         {/* TODO: yazilar degisebilir cok uzun ve okumak sıkıcı gelebilir */}
-        <h2 className="font-semibold text-xl">Hoş Geldin!</h2>
+        <h2 className="font-semibold text-xl">Hoş Geldiniz!</h2>
         <p>
           Sizler için ruh sağlığına yönelik hazırladığımız{" "}
           <span className="font-bold">online ve ücretsiz</span> egzersiz

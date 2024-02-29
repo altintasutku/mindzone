@@ -1,6 +1,6 @@
 import React from "react";
 
-const IntroductionTestTwo = () => {
+const IntroductionTestThree = () => {
   return (
     <ul>
       <li>
@@ -18,4 +18,4 @@ const IntroductionTestTwo = () => {
   );
 };
 
-export default IntroductionTestTwo;
+export default IntroductionTestThree;
