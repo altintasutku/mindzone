@@ -7,6 +7,10 @@ import {
   CheckIcon,
   ChevronsDownIcon,
   ChevronsLeftRightIcon,
+  FrownIcon,
+  LaughIcon,
+  MehIcon,
+  SmileIcon,
 } from "lucide-react";
 import React from "react";
 import {
@@ -57,13 +61,13 @@ const QuestionTestOne = () => {
                     }
                   >
                     {index === 0 ? (
-                      <CheckCheckIcon />
+                      <LaughIcon size={18} className="mr-2" />
                     ) : index === 1 ? (
-                      <CheckIcon />
+                      <SmileIcon  size={18} className="mr-2"/>
                     ) : index === 2 ? (
-                      <ChevronsLeftRightIcon />
+                      <MehIcon size={18} className="mr-2" />
                     ) : (
-                      <ChevronsDownIcon />
+                      <FrownIcon size={18} className="mr-2" />
                     )}
                     <small className="text-sm">{option}</small>
                   </Button>
