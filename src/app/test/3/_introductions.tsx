@@ -10,10 +10,6 @@ const IntroductionTestThree = () => {
       <li>
         Aşağıdaki kırmızı mesajı görürseniz hiçbir şey yapmayın (gitmeyin).
       </li>
-      <li>
-        İlk önce bir deneme oyunu yapacaksınız. Denemeye başlamak için “başla”
-        basın!
-      </li>
     </ul>
   );
 };

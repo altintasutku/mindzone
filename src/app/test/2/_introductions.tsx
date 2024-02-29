@@ -11,11 +11,6 @@ const IntroductionsTestTwo = () => {
         etrafında yeşil renk yandığını görürsünüz. Eğer tuşa basmamanız
         gerekirken basarsanız, harfin etrafında kırmızı renk görürsünüz.
       </li>
-      <li>
-        İlk önce deneme oyununa başlayacaksınız. Deneme oyununa başlamak için
-        sağ oka tıklayın.
-      </li>
-      <li>Deneme oyunu bitti. Asıl oyuna başlamak için “başla” tıklayın.</li>
     </ul>
   );
 };
