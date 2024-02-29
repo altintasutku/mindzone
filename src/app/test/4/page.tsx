@@ -84,7 +84,7 @@ const PerformanceTestPageFour = () => {
                 alt={`modImage`}
                 height={300}
                 width={300}
-                className="w-auto rounded-md"
+                className="rounded-md"
               />
             ) : (
               <div className="flex flex-col items-center animate-ping delay-200">
