@@ -2,7 +2,7 @@
 
 import FinishScreen from "@/components/game/FinishScreen";
 import React, { useEffect } from "react";
-import IntroductionTestTwo from "./_introductions";
+import IntroductionTestThree from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -73,7 +73,7 @@ const PerformanceTestPageThree = () => {
         <FinishScreen url="/test/4" />
       ) : round === 0 ? (
         <div>
-          <IntroductionTestTwo />
+          <IntroductionTestThree />
           <Separator className="my-5" />
 
           <div className="flex justify-center my-5">
