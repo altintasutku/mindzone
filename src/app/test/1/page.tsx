@@ -18,7 +18,7 @@ enum Rules {
   count = "count",
 }
 
-const myLoader = ({ src }: { src: string }) => {
+const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/test_one_images/${src}.jpg`;
 };
 
@@ -148,7 +148,7 @@ const PerformanceTestOnePage = () => {
           {isCorrect === null && currentShape ? (
             <Image
               className="border border-stone-200 rounded-md"
-              loader={myLoader}
+              loader={imageLoader}
               src={`${currentShape.number}${currentShape.color}${currentShape.shape}`}
               alt="random"
               width={100}
@@ -169,7 +169,7 @@ const PerformanceTestOnePage = () => {
             {answers.map((answer, index) => (
               <Image
                 key={index}
-                loader={myLoader}
+                loader={imageLoader}
                 className="border border-slate-400 rounded-md cursor-pointer hover:shadow-md hover:border-slate-700 transition duration-300 ease-in-out"
                 src={`${answer.number}${answer.color}${answer.shape}`}
                 alt={`${answer.number}${answer.color}${answer.shape}`}
