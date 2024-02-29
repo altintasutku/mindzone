@@ -14,6 +14,8 @@ const loader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/eyes/${src}.png`;
 };
 
+const DURATION = 1000;
+
 const Page = () => {
   const [round, setRound] = useState(0);
 
@@ -22,6 +24,8 @@ const Page = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const [isTutorial, setIsTutorial] = useState(true);
 
   const handleNext = () => {
     if (round >= TOTAL_ROUNDS) {
@@ -35,6 +39,12 @@ const Page = () => {
   const handleAnswer = (answer: number) => {
     if (currentQuestion?.correctAnswer === answer) {
       setIsCorrect(true);
+    } else if (isTutorial) {
+      setIsCorrect(false);
+      setTimeout(() => {
+        setIsCorrect(null);
+      }, DURATION);
+      return;
     } else {
       setIsCorrect(false);
     }
@@ -42,16 +52,25 @@ const Page = () => {
     setTimeout(() => {
       handleNext();
       setIsCorrect(null);
-    }, 1000);
+    }, DURATION);
   };
 
   return (
     <div>
-      {isFinished ? <FinishScreen url="question/2" /> : round === 0 ? (
+      {isFinished ? (
+        <FinishScreen url="/question/2" />
+      ) : round === 0 ? (
         <div className="flex flex-col items-center">
           <IntroductionTestFive />
           <Button className="my-5 w-24" onClick={handleNext}>
             Başla
+          </Button>
+        </div>
+      ) : isTutorial && round == 2 ? (
+        <div className="flex flex-col items-center">
+          <p>Tebrikler deneme bitti! Şimdi devam edelim</p>
+          <Button className="my-5 w-24" onClick={() => setIsTutorial(false)}>
+            Devam
           </Button>
         </div>
       ) : currentQuestion ? (
@@ -75,8 +94,7 @@ const Page = () => {
           <div></div>
           <div className="relative col-span-2">
             {isCorrect === null ? (
-              <>
-              </>
+              <></>
             ) : isCorrect ? (
               <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500">
                 Doğru

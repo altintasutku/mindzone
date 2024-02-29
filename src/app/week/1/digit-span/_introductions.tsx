@@ -14,7 +14,7 @@ const IntroductionDS = () => {
         Birbiri ardına bir dizi rakam göreceksiniz.
         <br />
         Rakamları hatırladıktan sonra sizlerden o rakamları{" "}
-        <strong>sırayla</strong>
+        <strong>sırayla</strong>{" "}
         yazmanızı isteyeceğiz.
       </p>
       <ul className="list-disc my-2">
