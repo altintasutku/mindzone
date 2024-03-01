@@ -26,8 +26,7 @@ const Welcome = () => {
           çalışmalardan oluşmaktadır ve dilediğiniz saat ve günde haftalık
           egzersizleri deneyimleyeme hakkına sahip olacaksınız.
           <br />
-          Bizlerle ilgili bilgilere ulaşmak ve iletişime geçmek için &quot;Biz
-          kimiz&quot; kısmına tıklayabilirsiniz.
+          Bizlerle ilgili bilgilere ulaşmak ve iletişime geçmek için &quot;Hakkımızda&quot; kısmına tıklayabilirsiniz.
         </p>
       </section>
   )

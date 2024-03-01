@@ -179,7 +179,7 @@ const PerformanceTestOnePage = () => {
               />
             ))}
           </div>
-          <Progress className="mt-7" value={(100 * round) / TOTAL_ROUNDS} />
+          <Progress className="mt-7" value={(100 * round) / TOTAL_ROUNDS} showValue/>
         </>
       )}
     </div>

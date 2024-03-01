@@ -253,7 +253,7 @@ const NumPad = ({
         </Button>
       </div>
 
-      <Progress value={(100 * (randomNumber.length - 1)) / 80} />
+      <Progress className="mt-10" value={(100 * (randomNumber.length - 1)) / 80} showValue/>
     </div>
   );
 };

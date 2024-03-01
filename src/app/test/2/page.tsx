@@ -4,11 +4,8 @@ import React, { useEffect, useState } from "react";
 import IntroductionsTestTwo from "./_introductions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { log } from "console";
 import { EyeIcon } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
-import { set } from "zod";
 import { cn } from "@/lib/utils";
 
 const TOTAL_ROUNDS = 450;
@@ -47,26 +44,6 @@ const PerformanceTestPageTwo = () => {
   const [correctsInTest, setCorrectsInTest] = useState<number>(0);
   const [correctState, setCorrectState] = useState<boolean | null>(false);
 
-  // const { toast } = useToast();
-
-  // const correctToats = () => {
-  //   toast({
-  //     title: "Doğru Cevap",
-  //     description: "Tebrikler! doğru yanıtladınız.",
-  //     variant: "success",
-  //     duration: 2000,
-  //   });
-  // };
-
-  // const wrongToats = () => {
-  //   toast({
-  //     title: "Yanlış Cevap",
-  //     description: "Üzgünüz! yanlış yanıtladınız.",
-  //     variant: "destructive",
-  //     duration: 2000,
-  //   });
-  // };
-
   useEffect(() => {
     if (selectedLetters[0] === selectedLetters[2]) {
       setCorrectsInTest((prev) => prev + 1);
@@ -81,10 +58,6 @@ const PerformanceTestPageTwo = () => {
       setCorrectState(null);
       const randomLetter = selectRandomLetter();
       setSelectedLetters((prev) => [prev[1], prev[2], randomLetter]);
-
-      // setTimeout(() => {
-      //   nextRound();
-      // }, 1);
     }
   };
 
@@ -151,10 +124,10 @@ const PerformanceTestPageTwo = () => {
           </div>
           <div className='w-40'>
             <Progress
-              max={round}
-              indicatorColor='bg-blue-500'
-              className='h-2 text-yellow-300'
-              value={round}
+              value={
+                (100 * (round + 1)) / TOTAL_ROUNDS
+              }
+              showValue
             />
           </div>
         </div>

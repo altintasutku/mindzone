@@ -7,6 +7,7 @@ import IntroductionTestFive from "./_introductions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import FinishScreen from "@/components/game/FinishScreen";
+import { Progress } from "@/components/ui/progress";
 
 const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
 
@@ -132,6 +133,8 @@ const Page = () => {
           >
             {currentQuestion.answers[3]}
           </Button>
+
+          <Progress className="col-span-4 mt-10" value={(100 * round) / TOTAL_ROUNDS} showValue />
         </div>
       ) : null}
     </div>

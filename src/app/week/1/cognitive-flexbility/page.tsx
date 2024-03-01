@@ -227,7 +227,7 @@ const CognitiveFlexibilityPage = () => {
             </Button>
           </div>
 
-          <Progress value={(100 * round) / TOTAL_ROUNDS} />
+          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue/>
         </>
       )}
     </div>
