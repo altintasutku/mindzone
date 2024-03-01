@@ -23,7 +23,7 @@ const DURATION = 1200;
 
 // 'string'ler duyguları, 'number'lar ise kaç tane fotoğrafı olduğunu belirtir.
 // örn: negatif duygular için elimizde 18 fotoğraf var.
-const mods: Record<string, number> = { negative: 2, notr: 4, positive: 8 };
+const mods: Record<string, number> = { negative: 18, notr: 4, positive: 8 };
 
 type CurrentModType = {
   mod: "negative" | "notr" | "positive";
