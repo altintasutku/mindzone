@@ -14,7 +14,7 @@ enum GO_NOGO {
   NONE = "NONE",
 }
 
-const REACTION_TIME = 2000;
+const REACTION_TIME = 1000;
 
 const TOTAL_ROUNDS = (15 * 60) / (REACTION_TIME / 1000 + 0.5);
 
@@ -99,7 +99,7 @@ const PerformanceTestPageThree = () => {
             GIT
           </Button>
           <Separator className="my-5" />
-          <Progress value={(100 * round) / TOTAL_ROUNDS} />
+          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue/>
         </div>
       )}
     </div>
