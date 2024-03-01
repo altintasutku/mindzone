@@ -21,7 +21,7 @@ const WeekContainer = ({ children, games }: Props) => {
         {children}
         <Separator className="my-4" />
         <h2 className="text-center my-4 font-semibold">
-          Hafta {games[0].week} egzersizleri
+          Hafta {games[0].week} Egzersizleri
         </h2>
         <div className="flex gap-3 flex-wrap justify-center">
           {games.map((game, index) =>
@@ -33,7 +33,7 @@ const WeekContainer = ({ children, games }: Props) => {
                 variant={"ghost"}
               >
                 <CheckIcon size={18} className="mr-2" />
-                {game.title}
+                {index + 1}. Egzersiz
               </Button>
             ) : (
               <Button
@@ -43,7 +43,7 @@ const WeekContainer = ({ children, games }: Props) => {
                 asChild
               >
                 <Link href={`/week/${game.week}/${game.slug}`}>
-                  {game.title}
+                  {index + 1}. Egzersiz
                 </Link>
               </Button>
             )

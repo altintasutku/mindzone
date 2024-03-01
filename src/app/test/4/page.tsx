@@ -25,13 +25,18 @@ const DURATION = 1200;
 // örn: negatif duygular için elimizde 18 fotoğraf var.
 const mods: Record<string, number> = { negative: 18, notr: 4, positive: 8 };
 
+type CurrentModType = {
+  mod: "negative" | "notr" | "positive";
+  index: number;
+};
+
 const PerformanceTestPageFour = () => {
   const [round, setRound] = useState(0);
 
-  const [currentMod, setCurrentMod] = useState<{
-    mod: string;
-    index: number;
-  } | null>(generateRandomMod());
+  const [currentMod, setCurrentMod] = useState<CurrentModType | null>({
+    mod: "negative",
+    index: 0,
+  });
 
   const [isFinished, setIsFinished] = useState(false);
 
@@ -46,7 +51,7 @@ const PerformanceTestPageFour = () => {
     setCurrentMod(null);
 
     setTimeout(() => {
-      const generatedMod = generateRandomMod();
+      const generatedMod = generateNextMod(currentMod);
       if (
         temp &&
         generatedMod.mod === temp.mod &&
@@ -127,6 +132,49 @@ const generateRandomMod = () => {
   const length = mods[randomKey];
   const randomIndex = Math.floor(Math.random() * length) + 1;
   return { mod: randomKey, index: randomIndex };
+};
+
+const generateNextMod = (currentMod: CurrentModType | null): CurrentModType => {
+  if (currentMod === null) {
+    return { mod: "negative", index: 1 };
+  }
+
+  if (currentMod.mod === "negative" && currentMod.index < mods["negative"]) {
+    return {
+      mod: "negative",
+      index: currentMod.index + 1,
+    };
+  }
+
+  if (currentMod.mod === "negative" && currentMod.index === mods["negative"]) {
+    return {
+      mod: "notr",
+      index: 1,
+    };
+  }
+
+  if (currentMod.mod === "notr" && currentMod.index < mods["notr"]) {
+    return {
+      mod: "notr",
+      index: currentMod.index + 1,
+    };
+  }
+
+  if (currentMod.mod === "notr" && currentMod.index === mods["notr"]) {
+    return {
+      mod: "positive",
+      index: 1,
+    };
+  }
+
+  if (currentMod.mod === "positive" && currentMod.index < mods["positive"]) {
+    return {
+      mod: "positive",
+      index: currentMod.index + 1,
+    };
+  }
+
+  return { mod: "negative", index: 1 };
 };
 
 export default PerformanceTestPageFour;
