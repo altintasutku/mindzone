@@ -13,7 +13,7 @@ const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
 const genderFolderName = ["Erkek", "Kadın"];
 const sexs = ["AM", "AF"];
 const personCountPerSex = 15;
-const MAXROUND = 4;
+const MAXROUND = 51;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);
@@ -24,8 +24,6 @@ const AffectiveEmpathyPage = () => {
   const [allRound1Images, setAllRound1Images] = useState<string[]>([]);
   const [isGameStarted, setIsGameStarted] = useState<boolean | null>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>();
-  const [correctAnsers, setCorrectAnswers] = useState(0);
-  const [wrongAnswers, setWrongAnswers] = useState(0);
 
   const handleNext = () => {
     setRound((prev) => prev + 1);
@@ -33,14 +31,12 @@ const AffectiveEmpathyPage = () => {
 
   const handleImageClick = (clickedImage: string) => {
     setSelectedImage(clickedImage);
-    if (clickedImage.slice(0, 8) === samePerson[0].slice(0, 8)) {
+    if (clickedImage.slice(0, 10) === samePerson[0].slice(0, 10)) {
       console.log("Doğru");
       setIsCorrect(true);
-      setCorrectAnswers((prev) => prev + 1);
     } else {
       console.log("Yanlış");
       setIsCorrect(false);
-      setWrongAnswers((prev) => prev + 1);
     }
     setTimeout(handleNext, 1000);
   };
@@ -78,7 +74,9 @@ const AffectiveEmpathyPage = () => {
       newImageString = `${genderFolderName[t]}/${sexs[y]}${formattedZ}/${sexs[y]}${formattedZ}${emotionNamelist[x]}`;
 
       // Yeni imageString listedeki diğer imageString'lerle eşleşmiyor mu kontrol et
-      isUnique = !imageString.some((item) => item === newImageString);
+      isUnique =
+        !imageString.some((item) => item === newImageString) &&
+        !samePerson.some((item) => item === newImageString);
     }
 
     setImageString((prev) => [...prev, newImageString]);
@@ -143,8 +141,9 @@ const AffectiveEmpathyPage = () => {
             <div className='grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center'>
               {allRound1Images.map((image, index) => (
                 <Image
-                  className={`rounded-md cursor-pointer ${selectedImage.includes(image) ? "filter brightness-150" : ""
-                    }`}
+                  className={`rounded-md cursor-pointer ${
+                    selectedImage === image && "border-2 border-blue-500"
+                  }`}
                   key={index}
                   width={180}
                   height={243}
