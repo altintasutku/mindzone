@@ -103,13 +103,14 @@ const WeekOneDirectorTaskPage = () => {
             <Button onClick={handleNextRound}>Başla</Button>
           </>
           : levels.map((level, i) => (
-            <div className='space-y-10 my-10'>
+            <div key={i + "i"} className='space-y-10 my-10'>
               <div className='flex gap-5 items-center'>
                 <div className='flex flex-col items-center'>
                   {level.gameMap.map((row, j) => (
-                    <div className='flex'>
+                    <div key={j + "j"} className='flex'>
                       {row.map((gameNode, k) => (
                         <div
+                          key={k + "k"}
                           className={cn('flex flex-col items-center justify-center relative group cursor-pointer', {
                             "z-30": j === 0,
                             "z-20": j === 1,
