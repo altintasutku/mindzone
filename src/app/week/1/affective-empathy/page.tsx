@@ -74,9 +74,9 @@ const AffectiveEmpathyPage = () => {
       newImageString = `${genderFolderName[t]}/${sexs[y]}${formattedZ}/${sexs[y]}${formattedZ}${emotionNamelist[x]}`;
 
       // Yeni imageString listedeki diğer imageString'lerle eşleşmiyor mu kontrol et
-      isUnique =
-        !imageString.some((item) => item === newImageString) &&
-        !samePerson.some((item) => item === newImageString);
+      isUnique = !allRound1Images.some(
+        (item) => item.slice(0, 10) === newImageString.slice(0, 10)
+      );
     }
 
     setImageString((prev) => [...prev, newImageString]);
