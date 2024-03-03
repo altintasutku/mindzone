@@ -3,11 +3,10 @@ import React, { useEffect, useState } from "react";
 import IntroductionCF from "./_intorductions";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { set } from "zod";
 import FinishScreen from "@/components/game/FinishScreen";
 
 const imageLoader = ({ src }: { src: string }) => {
-  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.jpg`;
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
 };
 
 const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
@@ -144,9 +143,8 @@ const AffectiveEmpathyPage = () => {
             <div className='grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center'>
               {allRound1Images.map((image, index) => (
                 <Image
-                  className={`rounded-md cursor-pointer ${
-                    selectedImage.includes(image) ? "filter brightness-150" : ""
-                  }`}
+                  className={`rounded-md cursor-pointer ${selectedImage.includes(image) ? "filter brightness-150" : ""
+                    }`}
                   key={index}
                   width={180}
                   height={243}

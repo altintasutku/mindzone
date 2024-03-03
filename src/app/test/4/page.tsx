@@ -9,6 +9,11 @@ import FinishScreen from "@/components/game/FinishScreen";
 import { Progress } from "@/components/ui/progress";
 import { CheckCheckIcon } from "lucide-react";
 
+type CurrentModType = {
+  mod: "negative" | "notr" | "positive";
+  index: number;
+};
+
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/test_four_images/${src}.JPG`;
 };
@@ -25,10 +30,21 @@ const DURATION = 1200;
 // örn: negatif duygular için elimizde 18 fotoğraf var.
 const mods: Record<string, number> = { negative: 18, notr: 4, positive: 8 };
 
-type CurrentModType = {
-  mod: "negative" | "notr" | "positive";
-  index: number;
-};
+// tüm modları birleştirip karıştırıyoruz.
+const allMods: CurrentModType[] = [
+  ...Array.from({ length: mods["negative"] }).map((_, index): CurrentModType => ({
+    mod: "negative",
+    index: index + 1,
+  })),
+  ...Array.from({ length: mods["notr"] }).map((_, index): CurrentModType => ({
+    mod: "notr",
+    index: index + 1,
+  })),
+  ...Array.from({ length: mods["positive"] }).map((_, index): CurrentModType => ({
+    mod: "positive",
+    index: index + 1,
+  })),
+].sort(() => Math.random() - 0.5);
 
 const PerformanceTestPageFour = () => {
   const [round, setRound] = useState(0);
@@ -46,22 +62,13 @@ const PerformanceTestPageFour = () => {
       return;
     }
 
-    const temp = currentMod;
-
     setCurrentMod(null);
 
     setTimeout(() => {
-      const generatedMod = generateNextMod(currentMod);
-      if (
-        temp &&
-        generatedMod.mod === temp.mod &&
-        generatedMod.index === temp.index
-      ) {
-        handleNext();
-      } else {
-        setRound((prev) => prev + 1);
-        setCurrentMod(generatedMod);
-      }
+      console.log(round);
+
+      setCurrentMod(allMods[round]);
+      setRound((prev) => prev + 1);
     }, DURATION);
   };
 
@@ -119,62 +126,11 @@ const PerformanceTestPageFour = () => {
               </div>
             ))}
           </div>
-          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue/>
+          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue />
         </>
       )}
     </div>
   );
-};
-
-const generateRandomMod = () => {
-  const keys = Object.keys(mods);
-  const randomKey = keys[Math.floor(Math.random() * keys.length)];
-  const length = mods[randomKey];
-  const randomIndex = Math.floor(Math.random() * length) + 1;
-  return { mod: randomKey, index: randomIndex };
-};
-
-const generateNextMod = (currentMod: CurrentModType | null): CurrentModType => {
-  if (currentMod === null) {
-    return { mod: "negative", index: 1 };
-  }
-
-  if (currentMod.mod === "negative" && currentMod.index < mods["negative"]) {
-    return {
-      mod: "negative",
-      index: currentMod.index + 1,
-    };
-  }
-
-  if (currentMod.mod === "negative" && currentMod.index === mods["negative"]) {
-    return {
-      mod: "notr",
-      index: 1,
-    };
-  }
-
-  if (currentMod.mod === "notr" && currentMod.index < mods["notr"]) {
-    return {
-      mod: "notr",
-      index: currentMod.index + 1,
-    };
-  }
-
-  if (currentMod.mod === "notr" && currentMod.index === mods["notr"]) {
-    return {
-      mod: "positive",
-      index: 1,
-    };
-  }
-
-  if (currentMod.mod === "positive" && currentMod.index < mods["positive"]) {
-    return {
-      mod: "positive",
-      index: currentMod.index + 1,
-    };
-  }
-
-  return { mod: "negative", index: 1 };
 };
 
 export default PerformanceTestPageFour;
