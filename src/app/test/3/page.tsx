@@ -36,7 +36,7 @@ const PerformanceTestPageThree = () => {
     setRound((prev) => prev + 1);
 
     if (current === GO_NOGO.NONE)
-      setCurrent(Math.random() > 0.5 ? GO_NOGO.GO : GO_NOGO.NOGO);
+      setCurrent(Math.random() > 0.3 ? GO_NOGO.GO : GO_NOGO.NOGO);
     else setCurrent(GO_NOGO.NONE);
   };
 
@@ -51,7 +51,7 @@ const PerformanceTestPageThree = () => {
     );
 
     return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   const handleClick = () => {
@@ -99,7 +99,7 @@ const PerformanceTestPageThree = () => {
             GIT
           </Button>
           <Separator className="my-5" />
-          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue/>
+          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue />
         </div>
       )}
     </div>

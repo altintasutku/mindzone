@@ -15,7 +15,7 @@ const loader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/eyes/${src}.png`;
 };
 
-const DURATION = 1000;
+const DURATION = 600;
 
 const Page = () => {
   const [round, setRound] = useState(0);
@@ -94,7 +94,7 @@ const Page = () => {
 
           <div></div>
           <div className="relative col-span-2">
-            {isCorrect === null ? (
+            {isCorrect === null || (isCorrect !== null && round > 1) ? (
               <></>
             ) : isCorrect ? (
               <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500">
