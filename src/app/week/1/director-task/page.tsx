@@ -104,8 +104,8 @@ const WeekOneDirectorTaskPage = () => {
           </>
           : levels.map((level, i) => (
             <div key={i + "i"} className='space-y-10 my-10'>
-              <div className='flex gap-5 items-center'>
-                <div className='flex flex-col items-center'>
+              <div className='flex gap-5 items-start'>
+                <div className='flex flex-col items-center my-20'>
                   {level.gameMap.map((row, j) => (
                     <div key={j + "j"} className='flex'>
                       {row.map((gameNode, k) => (
