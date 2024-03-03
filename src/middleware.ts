@@ -9,6 +9,8 @@ export async function middleware(req: NextRequest) {
 
   const token = await getToken({ req });
 
+  // this is comming from lazygit
+
   if (!token) {
     return NextResponse.redirect(new URL("/register", req.nextUrl));
   }
