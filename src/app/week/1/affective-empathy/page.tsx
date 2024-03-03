@@ -13,7 +13,7 @@ const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
 const genderFolderName = ["Erkek", "Kadın"];
 const sexs = ["AM", "AF"];
 const personCountPerSex = 15;
-const MAXROUND = 51;
+const MAXROUND = 52;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);
