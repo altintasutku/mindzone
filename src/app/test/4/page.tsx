@@ -32,18 +32,24 @@ const mods: Record<string, number> = { negative: 18, notr: 4, positive: 8 };
 
 // tüm modları birleştirip karıştırıyoruz.
 const allMods: CurrentModType[] = [
-  ...Array.from({ length: mods["negative"] }).map((_, index): CurrentModType => ({
-    mod: "negative",
-    index: index + 1,
-  })),
-  ...Array.from({ length: mods["notr"] }).map((_, index): CurrentModType => ({
-    mod: "notr",
-    index: index + 1,
-  })),
-  ...Array.from({ length: mods["positive"] }).map((_, index): CurrentModType => ({
-    mod: "positive",
-    index: index + 1,
-  })),
+  ...Array.from({ length: mods["negative"] }).map(
+    (_, index): CurrentModType => ({
+      mod: "negative",
+      index: index + 1,
+    })
+  ),
+  ...Array.from({ length: mods["notr"] }).map(
+    (_, index): CurrentModType => ({
+      mod: "notr",
+      index: index + 1,
+    })
+  ),
+  ...Array.from({ length: mods["positive"] }).map(
+    (_, index): CurrentModType => ({
+      mod: "positive",
+      index: index + 1,
+    })
+  ),
 ].sort(() => Math.random() - 0.5);
 
 const PerformanceTestPageFour = () => {
@@ -65,8 +71,6 @@ const PerformanceTestPageFour = () => {
     setCurrentMod(null);
 
     setTimeout(() => {
-      console.log(round);
-
       setCurrentMod(allMods[round]);
       setRound((prev) => prev + 1);
     }, DURATION);
