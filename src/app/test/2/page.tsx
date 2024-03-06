@@ -5,12 +5,8 @@ import IntroductionsTestTwo from "./_introductions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { EyeIcon } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-
-const TOTAL_ROUNDS = 450;
-
-const time = 2000;
+import { Progress } from "@/components/ui/progress";
 
 const LETTERS = [
   "A",
@@ -31,105 +27,122 @@ const LETTERS = [
   "R",
   "S",
   "T",
+  "U",
+  "V",
+  "Y",
+  "Z",
 ];
+
+const TOTAL_ROUNDS = 200;
+
+const DURATION = 1300;
 
 const PerformanceTestPageTwo = () => {
   const [round, setRound] = React.useState<number>(0);
   const [isFinished, setIsFinished] = useState(false);
-  const [selectedLetters, setSelectedLetters] = useState<
-    [string, string, string]
-  >(["", "", ""]);
-  const [correctAnswers, setCorrectAnswers] = useState<number>(0);
-  const [wrongAnswers, setWrongAnswers] = useState<number>(0);
-  const [correctsInTest, setCorrectsInTest] = useState<number>(0);
-  const [correctState, setCorrectState] = useState<boolean | null>(false);
+
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const [current, setCurrent] = useState<string | null>(null);
+
+  const [history, setHistory] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedLetters[0] === selectedLetters[2]) {
-      setCorrectsInTest((prev) => prev + 1);
+    if (round === 0 || isFinished) {
+      return;
     }
-  }, [selectedLetters]);
+
+    const timeout = setTimeout(
+      () => {
+        nextRound();
+      },
+      current ? DURATION : 500
+    );
+
+    return () => {
+      clearTimeout(timeout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round]);
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
       setIsFinished(true);
-    } else {
-      setRound((prev) => prev + 1);
-      setCorrectState(null);
-      const randomLetter = selectRandomLetter();
-      setSelectedLetters((prev) => [prev[1], prev[2], randomLetter]);
-    }
-  };
-
-  useEffect(() => {
-    if (round === 0) {
       return;
     }
-    const timer = setTimeout(() => {
-      nextRound();
-    }, time);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [round]);
 
-  const selectRandomLetter = () => {
-    const randomIndex = Math.floor(Math.random() * LETTERS.length);
-    const randomLetter = LETTERS[randomIndex];
+    setRound((prev) => prev + 1);
 
-    return randomLetter;
+    if (current) {
+      setCurrent(null);
+      return;
+    }
+
+    const percentage = (round * 100) / TOTAL_ROUNDS;
+
+    // 10% of the time, select from the first third of the letters
+    const letter =
+      LETTERS[
+        Math.floor(
+          Math.random() *
+            (percentage < 33
+              ? LETTERS.length / 3
+              : percentage < 66
+              ? (LETTERS.length / 3) * 2
+              : LETTERS.length)
+        )
+      ];
+    setCurrent(letter);
+
+    if (history.length < 4) setHistory((prev) => [...prev, letter]);
+    else {
+      setHistory((prev) => [...prev.slice(1, 5), letter]);
+    }
   };
 
-  const checkAnswer = () => {
-    if (selectedLetters[0] === selectedLetters[2]) {
-      // correctToats();
-      setCorrectState(true);
-      setCorrectAnswers((prev) => prev + 1);
+  const handleAnswer = () => {
+    if (!current || history.length < 3) return;
+
+    if (history[history.length - 3] === current) {
+      setIsCorrect(true);
     } else {
-      // wrongToats();
-      setCorrectState(false);
-      setWrongAnswers((prev) => prev + 1);
+      setIsCorrect(false);
     }
+
+    setTimeout(() => {
+      setIsCorrect(null);
+    }, 1000);
   };
 
   return (
-    <div className='flex flex-col items-center py-10'>
+    <div className="flex flex-col items-center py-10">
       {isFinished ? (
-        <FinishScreen url='/test/3' />
+        <FinishScreen url="/test/3" />
       ) : round === 0 ? (
-        <div className='flex flex-col'>
+        <div className="flex flex-col">
           <IntroductionsTestTwo />
-          <Separator className='my-5' />
+          <Separator className="my-5" />
 
-          <div className='flex justify-center my-5'>
+          <div className="flex justify-center my-5">
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className='flex flex-col gap-7 justify-center items-center'>
-          <div>
-            <p className=' text-4xl'>{selectedLetters[1]}</p>
-          </div>
-          <div className=' w-full'>
-            <Button
-              className={cn("w-full ", {
-                "bg-green-500 hover:bg-green-500": correctState === true,
-                "bg-red-500 hover:bg-red-500": correctState === false,
-                "": correctState === null,
-              })}
-              variant={"outline"}
-              onClick={checkAnswer}
-            >
-              <EyeIcon />
-            </Button>
-          </div>
-          <div className='w-40'>
-            <Progress
-              value={
-                (100 * (round + 1)) / TOTAL_ROUNDS
-              }
-              showValue
-            />
-          </div>
+        <div className="flex flex-col gap-7 justify-center items-center w-full">
+          <span className="text-3xl font-bold min-h-10">{current}</span>
+
+          <Button
+            onClick={handleAnswer}
+            variant="outline"
+            className={cn("flex justify-center px-16 py-4", {
+              "bg-green-500 text-white hover:bg-green-500": isCorrect === true,
+              "bg-red-500 text-white hover:bg-red-500": isCorrect === false,
+            })}
+          >
+            <EyeIcon size={36} />
+          </Button>
+
+          <Progress value={(round * 100) / TOTAL_ROUNDS} className="mt-10" />
         </div>
       )}
     </div>
