@@ -15,12 +15,16 @@ type Color = {
 };
 
 const colors: Color[] = [
-  { name: "YEŞIL", textColor: "text-yellow-400" },
-  { name: "MAVİ", textColor: "text-green-400" },
-  { name: "KIRMIZI", textColor: "text-blue-400" },
-  { name: "SARI", textColor: "text-red-400" },
-  { name: "MOR", textColor: "text-pink-400" },
-  { name: "PEMBE", textColor: "text-orange-400" },
+  { name: "Kırmızı", textColor: "text-red-400" },
+  { name: "Mavi", textColor: "text-blue-400" },
+  { name: "Yeşil", textColor: "text-green-400" },
+  { name: "Sarı", textColor: "text-yellow-400" },
+  { name: "Mor", textColor: "text-purple-400" },
+  { name: "Turuncu", textColor: "text-orange-400" },
+  { name: "Pembe", textColor: "text-pink-400" },
+  { name: "Kahverengi", textColor: "text-brown-400" },
+  { name: "Gri", textColor: "text-gray-400" },
+  { name: "Siyah", textColor: "text-black" },
 ];
 
 enum CorrectState {
@@ -33,15 +37,6 @@ const CORRECT_DURATION = 1000;
 
 const TOTAL_ROUNDS = 200;
 
-const answers = [
-  { color: "green", text: "Yeşil" },
-  { color: "blue", text: "Mavi" },
-  { color: "red", text: "Kırmızı" },
-  { color: "yellow", text: "Sarı" },
-  { color: "pink", text: "Pembe" },
-  { color: "orange", text: "Turuncu" },
-];
-
 const InhibitionPage = () => {
   const [round, setRound] = useState<number>(0);
 
@@ -50,6 +45,8 @@ const InhibitionPage = () => {
   const [correctState, setCorrectState] = useState<CorrectState>(
     CorrectState.None
   );
+
+  const [answers, setAnswers] = useState<Color[]>([]);
 
   const { toast } = useToast();
 
@@ -62,28 +59,73 @@ const InhibitionPage = () => {
       });
       setCurrentColor(null);
       return;
-    } else {
-      setRound((prev) => prev + 1);
-      setCurrentColor(colors[Math.floor(Math.random() * colors.length)]);
     }
+
+    setRound((prev) => prev + 1);
+
+    const generatedColor = colors[Math.floor(Math.random() * colors.length)];
+    let generatedColorSecond =
+      colors[Math.floor(Math.random() * colors.length)];
+
+    while (generatedColor.textColor === generatedColorSecond.textColor) {
+      generatedColorSecond = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    setCurrentColor({
+      name: generatedColor.name,
+      textColor: generatedColorSecond.textColor,
+    });
+
+    const answerArr = [generatedColor, generatedColorSecond];
+
+    let generatedColorThird = colors[Math.floor(Math.random() * colors.length)];
+
+    while (
+      generatedColorThird.textColor === generatedColor.textColor ||
+      generatedColorThird.textColor === generatedColorSecond.textColor
+    ) {
+      generatedColorThird = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    let generatedColorFourth =
+      colors[Math.floor(Math.random() * colors.length)];
+
+    while (
+      generatedColorFourth.textColor === generatedColor.textColor ||
+      generatedColorFourth.textColor === generatedColorSecond.textColor ||
+      generatedColorFourth.textColor === generatedColorThird.textColor
+    ) {
+      generatedColorFourth = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    answerArr.push(generatedColorThird, generatedColorFourth);
+
+    // Shuffle answers
+    for (let i = answerArr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [answerArr[i], answerArr[j]] = [answerArr[j], answerArr[i]];
+    }
+
+    setAnswers(answerArr);
   };
 
   const handleAnswer = (color: string) => {
-    if (currentColor) {
-      if (currentColor.textColor.includes(color)) {
-        setCorrectState(CorrectState.Correct);
-        setTimeout(() => {
-          setCorrectState(CorrectState.None);
-          handleNext();
-        }, CORRECT_DURATION);
-      } else {
-        setCorrectState(CorrectState.Incorrect);
-        setTimeout(() => {
-          setCorrectState(CorrectState.None);
-          handleNext();
-        }, CORRECT_DURATION);
-      }
+    if (!currentColor) {
+      return;
     }
+
+    if (currentColor.textColor === color) {
+      // Correct answer
+      setCorrectState(CorrectState.Correct);
+    } else {
+      // Incorrect answer
+      setCorrectState(CorrectState.Incorrect);
+    }
+
+    setTimeout(() => {
+      setCorrectState(CorrectState.None);
+      handleNext();
+    }, CORRECT_DURATION);
   };
 
   return (
@@ -117,19 +159,23 @@ const InhibitionPage = () => {
             </span>
           )}
           <div className="flex flex-col sm:flex-row w-full justify-center gap-1 sm:gap-4">
-            {answers.map((answer) => (
+            {answers.map((answer, index) => (
               <Button
-                key={answer.color}
+                key={index}
                 className="shadow"
                 variant={"secondary"}
-                onClick={() => handleAnswer(answer.color)}
+                onClick={() => handleAnswer(answer.textColor)}
               >
-                {answer.text}
+                {answer.name}
               </Button>
             ))}
           </div>
 
-          <Progress value={(100 * round) / TOTAL_ROUNDS} className="mt-20" showValue />
+          <Progress
+            value={(100 * round) / TOTAL_ROUNDS}
+            className="mt-20"
+            showValue
+          />
         </div>
       ) : (
         <div className="flex flex-col items-center">
