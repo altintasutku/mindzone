@@ -69,12 +69,12 @@ const WeekTwoGameFourPage = () => {
       ) : (
         <div>
           <div>
-            <p className='mx-10 font-bold'>
+            <p className='lg:mx-10 sm:mx-0 font-bold'>
               {weekTwoGame4Data[round - 1].question}
             </p>
-            <div className=' flex flex-row my-10 justify-center'>
+            <div className=' flex flex-col md:flex-row my-10 justify-center'>
               {weekTwoGame4Data[round - 1].options.map((option, index) => (
-                <div className='xlg:mx-10 lg:mx-4' key={index}>
+                <div className='xlg:mx-10 lg:mx-4 sm:mx-0' key={index}>
                   <Button
                     onClick={() => {
                       handleCheck(option);
