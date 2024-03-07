@@ -36,7 +36,7 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const TOTAL_ROUNDS = mods.negative + mods.positive;
 
-const REACTION_TIME = 1000;
+const REACTION_TIME = 1400;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
@@ -76,6 +76,8 @@ const WeekTwoGameThreePage = () => {
     } else {
       console.log("Hatalı!");
     }
+
+    nextRound();
   };
 
   return (
@@ -100,9 +102,9 @@ const WeekTwoGameThreePage = () => {
               <Image
                 loader={imageLoader}
                 src={`${currentData.type}/${currentData.index}`}
-                width={100}
+                width={300}
                 height={100}
-                className="object-contain h-72 w-72"
+                className="object-contain h-72 w-auto rounded-md"
                 alt="inhibition"
               />
             ) : null}

@@ -33,7 +33,7 @@ enum CorrectState {
   None = "None",
 }
 
-const CORRECT_DURATION = 1400;
+const CORRECT_DURATION = 1000;
 
 const TOTAL_ROUNDS = 200;
 
