@@ -7,6 +7,6 @@ export const questionProgressList: QuestionProgress[] = [
   {
     done: false,
     locked: false,
-    progress: 0,
+    progress: 100,
   },
 ];

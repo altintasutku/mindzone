@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { MenuIcon } from "lucide-react";
-import LanguageSelector from "./LanguageSelector";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "./ui/separator";
 
@@ -35,7 +34,7 @@ const Navbar = () => {
         <Link href={"/login"}>
           <Button variant={"ghost"}>Giriş Yap</Button>
         </Link>
-        <LanguageSelector />
+        {/* TODO: <LanguageSelector />  */}
       </div>
 
       <div className="flex lg:hidden items-center">
@@ -74,7 +73,7 @@ const Navbar = () => {
                 İletişim
               </Button>
             </Link>
-            <LanguageSelector />
+            {/* TODO: <LanguageSelector /> */}
           </SheetContent>
         </Sheet>
       </div>
