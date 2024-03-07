@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
 
 const WeekTwoGameThreeIntroduction = () => {
   return (
-    <div>WeekTwoWeekThreeIntroduction</div>
-  )
-}
+    <div>
+      Ekran&apos;da farklı duygularda fotoğraflar göreceksiniz{" "}
+      <strong>mutlu</strong> yüzleri görünce GİT tuşuna basmanız gerekmektedir.
+      Hadi başlayalım!
+    </div>
+  );
+};
 
-export default WeekTwoGameThreeIntroduction
+export default WeekTwoGameThreeIntroduction;
