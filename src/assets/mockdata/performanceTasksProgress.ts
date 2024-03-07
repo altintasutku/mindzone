@@ -1,22 +1,22 @@
 export const performanceTasksProgress: PerformanceTaskProgress[] = [
   {
-    done: false,
+    done: true,
     locked: false,
   },
   {
-    done: false,
+    done: true,
     locked: false,
   },
   {
-    done: false,
+    done: true,
     locked: false,
   },
   {
-    done: false,
+    done: true,
     locked: false,
   },
   {
-    done: false,
+    done: true,
     locked: false,
   },
 ];

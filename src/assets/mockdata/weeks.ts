@@ -2,12 +2,12 @@ export const weeks: WeekProgress[] = [
   {
     done: false,
     locked: false,
-    progress: 80,
+    progress: 100,
   },
   {
     done: false,
     locked: false,
-    progress: 0,
+    progress: 40,
   },
   {
     done: false,
