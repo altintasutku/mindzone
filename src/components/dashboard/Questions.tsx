@@ -5,7 +5,7 @@ import { questionProgressList } from "@/assets/mockdata/questionProgress";
 
 const Questions = () => {
   return (
-    <section className="bg-white shadow p-4 text-center space-y-3">
+    <section className="bg-white shadow p-4 text-center space-y-3 rounded-md bg-opacity-30">
       <h1 className="font-semibold text-xl">Anketler</h1>
       <ul className="flex flex-col sm:flex-row gap-3">
         {questionProgressList.map((question, index) => (

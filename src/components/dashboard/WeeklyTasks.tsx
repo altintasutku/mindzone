@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Progress } from "../ui/progress";
 import { Button } from "../ui/button";
@@ -6,44 +8,49 @@ import Link from "next/link";
 import { weeks } from "@/assets/mockdata/weeks";
 import Image from "next/image";
 import WeeklyTasksImage from "./WeeklyTasksImage";
+import { CardBody, CardContainer, CardItem } from "../ui/3d-card";
+import { useRouter } from "next/navigation";
 
 const WeeklyTasks = () => {
+  const router = useRouter();
+
   return (
-    <section className="bg-white shadow p-4 text-center space-y-3">
+    <section className="bg-white shadow text-center pt-5 rounded-md bg-opacity-30">
       <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3">
         {weeks.map((week, index) => (
-          <li
-            className="col-span-1 bg-white shadow p-4 rounded-md space-y-5"
-            key={`week${index}`}
+          <div
+            key={index}
+            onClick={() => {
+              if (!week.locked) {
+                router.push(
+                  (window.location.href = "/week/" + (index + 1))
+                );
+              }
+            }}
           >
-            <div className="flex justify-center">
-              <WeeklyTasksImage />
-            </div>
-            <div>Hafta {index + 1}</div>
-            <div className="flex items-center gap-4">
-              <div>{week.done ? "✅" : week.locked ? "🔒" : "🔵"}</div>
-              <div className="flex flex-col flex-1">
-                <Progress value={week.progress} />
-              </div>
-              {week.locked ? (
-                <Button variant={"default"} disabled>
-                  <LockIcon size={16} />
-                </Button>
-              ) : week.done ? (
-                <Button variant={"secondary"} disabled>
-                  <CheckIcon size={16} />
-                </Button>
-              ) : (
-                <Link href={`/week/${index + 1}`}>
-                  <Button variant={"default"}>Devam Et</Button>
-                </Link>
-              )}
-            </div>
-          </li>
+            <CardContainer>
+              <CardBody className="border w-8/12 md:w-10/12 overflow-hidden border-neutral-400 rounded-xl flex flex-col items-center h-auto gap-3 py-3 shadow hover:shadow-lg transition-all">
+                <CardItem className="flex w-full items-center justify-center">
+                  <Progress value={week.progress} className="w-full mx-5" />
+                </CardItem>
+                <CardItem className="flex items-center justify-center">
+                  <WeeklyTasksImage />
+                </CardItem>
+                {week.locked && (
+                  <div className="absolute w-full h-full bg-black inset-0 opacity-60 flex justify-center items-center">
+                    <LockIcon size={64} className="text-yellow-500" />
+                  </div>
+                )}
+              </CardBody>
+            </CardContainer>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
+    // <section className="bg-white shadow p-4 text-center space-y-3">
+    //   <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
+    // </section>
   );
 };
 

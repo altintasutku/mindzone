@@ -6,6 +6,7 @@ import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,15 +28,18 @@ export default function RootLayout({ children }: Props) {
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased  bg-[url('../images/bg-effect.png')] bg-contain",
+          "min-h-screen font-sans antialiased",
           fontSans.variable
         )}
       >
         <Providers>
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster />
+          <div className="absolute h-full w-full inset-0 z-20">
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster />
+          </div>
+          <BackgroundBeams />
         </Providers>
       </body>
     </html>
