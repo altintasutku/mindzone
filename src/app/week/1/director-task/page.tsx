@@ -32,7 +32,8 @@ const WeekOneDirectorTaskPage = () => {
   const [currentLevel, setCurrentLevel] = useState(levels[level]);
 
   useEffect(() => {
-    setCurrentLevel(levels[level]);
+    if (level === 0) return;
+    setCurrentLevel(levels[level - 1]);
   }, [level]);
 
   const handleNextRound = () => {
@@ -45,7 +46,7 @@ const WeekOneDirectorTaskPage = () => {
   };
 
   const handleCellClick = (row: number, col: number) => {
-    if (col === levels[level].answer[0] && row === levels[level].answer[1]) {
+    if (col === levels[level - 1].answer[0] && row === levels[level - 1].answer[1]) {
       console.log("Doğru");
     } else {
       console.log("Yanlış");
