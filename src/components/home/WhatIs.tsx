@@ -1,9 +1,17 @@
+"use client";
+
 import { dilrubaEmail } from "@/config/contactInfos";
 import React from "react";
+import { motion } from "framer-motion";
 
 const WhatIs = () => {
   return (
-    <section className="bg-white p-4 shadow-md rounded-md w-full text-xs">
+    <motion.section
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, delay:0.3 }}
+      className="bg-white p-4 shadow-md rounded-md w-full text-xs"
+    >
       <p>
         Bu çalışma Uzm. Klinik Psikolog Dilruba Sönmez’in doktora programı
         kapsamında tasarladığı bir web sitedir. Prof. Dr. Timothy Jordan
@@ -15,7 +23,7 @@ const WhatIs = () => {
         </a>{" "}
         adresinden ulaşabilirsiniz.
       </p>
-    </section>
+    </motion.section>
   );
 };
 
