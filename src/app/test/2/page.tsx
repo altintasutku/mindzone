@@ -53,7 +53,6 @@ const PerformanceTestPageTwo = () => {
   const [current, setCurrent] = useState<string | null>(null);
 
   const [history, setHistory] = useState<string[]>([]);
-  console.log("🚀 ~ PerformanceTestPageTwo ~ history:", history);
 
   useEffect(() => {
     if (round === 0 || isFinished) {
