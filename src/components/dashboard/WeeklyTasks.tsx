@@ -29,9 +29,15 @@ const WeeklyTasks = () => {
             }}
           >
             <CardContainer>
-              <CardBody className="border w-8/12 md:w-10/12 overflow-hidden border-neutral-400 rounded-xl flex flex-col items-center h-auto gap-3 py-3 shadow hover:shadow-lg transition-all">
+              <CardBody className="border w-11/12 overflow-hidden border-neutral-400 rounded-xl flex flex-col items-center h-auto gap-3 py-3 shadow hover:shadow-lg transition-all">
                 <CardItem className="flex w-full items-center justify-center">
                   <Progress value={week.progress} className="w-full mx-5" />
+                </CardItem>
+                <CardItem className="flex items-center justify-center">
+                  <WeeklyTasksImage />
+                </CardItem>
+                <CardItem className="flex w-full items-center justify-center">
+                  <span className="font-bold">Hafta {index + 1}</span>
                 </CardItem>
                 <CardItem className="flex w-full px-5">
                   <>
@@ -44,9 +50,7 @@ const WeeklyTasks = () => {
                     )}
                   </>
                 </CardItem>
-                <CardItem className="flex items-center justify-center">
-                  <WeeklyTasksImage />
-                </CardItem>
+
                 {week.locked && (
                   <div className="absolute w-full h-full bg-black inset-0 opacity-60 flex justify-center items-center">
                     <LockIcon size={64} className="text-yellow-500" />

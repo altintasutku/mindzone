@@ -11,7 +11,7 @@ const ContactAndAboutButtons = () => {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 0.7 }}
-      className="grid grid-cols-2 justify-center text-center bg-white p-4 shadow-md rounded-md w-full"
+      className="grid grid-cols-2 justify-center text-center bg-white p-4 shadow-md rounded-md w-full bg-opacity-30"
     >
       <small className="text-sm text-center opacity-65">
         Daha fazla bilgi almak için bize ulaşın

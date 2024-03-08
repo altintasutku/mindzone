@@ -18,21 +18,6 @@ const ContactPage = () => {
         </a>{" "}
         adresinden ulaşabilirsiniz.
       </span>
-      <h2 className="font-semibold">Geliştiricler:</h2>
-      <span>
-        Herhangi teknik bir hata veya öneri için{" "}
-        <a className="text-blue-600 underline" href={`mailto:${utkuEmail}`}>
-          {utkuEmail}
-        </a>{" "}
-        veya{" "}
-        <a
-          className="text-blue-600 underline"
-          href={`mailto:${ahmetYusufEmail}`}
-        >
-          {ahmetYusufEmail}
-        </a>{" "}
-        adresi ile iletişime geçiniz.
-      </span>
     </div>
   );
 };
