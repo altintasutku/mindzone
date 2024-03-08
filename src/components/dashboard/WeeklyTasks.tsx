@@ -21,11 +21,10 @@ const WeeklyTasks = () => {
         {weeks.map((week, index) => (
           <div
             key={index}
+            className="cursor-pointer"
             onClick={() => {
               if (!week.locked) {
-                router.push(
-                  (window.location.href = "/week/" + (index + 1))
-                );
+                router.push((window.location.href = "/week/" + (index + 1)));
               }
             }}
           >
@@ -33,6 +32,17 @@ const WeeklyTasks = () => {
               <CardBody className="border w-8/12 md:w-10/12 overflow-hidden border-neutral-400 rounded-xl flex flex-col items-center h-auto gap-3 py-3 shadow hover:shadow-lg transition-all">
                 <CardItem className="flex w-full items-center justify-center">
                   <Progress value={week.progress} className="w-full mx-5" />
+                </CardItem>
+                <CardItem className="flex w-full px-5">
+                  <>
+                    {week.locked ? (
+                      <Button className="w-full" variant={"outline"}>
+                        Kilitli
+                      </Button>
+                    ) : (
+                      <Button className="w-full">Devam Et</Button>
+                    )}
+                  </>
                 </CardItem>
                 <CardItem className="flex items-center justify-center">
                   <WeeklyTasksImage />
