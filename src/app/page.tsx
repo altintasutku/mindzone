@@ -7,7 +7,7 @@ import Link from "next/link";
 
 function Home() {
   return (
-    <main className="flex flex-col items-center gap-5 py-5 px-10 md:px-[10%] lg:px-[25%]">
+    <main className="flex flex-col items-center gap-5 py-5 px-3 md:px-[10%] lg:px-[25%]">
       <Button asChild variant={"destructive"}>
         <Link href="/dashboard">
           geçici dashboard linki

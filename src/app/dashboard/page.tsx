@@ -6,7 +6,7 @@ import React from "react";
 
 const DashboardPage = () => {
   return (
-    <div className="flex flex-col px-5 sm:px-16 lg:px-32 py-3 sm:py-10 gap-4">
+    <div className="flex flex-col px-3 sm:px-16 lg:px-32 py-3 sm:py-10 gap-4">
       <Information />
 
       <Questions />
