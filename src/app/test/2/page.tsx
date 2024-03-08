@@ -33,19 +33,27 @@ const LETTERS = [
   "Z",
 ];
 
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 400;
 
 const DURATION = 1300;
+
+const CHANCE_OF_LETTER = 0.5;
 
 const PerformanceTestPageTwo = () => {
   const [round, setRound] = React.useState<number>(0);
   const [isFinished, setIsFinished] = useState(false);
+
+  const [correct, setCorrect] = useState<number>(0);
+  const [wrong, setWrong] = useState<number>(0);
+
+  const [isBreakActive, setIsBreakActive] = useState<boolean>(true);
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const [current, setCurrent] = useState<string | null>(null);
 
   const [history, setHistory] = useState<string[]>([]);
+  console.log("🚀 ~ PerformanceTestPageTwo ~ history:", history);
 
   useEffect(() => {
     if (round === 0 || isFinished) {
@@ -71,6 +79,10 @@ const PerformanceTestPageTwo = () => {
       return;
     }
 
+    if (correct === 1 && isBreakActive) {
+      return;
+    }
+
     setRound((prev) => prev + 1);
 
     if (current) {
@@ -82,16 +94,18 @@ const PerformanceTestPageTwo = () => {
 
     // 10% of the time, select from the first third of the letters
     const letter =
-      LETTERS[
-        Math.floor(
-          Math.random() *
-            (percentage < 33
-              ? LETTERS.length / 3
-              : percentage < 66
-              ? (LETTERS.length / 3) * 2
-              : LETTERS.length)
-        )
-      ];
+      Math.random() > CHANCE_OF_LETTER
+        ? LETTERS[
+            Math.floor(
+              Math.random() *
+                (percentage < 33
+                  ? LETTERS.length / 3
+                  : percentage < 66
+                  ? (LETTERS.length / 3) * 2
+                  : LETTERS.length)
+            )
+          ]
+        : history[history.length - 1] || "A";
     setCurrent(letter);
 
     if (history.length < 4) setHistory((prev) => [...prev, letter]);
@@ -105,13 +119,23 @@ const PerformanceTestPageTwo = () => {
 
     if (history[history.length - 3] === current) {
       setIsCorrect(true);
+      setCorrect((prev) => prev + 1);
     } else {
       setIsCorrect(false);
+      setWrong((prev) => prev + 1);
     }
 
     setTimeout(() => {
       setIsCorrect(null);
     }, 1000);
+  };
+
+  const finishBreak = () => {
+    setCorrect(0);
+    setWrong(0);
+    setRound(1);
+    setHistory([]);
+    setIsBreakActive(false);
   };
 
   return (
@@ -126,6 +150,11 @@ const PerformanceTestPageTwo = () => {
           <div className="flex justify-center my-5">
             <Button onClick={nextRound}>Başla</Button>
           </div>
+        </div>
+      ) : correct === 1 && isBreakActive ? (
+        <div className="flex flex-col items-center gap-4">
+          <div>Tebrikler! Deneme bitti hadi oyuna geçelim</div>
+          <Button onClick={finishBreak}>Devam Et</Button>
         </div>
       ) : (
         <div className="flex flex-col gap-7 justify-center items-center w-full">

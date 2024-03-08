@@ -1,23 +1,23 @@
-"use client";
+// "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+// import { usePathname, useRouter } from "next/navigation";
 import React from "react";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
+// import { Separator } from "../ui/separator";
+// import { Button } from "../ui/button";
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
 const TestContainer = ({ children }: Props) => {
-  const pathname = usePathname();
-  const router = useRouter();
+  // const pathname = usePathname();
+  // const router = useRouter();
 
   return (
     <div className="flex justify-center items-center">
       <div className="bg-white m-5 p-4 rounded-md shadow w-full md:max-w-[60%]">
         {children}
-        <Separator className="my-4" />
+        {/* <Separator className="my-4" />
         <h2 className="text-center my-4 font-semibold">Performans Testleri</h2>
         <div className="flex gap-3 flex-wrap justify-center">
           <Button
@@ -36,7 +36,7 @@ const TestContainer = ({ children }: Props) => {
           >
             Sonraki Oyun
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
