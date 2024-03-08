@@ -6,7 +6,6 @@ import WeekTwoGameThreeIntroduction from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Loader2Icon } from "lucide-react";
 
 const mods = { negative: 40, positive: 16 };
 
@@ -36,7 +35,8 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const TOTAL_ROUNDS = mods.negative + mods.positive;
 
-const REACTION_TIME = 1400;
+const MIN_REACTION_TIME = 1000;
+const MAX_REACTION_TIME = 2500;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
@@ -63,7 +63,10 @@ const WeekTwoGameThreePage = () => {
       () => {
         nextRound();
       },
-      currentData === null ? 500 : REACTION_TIME
+      currentData === null
+        ? 500
+        : Math.random() * (MAX_REACTION_TIME - MIN_REACTION_TIME) +
+            MIN_REACTION_TIME
     );
 
     return () => clearTimeout(timer);
@@ -84,7 +87,7 @@ const WeekTwoGameThreePage = () => {
     <div>
       {isFinished ? (
         <div className="flex justify-center items-center">
-            <FinishScreen url="/week/2/cognitive-emphaty" />
+          <FinishScreen url="/week/2/cognitive-emphaty" />
         </div>
       ) : round === 0 ? (
         <div className="flex flex-col">
@@ -111,7 +114,9 @@ const WeekTwoGameThreePage = () => {
           </div>
           <Separator className="my-5" />
           <div className="flex justify-center my-5">
-            <Button className="w-full md:w-48" onClick={handleClick}>GİT</Button>
+            <Button className="w-full md:w-48" onClick={handleClick}>
+              GİT
+            </Button>
           </div>
         </div>
       )}
