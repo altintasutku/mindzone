@@ -103,7 +103,7 @@ function generateRandomMap(
         : "";
       const shouldShow = isAnswerCell
         ? true
-        : value === randomPhoto
+        : value?.name === randomPhoto.name
         ? false
         : Math.random() > 0.5;
       row.push({ value, size, isShowing: shouldShow });
