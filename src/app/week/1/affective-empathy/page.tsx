@@ -32,10 +32,8 @@ const AffectiveEmpathyPage = () => {
   const handleImageClick = (clickedImage: string) => {
     setSelectedImage(clickedImage);
     if (clickedImage.slice(0, 10) === samePerson[0].slice(0, 10)) {
-      console.log("Doğru");
       setIsCorrect(true);
     } else {
-      console.log("Yanlış");
       setIsCorrect(false);
     }
     setTimeout(handleNext, 1000);

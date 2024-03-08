@@ -107,21 +107,18 @@ const CognitiveFlexibilityPage = () => {
     if (!currentItem) return;
 
     if (currentItem?.box === 1 || currentItem?.box === 2) {
-      console.log("if");
       if (!VOWELS.includes(currentItem.item[0]) && button === "X") {
         return correctAnswer();
       } else if (VOWELS.includes(currentItem.item[0]) && button === "Y") {
         return correctAnswer();
       }
     } else if (round <= 32) {
-      console.log("else if");
       if (ODD_NUMBERS.includes(currentItem.item[0]) && button === "X") {
         return correctAnswer();
       } else if (!ODD_NUMBERS.includes(currentItem.item[0]) && button === "Y") {
         return correctAnswer();
       }
     } else {
-      console.log("else");
       if (ODD_NUMBERS.includes(currentItem.item[1]) && button === "X") {
         return correctAnswer();
       } else if (!ODD_NUMBERS.includes(currentItem.item[0]) && button === "Y") {
