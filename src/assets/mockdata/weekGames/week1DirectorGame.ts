@@ -10,8 +10,6 @@ type GameNode = {
   isShowing: boolean;
 };
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Alfabe tanımlaması
-
 type Image = {
   name: string;
   path: string;

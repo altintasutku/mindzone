@@ -1,6 +1,6 @@
 "use client";
 
-import { performanceTestFiveQuestions } from "@/assets/mockdata/performanceTestFive";
+import { performanceTestFiveQuestions } from "@/assets/mockdata/performaceTests/performanceTestFive";
 import Image from "next/image";
 import React, { useState } from "react";
 import IntroductionTestFive from "./_introductions";

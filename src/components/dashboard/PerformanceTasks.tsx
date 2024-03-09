@@ -3,7 +3,7 @@ import { Progress } from "../ui/progress";
 import { Button } from "../ui/button";
 import { CheckIcon, LockIcon, PlayIcon } from "lucide-react";
 import Link from "next/link";
-import { performanceTasksProgress } from "@/assets/mockdata/performanceTasksProgress";
+import { performanceTasksProgress } from "@/assets/mockdata/progresses/performanceTasksProgress";
 
 const PerformanceTasks = () => {
   return (

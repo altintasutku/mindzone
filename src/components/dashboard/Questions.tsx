@@ -1,7 +1,7 @@
 import React from "react";
 import { Progress } from "../ui/progress";
 import Link from "next/link";
-import { questionProgressList } from "@/assets/mockdata/questionProgress";
+import { questionProgressList } from "@/assets/mockdata/progresses/questionProgress";
 
 const Questions = () => {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { stepOneQuestions } from "@/assets/mockdata/questions";
+import { stepOneQuestions } from "@/assets/mockdata/survey/questions";
 import { Button } from "@/components/ui/button";
 import { FrownIcon, LaughIcon, MehIcon, SmileIcon } from "lucide-react";
 import React from "react";
