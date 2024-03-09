@@ -1,16 +1,14 @@
-"use client";
-
 import React from "react";
 import { Progress } from "../ui/progress";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { LockIcon } from "lucide-react";
 import { weeks } from "@/assets/mockdata/weeks";
 import WeeklyTasksImage from "./WeeklyTasksImage";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const WeeklyTasks = () => {
-  const router = useRouter();
-
   return (
     <section className="bg-white shadow text-center pt-5 rounded-md bg-opacity-30 space-y-5">
       <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
@@ -19,11 +17,6 @@ const WeeklyTasks = () => {
           <div
             key={index}
             className="cursor-pointer border overflow-hidden border-neutral-200 rounded-xl flex flex-col items-center gap-3 py-3 shadow-md hover:shadow-lg transition-all relative"
-            onClick={() => {
-              if (!week.locked && week.progress !== 100) {
-                router.push((window.location.href = "/week/" + (index + 1)));
-              }
-            }}
           >
             <div className="flex w-full items-center justify-center">
               <Progress
@@ -52,7 +45,7 @@ const WeeklyTasks = () => {
                     Bitti
                   </Button>
                 ) : (
-                  <Button className="w-full">Devam Et</Button>
+                  <Link href={"/week/" + (index + 1)} className={cn("w-full",buttonVariants())}>Devam Et</Link>
                 )}
               </>
             </div>
@@ -66,9 +59,6 @@ const WeeklyTasks = () => {
         ))}
       </div>
     </section>
-    // <section className="bg-white shadow p-4 text-center space-y-3">
-    //   <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
-    // </section>
   );
 };
 
