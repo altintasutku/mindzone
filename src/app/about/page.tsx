@@ -1,11 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
-import imageDilruba from "@/images/dilruba-sonmez.png";
-import imageTimothy from "@/images/timothy-r-jordan.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { dilrubaEmail } from "@/config/contactInfos";
+
+const imageLoader = ({ src }: { src: string }) => {
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${src}`;
+};
 
 const AboutPage = () => {
   return (
@@ -31,8 +35,11 @@ const AboutPage = () => {
 
       <section className="flex flex-col ic gap-4 bg-white p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
         <Image
+          loader={imageLoader}
           alt="Dilruba Sönmez"
-          src={imageDilruba}
+          src={"dilruba-sonmez.png"}
+          width={240}
+          height={240}
           className="w-full md:w-60 self-center aspect-square object-cover rounded-full"
         />
         <h2 className="font-semibold text-center text-2xl">Dilruba Sönmez</h2>
@@ -91,8 +98,11 @@ const AboutPage = () => {
 
       <section className="flex flex-col ic gap-4 bg-white p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
         <Image
+          loader={imageLoader}
           alt="Profesör Dr. Timothy Richard Jordan"
-          src={imageTimothy}
+          src={"timothy-r-jordan.png"}
+          width={240}
+          height={240}
           className="w-full md:w-60 self-center aspect-square object-cover rounded-full"
         />
         <h2 className="font-semibold text-center text-2xl">
