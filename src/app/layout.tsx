@@ -26,7 +26,7 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body
-        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
+        className={cn("min-h-screen font-sans antialiased bg-[url('../assets/background.png')]", fontSans.variable)}
       >
         <Providers>
           {/* <div className="absolute h-full w-full inset-0 z-20"> */}

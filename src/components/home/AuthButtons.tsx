@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const AuthButtons = () => {
   return (
-    <section className="flex flex-col gap-4 bg-white p-4 shadow-md rounded-md w-full bg-opacity-30">
+    <section className="flex flex-col gap-4 bg-white p-4 shadow-md rounded-md w-full">
       <small className="text-sm text-center opacity-65">
         Devam etmek için sisteme kayıt ol ya da giriş yap
       </small>

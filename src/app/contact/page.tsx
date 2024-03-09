@@ -1,7 +1,5 @@
 import {
-  ahmetYusufEmail,
   dilrubaEmail,
-  utkuEmail,
 } from "@/config/contactInfos";
 import React from "react";
 

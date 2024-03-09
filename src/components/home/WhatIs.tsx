@@ -3,7 +3,7 @@ import React from "react";
 
 const WhatIs = () => {
   return (
-    <section className="bg-white p-4 shadow-md rounded-md w-full text-xs bg-opacity-30">
+    <section className="bg-white p-4 shadow-md rounded-md w-full text-xs">
       <p>
         Bu çalışma Uzm. Klinik Psikolog Dilruba Sönmez’in doktora programı
         kapsamında tasarladığı bir web sitedir. Prof. Dr. Timothy Jordan
