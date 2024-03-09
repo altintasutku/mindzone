@@ -4,6 +4,7 @@ import IntroductionCF from "./_intorductions";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import FinishScreen from "@/components/game/FinishScreen";
+import { Progress } from "@/components/ui/progress";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
@@ -112,23 +113,23 @@ const AffectiveEmpathyPage = () => {
   return (
     <div>
       {round >= MAXROUND ? (
-        <FinishScreen url='/week/2/' />
+        <FinishScreen url="/week/2/" />
       ) : round === 0 ? (
-        <div className='flex flex-col items-center'>
+        <div className="flex flex-col items-center">
           <IntroductionCF />
-          <Button onClick={handleNext} className='my-5'>
+          <Button onClick={handleNext} className="my-5">
             Hadi Başlayalım
           </Button>
         </div>
       ) : (
-        <div className='flex flex-col items-center'>
+        <div className="flex flex-col items-center space-y-10">
           {isCorrect === true ? (
-            <p className=' text-green-600 text-5xl'>Doğru</p>
+            <p className=" text-green-600 text-5xl">Doğru</p>
           ) : isCorrect === false ? (
-            <p className=' text-red-600 text-5xl'>Yanlış</p>
+            <p className=" text-red-600 text-5xl">Yanlış</p>
           ) : isGameStarted === false ? (
             <Image
-              className='rounded-md'
+              className="rounded-md"
               width={200}
               height={270}
               alt={`${samePerson[0]}`}
@@ -136,7 +137,7 @@ const AffectiveEmpathyPage = () => {
               loader={imageLoader}
             />
           ) : (
-            <div className='grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center'>
+            <div className="grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center">
               {allRound1Images.map((image, index) => (
                 <Image
                   className={`rounded-md cursor-pointer ${
@@ -153,13 +154,10 @@ const AffectiveEmpathyPage = () => {
               ))}
             </div>
           )}
+
+          <Progress value={(round * 100) / MAXROUND} />
         </div>
       )}
-      <div className=' p-5'>
-        {/* <Button onClick={handleCheck} variant={"ghost"}>
-              Kontrol et
-            </Button> */}
-      </div>
     </div>
   );
 };

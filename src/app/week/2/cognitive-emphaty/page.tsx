@@ -1,5 +1,5 @@
 "use client";
-import { weekTwoGame4Data } from "@/assets/mockdata/week2game4data";
+import { weekTwoGame4Data } from "@/assets/mockdata/weekGames/week2game4data";
 import React, { useEffect } from "react";
 import IntroductionCF from "../working-memory/_introductions";
 import { Button } from "@/components/ui/button";

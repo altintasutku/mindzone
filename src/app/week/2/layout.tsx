@@ -1,4 +1,4 @@
-import { weekTwoGames } from "@/assets/weekGames";
+import { weekTwoGames } from "@/assets/mockdata/weekGames/weekGames";
 import WeekContainer from "@/components/game/WeekContainer";
 import React from "react";
 

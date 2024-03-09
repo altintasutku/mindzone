@@ -8,7 +8,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import FinishScreen from "@/components/game/FinishScreen";
-import { levels } from "@/assets/mockdata/week1DirectorGame";
+import { levels } from "@/assets/mockdata/weekGames/week1DirectorGame";
 
 const boxImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;

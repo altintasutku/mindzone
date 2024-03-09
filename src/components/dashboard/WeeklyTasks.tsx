@@ -2,7 +2,7 @@ import React from "react";
 import { Progress } from "../ui/progress";
 import { Button, buttonVariants } from "../ui/button";
 import { LockIcon } from "lucide-react";
-import { weeks } from "@/assets/mockdata/weeks";
+import { weeks } from "@/assets/mockdata/progresses/weeks";
 import WeeklyTasksImage from "./WeeklyTasksImage";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
