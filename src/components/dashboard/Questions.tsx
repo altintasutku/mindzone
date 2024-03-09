@@ -16,7 +16,7 @@ const Questions = () => {
           >
             <div>Anket {index + 1}</div>
             <div className="flex items-center gap-4">
-              <div>{question.done ? "✅" : question.locked ? "🔒" : "🔵"}</div>
+              <div>{question.progress === 100 ? "✅" : question.locked ? "🔒" : "🔵"}</div>
               <div className="flex flex-col flex-1">
                 <Progress value={question.progress} />
               </div>

@@ -171,11 +171,7 @@ const InhibitionPage = () => {
             ))}
           </div>
 
-          <Progress
-            value={(100 * round) / TOTAL_ROUNDS}
-            className="mt-20"
-            showValue
-          />
+          <Progress value={(100 * round) / TOTAL_ROUNDS} className="mt-20" />
         </div>
       ) : (
         <div className="flex flex-col items-center">

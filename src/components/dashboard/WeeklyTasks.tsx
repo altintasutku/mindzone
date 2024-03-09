@@ -3,10 +3,8 @@
 import React from "react";
 import { Progress } from "../ui/progress";
 import { Button } from "../ui/button";
-import { CheckIcon, LockIcon, PlayIcon } from "lucide-react";
-import Link from "next/link";
+import { LockIcon } from "lucide-react";
 import { weeks } from "@/assets/mockdata/weeks";
-import Image from "next/image";
 import WeeklyTasksImage from "./WeeklyTasksImage";
 import { CardBody, CardContainer, CardItem } from "../ui/3d-card";
 import { useRouter } from "next/navigation";
@@ -23,18 +21,23 @@ const WeeklyTasks = () => {
             key={index}
             className="cursor-pointer"
             onClick={() => {
-              if (!week.locked) {
+              if (!week.locked && week.progress !== 100) {
                 router.push((window.location.href = "/week/" + (index + 1)));
               }
             }}
           >
             <CardContainer>
-              <CardBody className="border w-11/12 overflow-hidden border-neutral-400 rounded-xl flex flex-col items-center h-auto gap-3 py-3 shadow hover:shadow-lg transition-all">
+              <CardBody className="border w-11/12 overflow-hidden border-neutral-200 rounded-xl flex flex-col items-center h-auto gap-3 py-3 shadow-md hover:shadow-lg transition-all">
                 <CardItem className="flex w-full items-center justify-center">
-                  <Progress value={week.progress} className="w-full mx-5" />
+                  <Progress
+                    value={week.progress}
+                    className="w-full mx-5"
+                    indicatorColor={week.progress === 100 ? "bg-green-700" : "bg-primary"}
+                    showValue
+                  />
                 </CardItem>
                 <CardItem className="flex items-center justify-center">
-                  <WeeklyTasksImage />
+                  <WeeklyTasksImage week={week} weekNumber={index + 1} />
                 </CardItem>
                 <CardItem className="flex w-full items-center justify-center">
                   <span className="font-bold">Hafta {index + 1}</span>
@@ -45,6 +48,8 @@ const WeeklyTasks = () => {
                       <Button className="w-full" variant={"outline"}>
                         Kilitli
                       </Button>
+                    ) : week.progress === 100 ? (
+                      <Button className="w-full bg-green-700 hover:bg-green-700">Bitti</Button>
                     ) : (
                       <Button className="w-full">Devam Et</Button>
                     )}
