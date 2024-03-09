@@ -5,7 +5,6 @@ declare type Question = {
 };
 
 declare type QuestionProgress = {
-  done: boolean;
   locked: boolean;
   progress: number;
 };

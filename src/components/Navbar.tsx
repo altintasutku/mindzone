@@ -15,13 +15,14 @@ const imageLoader = ({ src }: { src: string }) => {
 const Navbar = () => {
   return (
     <nav className="w-full flex justify-between items-center lg:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground">
-      <Link href="/" className="flex gap-4">
+      <Link href="/" className="flex gap-4 items-center">
         <Image
           loader={imageLoader}
           src={"brain-logo.png"}
           alt="MindZone"
-          width={50}
-          height={50}
+          width={40}
+          height={40}
+          className="aspect-square w-10 h-10"
         />
 
         <div>
@@ -45,12 +46,15 @@ const Navbar = () => {
       </div>
 
       <div className="hidden md:flex justify-end items-center gap-1 col-span-1 flex-1">
-        <Link href={"/register"}>
+        <Link href={"/dashboard"}>
+          <Button variant={"ghost"}>Gösterge Paneli</Button>
+        </Link>
+        {/* <Link href={"/register"}>
           <Button variant={"ghost"}>Kayıt Ol</Button>
         </Link>
         <Link href={"/login"}>
           <Button variant={"ghost"}>Giriş Yap</Button>
-        </Link>
+        </Link> */}
         {/* TODO: <LanguageSelector />  */}
       </div>
 
@@ -74,7 +78,12 @@ const Navbar = () => {
               </Button>
             </Link>
             <Separator />
-            <Link href={"/register"}>
+            <Link href={"/dashboard"}>
+              <Button variant={"ghost"} className="w-full">
+                Gösterge Paneli
+              </Button>
+            </Link>
+            {/* <Link href={"/register"}>
               <Button variant={"ghost"} className="w-full">
                 Kayıt Ol
               </Button>
@@ -83,7 +92,7 @@ const Navbar = () => {
               <Button variant={"ghost"} className="w-full">
                 Giriş Yap
               </Button>
-            </Link>
+            </Link> */}
             <Separator />
             <Link href={"/about"}>
               <Button variant={"ghost"} className="w-full">
