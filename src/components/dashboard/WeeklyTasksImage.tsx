@@ -22,7 +22,7 @@ const WeeklyTasksImage = ({
           ? "example-week-preview"
           : `week${weekNumber}_game${week.progress / 20}`
       }
-      className="border border-slate-200 aspect-square object-cover rounded-md w-11/12 shadow-md"
+      className="border border-slate-200 aspect-square object-cover rounded-md shadow-md"
       alt="weekPreview"
       width={250}
       height={250}

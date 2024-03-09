@@ -1,16 +1,9 @@
-"use client";
-
 import React from "react";
-import { TextGenerateEffect } from "../ui/text-generate-effect";
-import { motion } from "framer-motion";
 import { InfiniteMovingCards } from "../ui/infinite-moving-cards";
 
 const Welcome = () => {
   return (
-    <motion.section
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, delay: 0.1 }}
+    <section
       className="bg-white p-4 shadow-md rounded-md w-full bg-opacity-30"
     >
       {/* TODO: yazilar degisebilir cok uzun ve okumak sıkıcı gelebilir */}
@@ -65,7 +58,7 @@ const Welcome = () => {
         Bizlerle ilgili bilgilere ulaşmak ve iletişime geçmek için
         &quot;Hakkımızda&quot; kısmına tıklayabilirsiniz.
       </div>
-    </motion.section>
+    </section>
   );
 };
 
