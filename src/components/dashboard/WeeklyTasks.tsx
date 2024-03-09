@@ -4,13 +4,12 @@ import { Button, buttonVariants } from "../ui/button";
 import { LockIcon } from "lucide-react";
 import { weeks } from "@/assets/mockdata/weeks";
 import WeeklyTasksImage from "./WeeklyTasksImage";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const WeeklyTasks = () => {
   return (
-    <section className="bg-white shadow text-center pt-5 rounded-md bg-opacity-30 space-y-5">
+    <section className="bg-white shadow text-center pt-5 rounded-md space-y-5">
       <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10">
         {weeks.map((week, index) => (
