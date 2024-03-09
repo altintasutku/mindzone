@@ -37,7 +37,7 @@ const TOTAL_ROUNDS = 400;
 
 const DURATION = 1300;
 
-const CHANCE_OF_LETTER = 0.5;
+const CHANCE_OF_LETTER = 0.35;
 
 const PerformanceTestPageTwo = () => {
   const [round, setRound] = React.useState<number>(0);
@@ -53,9 +53,10 @@ const PerformanceTestPageTwo = () => {
   const [current, setCurrent] = useState<string | null>(null);
 
   const [history, setHistory] = useState<string[]>([]);
+  console.log("🚀 ~ PerformanceTestPageTwo ~ history:", history)
 
   useEffect(() => {
-    if (round === 0 || isFinished) {
+    if (round === 0 || isFinished || (correct === 1 && isBreakActive)) {
       return;
     }
 
