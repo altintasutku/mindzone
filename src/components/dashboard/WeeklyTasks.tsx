@@ -31,7 +31,7 @@ const WeeklyTasks = () => {
               <WeeklyTasksImage week={week} weekNumber={index + 1} />
             </div>
             <div className="flex w-full items-center justify-center">
-              <span className="font-bold">Hafta {index + 1}</span>
+              <span className="font-bold">{index + 1}. Hafta</span>
             </div>
             <div className="flex w-full px-5">
               <>

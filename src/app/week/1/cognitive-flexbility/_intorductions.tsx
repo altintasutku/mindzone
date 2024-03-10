@@ -4,6 +4,9 @@ const IntroductionCF = () => {
   return (
     <>
       <p>
+        <h2 className="text-xl font-semibold text-center">
+          2. egzersiz açıklaması
+        </h2>
         Bu egzersizde ekranda harfler ve sayılar göreceksiniz. Takip etmeniz
         gereken birkaç kural belirledik ve bunlara göre yanıtlamanız
         gerekmektedir.

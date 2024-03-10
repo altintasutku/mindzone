@@ -6,6 +6,7 @@ import WeekTwoGameThreeIntroduction from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const mods = { negative: 40, positive: 16 };
 
@@ -36,13 +37,16 @@ const imageLoader = ({ src }: { src: string }) => {
 const TOTAL_ROUNDS = mods.negative + mods.positive;
 
 const MIN_REACTION_TIME = 1000;
-const MAX_REACTION_TIME = 2500;
+const MAX_REACTION_TIME = 1400;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
+  console.log("🚀 ~ WeekTwoGameThreePage ~ round:", round);
   const [isFinished, setIsFinished] = useState(false);
 
   const [currentData, setCurrentData] = useState<DataType | null>(null);
+
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
@@ -50,10 +54,10 @@ const WeekTwoGameThreePage = () => {
       return;
     }
 
-    setRound((prev) => prev + 1);
-
-    if (currentData === null) setCurrentData(allData[round - 1]);
-    else setCurrentData(null);
+    if (currentData === null) {
+      setRound((prev) => prev + 1);
+      setCurrentData(allData[round - 1]);
+    } else setCurrentData(null);
   };
 
   useEffect(() => {
@@ -75,12 +79,14 @@ const WeekTwoGameThreePage = () => {
 
   const handleClick = () => {
     if (currentData?.type === "positive") {
-      console.log("Dogru!");
+      setIsCorrect(true);
     } else {
-      console.log("Hatalı!");
+      setIsCorrect(false);
     }
 
-    nextRound();
+    setTimeout(() => {
+      setIsCorrect(null);
+    }, 1000);
   };
 
   return (
@@ -114,7 +120,13 @@ const WeekTwoGameThreePage = () => {
           </div>
           <Separator className="my-5" />
           <div className="flex justify-center my-5">
-            <Button className="w-full md:w-48" onClick={handleClick}>
+            <Button
+              className={cn("w-full md:w-48", {
+                "bg-green-500 hover:bg-green-500": isCorrect === true,
+                "bg-red-500 hover:bg-red-500": isCorrect === false,
+              })}
+              onClick={handleClick}
+            >
               GİT
             </Button>
           </div>

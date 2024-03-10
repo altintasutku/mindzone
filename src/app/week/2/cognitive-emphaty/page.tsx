@@ -1,11 +1,11 @@
 "use client";
 import { weekTwoGame4Data } from "@/assets/mockdata/weekGames/week2game4data";
 import React, { useEffect } from "react";
-import IntroductionCF from "../working-memory/_introductions";
 import { Button } from "@/components/ui/button";
 import { Ghost } from "lucide-react";
 import { set } from "zod";
 import FinishScreen from "@/components/game/FinishScreen";
+import WeekTwoGameFourIntroductions from "./_introductions";
 
 const WeekTwoGameFourPage = () => {
   const [round, setRound] = React.useState(0);
@@ -46,7 +46,7 @@ const WeekTwoGameFourPage = () => {
         <FinishScreen url='/week/2/cognitive-emphaty/1' />
       ) : round === 0 ? (
         <div>
-          <IntroductionCF />
+          <WeekTwoGameFourIntroductions />
 
           <div className='flex justify-center items-center mt-5'>
             <Button onClick={handleNext}>Devam</Button>

@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const registerValidator = z.object({
-  username: z.string(),
+  name: z.string(),
+  surname: z.string(),
   email: z.string(),
   password: z.string(),
   gender: z.string(),
@@ -17,7 +18,7 @@ export const registerValidator = z.object({
 export type RegisterType = z.infer<typeof registerValidator>;
 
 export const loginValidator = z.object({
-  username: z.string(),
+  email: z.string().email(),
   password: z.string(),
 });
 

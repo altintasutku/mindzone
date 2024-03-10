@@ -26,13 +26,13 @@ export default function ToggleTheme() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white text-black">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
+          Aydınlık
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
+          Karanlık
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
+          Sistem
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

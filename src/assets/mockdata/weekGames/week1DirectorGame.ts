@@ -17,28 +17,28 @@ type Image = {
 
 const images: Image[] = [
   {
-    name: "Elma",
+    name: "elmayı",
     path: "Apple",
   },
   {
-    name: "Araba",
+    name: "arabayı",
     path: "Car",
   },
   {
-    name: "İnek",
+    name: "ineği",
     path: "Cow",
   },
   {
-    name: "Ördek",
+    name: "ördeği",
     path: "Duck",
   },
   {
-    name: "Traktör",
+    name: "traktörü",
     path: "Tractor",
   },
 ];
 
-const sizes = ["Küçük", "Büyük"];
+const sizes = ["küçük", "büyük"];
 
 export const levels: Level[] = [];
 

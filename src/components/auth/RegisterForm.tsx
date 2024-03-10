@@ -23,22 +23,13 @@ import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
-
   const router = useRouter();
 
   const { mutate: register, isPending } = useMutation({
     mutationFn: async (values: RegisterType) => {
       const { data } = await axios.post(
         (process.env.NEXT_PUBLIC_API_URL as string) + "/user",
-        {
-          ...values,
-          name: values.username.split(" ")[0],
-          surname: values.username.split(" ")[1] || "",
-          isActive: true, //TODO: request bodyler degisebilir
-          userType: 0,
-          preAssessmentCompleted: true,
-          performanceAssessmentCompleted: true,
-        }
+        values
       );
       return data;
     },
@@ -63,8 +54,11 @@ const RegisterForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="gap-2 flex flex-col sm:grid grid-cols-2 w-full sm:w-auto"
       >
-        <CustomFormField form={form} name="username">
-          {({ field }) => <Input placeholder="Kullanıcı Adı" {...field} />}
+        <CustomFormField form={form} name="name" small>
+          {({ field }) => <Input placeholder="İsim" {...field} />}
+        </CustomFormField>
+        <CustomFormField form={form} name="surname" small>
+          {({ field }) => <Input placeholder="Soyisim" {...field} />}
         </CustomFormField>
         <CustomFormField form={form} name="email" small>
           {({ field }) => <Input placeholder="Email" {...field} />}

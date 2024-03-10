@@ -30,7 +30,7 @@ export default function RootLayout({ children }: Props) {
       >
         <Providers
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
