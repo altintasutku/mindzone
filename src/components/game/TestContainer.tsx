@@ -15,7 +15,7 @@ const TestContainer = ({ children }: Props) => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="bg-white m-5 p-4 rounded-md shadow w-full md:max-w-[60%]">
+      <div className="bg-white dark:bg-zinc-900 m-5 p-4 rounded-md shadow w-full md:max-w-[60%]">
         {children}
         {/* <Separator className="my-4" />
         <h2 className="text-center my-4 font-semibold">Performans Testleri</h2>

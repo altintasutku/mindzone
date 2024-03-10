@@ -161,7 +161,7 @@ const RegisterForm = () => {
         </CustomFormField>
         <CustomFormField form={form} name="approveJoining">
           {({ field }) => (
-            <div className="flex justify-center items-center p-2 gap-2 bg-white">
+            <div className="flex justify-center items-center p-2 gap-2 bg-white dark:bg-zinc-900">
               <Checkbox
                 checked={formAccepted}
                 onCheckedChange={() => setFormAccepted(!formAccepted)}

@@ -26,15 +26,20 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body
-        className={cn("min-h-screen font-sans antialiased bg-[url('../assets/background.png')]", fontSans.variable)}
+        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
-        <Providers>
-          {/* <div className="absolute h-full w-full inset-0 z-20"> */}
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster />
-          {/* </div> */}
+        <Providers
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="min-h-screen bg-white bg-grid-slate-200/60 dark:bg-[rgba(0,0,0,0.9)] dark:bg-grid-slate-700/40">
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster />
+          </div>
         </Providers>
       </body>
     </html>

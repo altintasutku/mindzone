@@ -123,37 +123,39 @@ const AffectiveEmpathyPage = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center space-y-10">
-          {isCorrect === true ? (
-            <p className=" text-green-600 text-5xl">Doğru</p>
-          ) : isCorrect === false ? (
-            <p className=" text-red-600 text-5xl">Yanlış</p>
-          ) : isGameStarted === false ? (
-            <Image
-              className="rounded-md"
-              width={200}
-              height={270}
-              alt={`${samePerson[0]}`}
-              src={samePerson[0]}
-              loader={imageLoader}
-            />
-          ) : (
-            <div className="grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center">
-              {allRound1Images.map((image, index) => (
-                <Image
-                  className={`rounded-md cursor-pointer ${
-                    selectedImage === image && "border-2 border-blue-500"
-                  }`}
-                  key={index}
-                  width={180}
-                  height={243}
-                  alt={image}
-                  src={image}
-                  loader={imageLoader}
-                  onClick={() => handleImageClick(image)}
-                />
-              ))}
-            </div>
-          )}
+          <div className="min-h-72 flex flex-col justify-center items-center">
+            {isCorrect === true ? (
+              <p className=" text-green-600 text-5xl">Doğru</p>
+            ) : isCorrect === false ? (
+              <p className=" text-red-600 text-5xl">Yanlış</p>
+            ) : isGameStarted === false ? (
+              <Image
+                className="rounded-md"
+                width={200}
+                height={270}
+                alt={`${samePerson[0]}`}
+                src={samePerson[0]}
+                loader={imageLoader}
+              />
+            ) : (
+              <div className="grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center">
+                {allRound1Images.map((image, index) => (
+                  <Image
+                    className={`rounded-md cursor-pointer ${
+                      selectedImage === image && "border-2 border-blue-500"
+                    }`}
+                    key={index}
+                    width={180}
+                    height={243}
+                    alt={image}
+                    src={image}
+                    loader={imageLoader}
+                    onClick={() => handleImageClick(image)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
           <Progress value={(round * 100) / MAXROUND} />
         </div>

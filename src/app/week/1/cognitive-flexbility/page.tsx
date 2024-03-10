@@ -190,7 +190,7 @@ const CognitiveFlexibilityPage = () => {
         <>
           <div
             className={cn(
-              "grid grid-cols-2 grid-rows-2 divide-slate-200 min-h-40 w-full transition-all duration-100 ease-in-out border-2",
+              "grid grid-cols-2 grid-rows-2 divide-slate-200 min-h-40 w-full transition-all rounded-md overflow-hidden duration-100 ease-in-out border-2",
               {
                 "border-green-500": correctState === CorrectState.Correct,
                 "border-red-500": correctState === CorrectState.Incorrect,
@@ -209,14 +209,14 @@ const CognitiveFlexibilityPage = () => {
 
           <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
             <Button
-              className="px-0 sm:px-20 py-5 text-xl font-bold"
+              className="px-0 sm:px-20 py-5 text-xl font-bold text-white"
               onClick={() => handleButton("X")}
               disabled={correctState !== CorrectState.None}
             >
               X
             </Button>
             <Button
-              className="px-0 sm:px-20 py-5 text-xl font-bold"
+              className="px-0 sm:px-20 py-5 text-xl font-bold text-white"
               onClick={() => handleButton("Y")}
               disabled={correctState !== CorrectState.None}
             >

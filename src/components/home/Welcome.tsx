@@ -4,7 +4,7 @@ import { InfiniteMovingCards } from "../ui/infinite-moving-cards";
 const Welcome = () => {
   return (
     <section
-      className="bg-white p-4 shadow-md rounded-md w-full"
+      className="bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full"
     >
       {/* TODO: yazilar degisebilir cok uzun ve okumak sıkıcı gelebilir */}
       <h2 className="font-semibold text-4xl flex justify-center">

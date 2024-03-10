@@ -5,13 +5,13 @@ import { questionProgressList } from "@/assets/mockdata/progresses/questionProgr
 
 const Questions = () => {
   return (
-    <section className="bg-white shadow p-4 text-center space-y-3 rounded-md">
+    <section className="bg-white dark:bg-zinc-900 shadow p-4 text-center space-y-3 rounded-md">
       <h1 className="font-semibold text-xl">Anketler</h1>
       <ul className="flex flex-col sm:flex-row gap-3">
         {questionProgressList.map((question, index) => (
           <Link
             href={`/question/${index + 1}`}
-            className="bg-white shadow p-4 rounded-md flex-1 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+            className="bg-white dark:bg-zinc-900 shadow p-4 rounded-md flex-1 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out"
             key={`question${index}`}
           >
             <div>Anket {index + 1}</div>

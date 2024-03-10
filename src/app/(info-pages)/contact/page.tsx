@@ -5,7 +5,7 @@ import React from "react";
 
 const ContactPage = () => {
   return (
-    <div className="bg-white shadow m-[10%] p-4 rounded-md">
+    <div className="bg-white dark:bg-zinc-900 shadow m-[10%] p-4 rounded-md">
       <h1 className="font-semibold text-xl">İletişim</h1>
       <p>Bizlere soru sormakta kendinizi özgür hissedin</p>
       <h2 className="font-semibold">Araştırmacılar:</h2>

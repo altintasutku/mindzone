@@ -14,7 +14,7 @@ const imageLoader = ({ src }: { src: string }) => {
 const AboutPage = () => {
   return (
     <div className="grid grid-cols-2 gap-5 py-5 px-10 md:px-[5%] lg:px-[15%]">
-      <section className="bg-white p-4 shadow-md rounded-md w-full col-span-2">
+      <section className="bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2">
         <h2 className="font-semibold text-xl text-primary">Biz Kimiz?</h2>
         <p>
           Bu çalışma Uzm. Klinik Psikolog Dilruba Sönmez’in doktora programı
@@ -33,7 +33,7 @@ const AboutPage = () => {
         </p>
       </section>
 
-      <section className="flex flex-col ic gap-4 bg-white p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
+      <section className="flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
         <Image
           loader={imageLoader}
           alt="Dilruba Sönmez"
@@ -96,7 +96,7 @@ const AboutPage = () => {
         </Button>
       </section>
 
-      <section className="flex flex-col ic gap-4 bg-white p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
+      <section className="flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
         <Image
           loader={imageLoader}
           alt="Profesör Dr. Timothy Richard Jordan"

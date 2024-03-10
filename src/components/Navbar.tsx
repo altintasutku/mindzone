@@ -7,6 +7,7 @@ import { MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
+import ToggleTheme from "./ToggleTheme";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${src}`;
@@ -14,7 +15,7 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const Navbar = () => {
   return (
-    <nav className="w-full flex justify-between items-center lg:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground">
+    <nav className="w-full flex justify-between items-center lg:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground text-white">
       <Link href="/" className="flex gap-4 items-center">
         <Image
           loader={imageLoader}
@@ -56,6 +57,7 @@ const Navbar = () => {
           <Button variant={"ghost"}>Giriş Yap</Button>
         </Link> */}
         {/* TODO: <LanguageSelector />  */}
+        <ToggleTheme />
       </div>
 
       <div className="flex lg:hidden items-center">
@@ -67,7 +69,7 @@ const Navbar = () => {
           </SheetTrigger>
           <SheetContent
             side={"right"}
-            className="w-[200px] sm:w-[500px] flex flex-col"
+            className="w-[200px] sm:w-[500px] flex flex-col dark:bg-zinc-900"
           >
             <h1 className="text-2xl font-semibold text-center mt-5">
               MindZone
@@ -105,6 +107,7 @@ const Navbar = () => {
               </Button>
             </Link>
             {/* TODO: <LanguageSelector /> */}
+            <ToggleTheme />
           </SheetContent>
         </Sheet>
       </div>

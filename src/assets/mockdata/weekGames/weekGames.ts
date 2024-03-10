@@ -1,6 +1,6 @@
 export const weekOneGames: Game[] = [
   {
-    isCompleted: false,
+    isCompleted: true,
     slug: "digit-span",
     week: "1",
   },
