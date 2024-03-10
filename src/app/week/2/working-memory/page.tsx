@@ -208,7 +208,7 @@ const WorkingMemory = () => {
           <p className=' text-red-600 text-3xl'>Yanlış</p>
         </div>
       ) : (
-        <div className='flex gap-4'>
+        <div className='flex gap-4 justify-center'>
           {persons.map((person, index) => (
             <div key={index} className=' bg-slate-700 rounded-md'>
               <Image

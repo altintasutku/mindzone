@@ -36,7 +36,7 @@ const Progress = React.forwardRef<
           className={cn(
             "absolute z-10 flex justify-center items-center text-sm w-full",
             {
-              "text-black": value && value < 50,
+              "text-black dark:text-white": value && value < 50,
               "text-white": value && value >= 50,
             }
           )}

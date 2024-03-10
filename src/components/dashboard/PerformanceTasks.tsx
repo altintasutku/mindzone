@@ -7,7 +7,7 @@ import { performanceTasksProgress } from "@/assets/mockdata/progresses/performan
 
 const PerformanceTasks = () => {
   return (
-    <section className="bg-white shadow p-4 text-center space-y-3 rounded-md">
+    <section className="bg-white dark:bg-zinc-900 shadow p-4 text-center space-y-3 rounded-md">
       <h1 className="font-semibold text-xl">Performans Testleri</h1>
       <div className="flex flex-wrap justify-evenly gap-2">
         {performanceTasksProgress.map((task, index) => (

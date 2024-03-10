@@ -3,16 +3,20 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import React, { useState } from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { type ThemeProviderProps } from "next-themes/dist/types";
 
-type ProvidersProps = Readonly<{ children: React.ReactNode }>;
+interface ProvidersProps extends ThemeProviderProps {}
 
-const Providers = ({ children }: ProvidersProps) => {
+const Providers = ({ children, ...props }: ProvidersProps) => {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionProvider>{children}</SessionProvider>
-    </QueryClientProvider>
+    <NextThemesProvider {...props}>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider>{children}</SessionProvider>
+      </QueryClientProvider>
+    </NextThemesProvider>
   );
 };
 

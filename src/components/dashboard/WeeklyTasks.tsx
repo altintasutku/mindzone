@@ -9,13 +9,13 @@ import { cn } from "@/lib/utils";
 
 const WeeklyTasks = () => {
   return (
-    <section className="bg-white shadow text-center pt-5 rounded-md space-y-5">
+    <section className="dark:bg-zinc-900 shadow text-center pt-5 rounded-md space-y-5">
       <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10">
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10 p-4">
         {weeks.map((week, index) => (
           <div
             key={index}
-            className="cursor-pointer border overflow-hidden border-neutral-200 rounded-xl flex flex-col items-center gap-3 py-3 shadow-md hover:shadow-lg transition-all relative"
+            className="cursor-pointer border overflow-hidden border-neutral-200 dark:border-neutral-600 rounded-xl flex flex-col items-center gap-3 py-3 shadow-md hover:shadow-lg transition-all relative"
           >
             <div className="flex w-full items-center justify-center">
               <Progress
@@ -50,7 +50,7 @@ const WeeklyTasks = () => {
             </div>
 
             {week.locked && (
-              <div className="absolute w-full h-full bg-black inset-0 opacity-60 flex justify-center items-center">
+              <div className="absolute w-full h-full bg-black/40 backdrop-blur-sm z-40 inset-0 flex justify-center items-center">
                 <LockIcon size={64} className="text-yellow-500" />
               </div>
             )}
