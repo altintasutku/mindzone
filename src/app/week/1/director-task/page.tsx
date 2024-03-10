@@ -107,8 +107,8 @@ const WeekOneDirectorTaskPage = () => {
                             loader={itemImageLoader}
                             src={gameNode.value.path}
                             alt="itemImage"
-                            height={gameNode.size === "Küçük" ? 50 : 80}
-                            width={gameNode.size === "Küçük" ? 50 : 80}
+                            height={gameNode.size === "küçük" ? 50 : 80}
+                            width={gameNode.size === "küçük" ? 50 : 80}
                           />
                         ) : (
                           ""

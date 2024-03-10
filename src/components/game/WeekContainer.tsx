@@ -37,7 +37,7 @@ const WeekContainer = ({ children, games }: Props) => {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-center my-4 font-semibold">
-              Hafta {games[0].week} Egzersizleri
+              {games[0].week}. hafta egzersizlerini göster
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4">
               {games.map((game, index) => (
@@ -46,8 +46,11 @@ const WeekContainer = ({ children, games }: Props) => {
                   className={cn(
                     "flex gap-4 items-center border border-slate-200 cursor-pointer min-h-12 rounded-xl overflow-hidden shadow text-lg font-semibold",
                     {
-                      "bg-slate-100 dark:bg-slate-500": pathname.includes(game.slug),
-                      "bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200": game.isCompleted,
+                      "bg-slate-100 dark:bg-slate-500": pathname.includes(
+                        game.slug
+                      ),
+                      "bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200":
+                        game.isCompleted,
                     }
                   )}
                   onClick={() => {

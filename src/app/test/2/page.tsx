@@ -53,7 +53,6 @@ const PerformanceTestPageTwo = () => {
   const [current, setCurrent] = useState<string | null>(null);
 
   const [history, setHistory] = useState<string[]>([]);
-  console.log("🚀 ~ PerformanceTestPageTwo ~ history:", history)
 
   useEffect(() => {
     if (round === 0 || isFinished || (correct === 1 && isBreakActive)) {
@@ -153,12 +152,35 @@ const PerformanceTestPageTwo = () => {
         </div>
       ) : correct === 1 && isBreakActive ? (
         <div className="flex flex-col items-center gap-4">
-          <div>Tebrikler! Deneme bitti hadi oyuna geçelim</div>
+          <div>
+            <span className="text-green-500">Tebrikler! Doğru bildin.</span>{" "}
+            Deneme bitti hadi oyuna geçelim
+          </div>
           <Button onClick={finishBreak}>Devam Et</Button>
         </div>
       ) : (
         <div className="flex flex-col gap-7 justify-center items-center w-full">
-          <span className="text-3xl font-bold min-h-10">{current}</span>
+          {correct < 1 && isBreakActive ? (
+            <div className="flex gap-2">
+              {history.map((letter, index) => (
+                <span
+                  key={letter + index}
+                  className={cn(
+                    "text-3xl font-bold min-h-10 bg-yellow-600 p-5 aspect-square flex justify-center items-center",
+                    {
+                      "opacity-60": index !== 3,
+                    }
+                  )}
+                >
+                  {letter || ""}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="text-3xl font-bold min-h-10 bg-yellow-700 p-5 aspect-square flex justify-center items-center">
+              {current || ""}
+            </span>
+          )}
 
           <Button
             onClick={handleAnswer}

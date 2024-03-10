@@ -29,7 +29,7 @@ const AboutPage = () => {
           >
             {dilrubaEmail}
           </a>{" "}
-          adresinden ulaşabilirsiniz.
+          adresinden ulaşabilirsiniz
         </p>
       </section>
 

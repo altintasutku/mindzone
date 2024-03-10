@@ -90,14 +90,14 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="max-w-full relative rounded-2xl border flex-shrink-0 border-slate-700 px-8 py-6 w-[250px]"
+            className="max-w-full relative rounded-2xl border flex-shrink-0 border-slate-700 px-8 py-6 w-[250px] bg-gradient-to-tr from-primary to-purple-800"
             // style={{
             //   background:
             //     "linear-gradient(180deg, var(--slate-800), var(--slate-900)",
             // }}
             key={item.name}
           >
-            <blockquote>
+            <blockquote className="text-white">
               <div
                 aria-hidden="true"
                 className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
@@ -105,7 +105,7 @@ export const InfiniteMovingCards = ({
               <span className=" relative z-20 text-4xl leading-[1.6] font-bold">
                 {item.quote}
               </span>
-              <div className="relative z-20 mt-6 flex flex-row items-center">
+              <div className="relative z-20 mt-2 flex flex-row items-center">
                 <span className="flex flex-col gap-1">
                   <span className=" text-sm leading-[1.6] font-normal">
                     {item.name}

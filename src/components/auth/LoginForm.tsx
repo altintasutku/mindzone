@@ -14,12 +14,11 @@ import { Loader2Icon } from "lucide-react";
 
 const LoginForm = () => {
   const { mutate: login, isPending } = useMutation({
-    mutationFn: async ({ username, password }: LoginType) => {
+    mutationFn: async (credentials: LoginType) => {
       const { data } = await axios.post(
         (process.env.NEXT_PUBLIC_API_URL as string) + "/auth/authentication",
         {
-          username,
-          password,
+          credentials,
         }
       );
       return data;
@@ -42,7 +41,7 @@ const LoginForm = () => {
         className="gap-2 flex flex-col sm:grid grid-cols-2 w-full sm:w-auto"
       >
         <CustomFormField form={form} name="username">
-          {({ field }) => <Input placeholder="Kullanıcı Adı" {...field} />}
+          {({ field }) => <Input placeholder="E-posta" {...field} />}
         </CustomFormField>
         <CustomFormField form={form} name="password">
           {({ field }) => (
@@ -50,7 +49,11 @@ const LoginForm = () => {
           )}
         </CustomFormField>
 
-        <Button type="submit" className="col-span-2" disabled={isPending || !form.formState.isValid}>
+        <Button
+          type="submit"
+          className="col-span-2"
+          disabled={isPending || !form.formState.isValid}
+        >
           {isPending ? <Loader2Icon className="animate-spin" /> : "Giriş Yap"}
         </Button>
       </form>

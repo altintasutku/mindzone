@@ -3,7 +3,7 @@ import React from "react";
 
 const WeekOnePage = () => {
   return (
-    <WelcomeToWeek week="Hafta 1&apos;e" />
+    <WelcomeToWeek week="1. Hafta&apos;ya" />
   );
 };
 
