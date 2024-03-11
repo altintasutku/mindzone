@@ -7,9 +7,9 @@ const IntroductionCF = () => {
         <h2 className="text-xl font-semibold text-center">
           5. egzersiz açıklaması
         </h2>
-        Ekranda farklı yüz resimleri göreceksiniz. Burada sizden istenen aynı
-        kişileri eşleştirmeniz ya da duyguları eşleştirmenizdir. İlk başta aynı
-        kişinin yüzünü seçmeniz beklenmektedir. Hadi başlayalım!
+        Ekranda önce size bir yüz fotoğrafı gösterilecektir. Daha sonra ekranda
+        beliren 4 farklı fotoğraf arasından ilk fotoğraftaki kişiyi bulup
+        işaretlemeniz gerekmektedir. Hadi başlayalım!
         <br />
       </p>
     </>

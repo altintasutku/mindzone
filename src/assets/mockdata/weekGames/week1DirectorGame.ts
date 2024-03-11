@@ -38,7 +38,7 @@ const images: Image[] = [
   },
 ];
 
-const sizes = ["küçük", "büyük"];
+const sizes = ["küçük", "orta", "büyük"];
 
 export const levels: Level[] = [];
 
