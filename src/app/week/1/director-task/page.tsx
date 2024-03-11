@@ -25,14 +25,14 @@ const itemImageLoader = ({ src }: { src: string }) => {
 const TOTAL_ROUNDS = levels.length;
 
 const WeekOneDirectorTaskPage = () => {
-  const [level, setLevel] = useState(0);
+  const [level, setLevel] = useState(-1);
 
   const [isFinished, setIsFinished] = useState(false);
 
   const [currentLevel, setCurrentLevel] = useState(levels[level]);
 
   useEffect(() => {
-    if (level === 0) return;
+    if (level === 0 || level === -1) return;
     setCurrentLevel(levels[level - 1]);
   }, [level]);
 
@@ -46,7 +46,10 @@ const WeekOneDirectorTaskPage = () => {
   };
 
   const handleCellClick = (row: number, col: number) => {
-    if (col === levels[level - 1].answer[0] && row === levels[level - 1].answer[1]) {
+    if (
+      col === levels[level - 1].answer[0] &&
+      row === levels[level - 1].answer[1]
+    ) {
       console.log("Doğru");
     } else {
       console.log("Yanlış");
@@ -58,7 +61,7 @@ const WeekOneDirectorTaskPage = () => {
     <div className="flex flex-col items-center gap-7">
       {isFinished ? (
         <FinishScreen url="/week/1/affective-empathy" />
-      ) : level === 0 ? (
+      ) : level === -1 ? (
         <>
           <DirectorTaskIntroductions />
 
@@ -66,7 +69,22 @@ const WeekOneDirectorTaskPage = () => {
 
           <Button onClick={handleNextRound}>Başla</Button>
         </>
-      ) : (
+      ) : level === 0 ? (
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="font-semibold border border-slate-100 rounded-lg px-4 py-2">
+            Merhaba! Ben bu egzersizdeki yönetmenim. Sizlerden bazı objeleri
+            seçmenizi isteyeceğim. Hadi başlayalım!
+          </h1>
+          <Image
+            loader={directorImageLoader}
+            src="director"
+            alt="directorImage"
+            height={60}
+            width={60}
+          />
+          <Button onClick={handleNextRound}>Başla</Button>
+        </div>
+      ) : currentLevel ? (
         <div className="space-y-10 sm:my-10">
           <div className="flex flex-col-reverse sm:flex-row sm:gap-5 items-end sm:items-start">
             <div className="flex flex-col items-center my-20">
@@ -90,9 +108,9 @@ const WeekOneDirectorTaskPage = () => {
                         loader={boxImageLoader}
                         src={!gameNode.isShowing ? "full-box" : "empty-box"}
                         alt="boxImage"
-                        className="-m-[4px] sm:-m-[8px]"
-                        height={120}
-                        width={120}
+                        className="-m-[4px] sm:-m-[9px]"
+                        height={140}
+                        width={140}
                       />
                       <span
                         className={cn(
@@ -107,8 +125,20 @@ const WeekOneDirectorTaskPage = () => {
                             loader={itemImageLoader}
                             src={gameNode.value.path}
                             alt="itemImage"
-                            height={gameNode.size === "küçük" ? 50 : 80}
-                            width={gameNode.size === "küçük" ? 50 : 80}
+                            height={
+                              gameNode.size === "küçük"
+                                ? 50
+                                : gameNode.size === "orta"
+                                ? 80
+                                : 110
+                            }
+                            width={
+                              gameNode.size === "küçük"
+                                ? 50
+                                : gameNode.size === "orta"
+                                ? 80
+                                : 110
+                            }
                           />
                         ) : (
                           ""
@@ -134,7 +164,7 @@ const WeekOneDirectorTaskPage = () => {
           </div>
           <Progress value={(level * 100) / TOTAL_ROUNDS} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

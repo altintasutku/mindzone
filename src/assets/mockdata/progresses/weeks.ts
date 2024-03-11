@@ -8,8 +8,8 @@ export const weeks: WeekProgress[] = [
     progress: 40,
   },
   {
-    locked: true,
-    progress: 0,
+    locked: false,
+    progress: 20,
   },
   {
     locked: true,
