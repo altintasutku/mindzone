@@ -3,15 +3,19 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  return NextResponse.next();
-
-  //TODO
-
   const token = await getToken({ req });
 
-  // this is comming from lazygit
-
-  if (!token) {
+  if (!token && req.nextUrl.pathname.includes("/dashboard")) {
     return NextResponse.redirect(new URL("/register", req.nextUrl));
+  } else if (
+    token &&
+    ((req.nextUrl.pathname === "/" &&
+      req.nextUrl.searchParams.get("nav") !== "true") ||
+      req.nextUrl.pathname === "/login" ||
+      req.nextUrl.pathname === "/register")
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
+
+  return NextResponse.next();
 }

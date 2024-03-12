@@ -11,53 +11,64 @@ import CustomFormField from "./CustomFormField";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2Icon } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
-  const { mutate: login, isPending } = useMutation({
-    mutationFn: async (credentials: LoginType) => {
-      const { data } = await axios.post(
-        (process.env.NEXT_PUBLIC_API_URL as string) + "/auth/authentication",
-        {
-          credentials,
-        }
-      );
-      return data;
-    },
-  });
+  // const { mutate: login, isPending } = useMutation({
+  //   mutationFn: async (credentials: LoginType) => {
+  //     console.log(credentials);
+      
+  //     const { data } = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/api/authentication`,
+  //       {
+  //         username: credentials.email,
+  //         password: credentials.password,
+  //       }
+  //     );
 
-  const form = useForm<LoginType>({
-    resolver: zodResolver(loginValidator),
-    defaultValues: {},
-  });
+  //     console.log("data", data);
 
-  function onSubmit(values: LoginType) {
-    login(values);
+  //     return data;
+  //   },
+  // });
+
+  const [isPending, setIsPending] = React.useState(false);
+
+  const login = async (credentials: LoginType) => {
+    setIsPending(true);
+    signIn("credentials",{
+      email: credentials.email,
+      password: credentials.password,
+      callbackUrl: "/",
+    })
   }
 
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-2 flex flex-col sm:grid grid-cols-2 w-full sm:w-auto"
-      >
-        <CustomFormField form={form} name="username">
-          {({ field }) => <Input placeholder="E-posta" {...field} />}
-        </CustomFormField>
-        <CustomFormField form={form} name="password">
-          {({ field }) => (
-            <Input placeholder="Şifre" type="password" {...field} />
-          )}
-        </CustomFormField>
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-        <Button
-          type="submit"
-          className="col-span-2"
-          disabled={isPending || !form.formState.isValid}
-        >
-          {isPending ? <Loader2Icon className="animate-spin" /> : "Giriş Yap"}
-        </Button>
-      </form>
-    </Form>
+  return (
+    <form className="gap-2 flex flex-col w-full sm:w-auto">
+      <Input
+        placeholder="E-posta"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        placeholder="Şifre"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <Button
+        type="button"
+        onClick={() => login({ email, password })}
+        className="col-span-2"
+        disabled={isPending}
+      >
+        {isPending ? <Loader2Icon className="animate-spin" /> : "Giriş Yap"}
+      </Button>
+    </form>
   );
 };
 

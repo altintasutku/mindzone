@@ -28,10 +28,19 @@ const RegisterForm = () => {
   const { mutate: register, isPending } = useMutation({
     mutationFn: async (values: RegisterType) => {
       const { data } = await axios.post(
-        (process.env.NEXT_PUBLIC_API_URL as string) + "/user",
-        values
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
+        {
+          ...values,
+          age: parseInt(values.age),
+          contactType: parseInt(values.contactType),
+          status: "S1",
+          weeklyStatus: "1",
+          performanceTaskStep: "1",
+          isActive: true,
+        }
       );
-      return data;
+
+      return data as { id: number };
     },
     onSuccess: () => {
       router.push("/login");
@@ -42,6 +51,10 @@ const RegisterForm = () => {
 
   const form = useForm<RegisterType>({
     resolver: zodResolver(registerValidator),
+    defaultValues: {
+      chronicIllness: "-",
+      psychologicalHistory: "-",
+    },
   });
 
   function onSubmit(values: RegisterType) {
@@ -172,7 +185,7 @@ const RegisterForm = () => {
         </CustomFormField>
 
         <Button
-          disabled={!formAccepted || !form.formState.isValid || isPending}
+          disabled={!formAccepted || isPending}
           type="submit"
           className="col-span-2"
         >
