@@ -8,12 +8,34 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
 import ToggleTheme from "./ToggleTheme";
+import { signOut, useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${src}`;
 };
 
 const Navbar = () => {
+  const session = useSession();
+
+  //TODO: silinecek
+  // const { data } = useQuery({
+  //   queryKey: ["user"],
+  //   queryFn: async () => {
+  //     const { data } = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/api/users/33`,
+  //       {
+  //         headers: {
+  //           Token: `${session.data?.user.accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     return data;
+  //   },
+  //   enabled: session.status === "authenticated",
+  // });
+
   return (
     <nav className="w-full flex justify-between items-center lg:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground text-white">
       <Link href="/" className="flex gap-4 items-center">
@@ -35,7 +57,7 @@ const Navbar = () => {
       </Link>
 
       <div className="hidden lg:flex items-center justify-center gap-1 col-span-1">
-        <Link href={"/"}>
+        <Link href={"/?nav=true"}>
           <Button variant={"ghost"}>Ana Sayfa</Button>
         </Link>
         <Link href={"/about"}>
@@ -46,16 +68,27 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="hidden md:flex justify-end items-center gap-1 col-span-1 flex-1">
-        <Link href={"/dashboard"}>
-          <Button variant={"ghost"}>Gösterge Paneli</Button>
-        </Link>
-        {/* <Link href={"/register"}>
-          <Button variant={"ghost"}>Kayıt Ol</Button>
-        </Link>
-        <Link href={"/login"}>
-          <Button variant={"ghost"}>Giriş Yap</Button>
-        </Link> */}
+      <div className="hidden lg:flex justify-end items-center gap-1 col-span-1 flex-1">
+        {session.status === "loading" ? null : session.status ===
+          "authenticated" ? (
+          <>
+            <Link href={"/dashboard"}>
+              <Button variant={"ghost"}>Gösterge Paneli</Button>
+            </Link>
+            <Button variant={"ghost"} onClick={() => signOut()}>
+              Çıkış Yap
+            </Button>
+          </>
+        ) : (
+          <>
+            <Link href={"/register"}>
+              <Button variant={"ghost"}>Kayıt Ol</Button>
+            </Link>
+            <Link href={"/login"}>
+              <Button variant={"ghost"}>Giriş Yap</Button>
+            </Link>
+          </>
+        )}
         {/* TODO: <LanguageSelector />  */}
         <ToggleTheme />
       </div>
@@ -74,39 +107,43 @@ const Navbar = () => {
             <h1 className="text-2xl font-semibold text-center mt-5">
               MindZone
             </h1>
-            <Link href={"/"}>
+            <Link href={"/?nav=true"}>
               <Button variant={"ghost"} className="w-full">
                 Ana Sayfa
               </Button>
             </Link>
             <Separator />
-            <Link href={"/dashboard"}>
-              <Button variant={"ghost"} className="w-full">
-                Gösterge Paneli
-              </Button>
-            </Link>
-            {/* <Link href={"/register"}>
-              <Button variant={"ghost"} className="w-full">
-                Kayıt Ol
-              </Button>
-            </Link>
-            <Link href={"/login"}>
-              <Button variant={"ghost"} className="w-full">
-                Giriş Yap
-              </Button>
-            </Link> */}
-            <Separator />
-            <Link href={"/about"}>
-              <Button variant={"ghost"} className="w-full">
-                Hakkımızda
-              </Button>
-            </Link>
-            <Link href={"/contact"}>
-              <Button variant={"ghost"} className="w-full">
-                İletişim
-              </Button>
-            </Link>
-            {/* TODO: <LanguageSelector /> */}
+            {session.status === "loading" ? null : session.status ===
+              "authenticated" ? (
+              <>
+                <Link href={"/dashboard"}>
+                  <Button variant={"ghost"} className="w-full">
+                    Gösterge Paneli
+                  </Button>
+                </Link>
+                <Button
+                  variant={"ghost"}
+                  className="w-full"
+                  onClick={() => signOut()}
+                >
+                  Çıkış Yap
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href={"/register"}>
+                  <Button variant={"ghost"} className="w-full">
+                    Kayıt Ol
+                  </Button>
+                </Link>
+                <Link href={"/login"}>
+                  <Button variant={"ghost"} className="w-full">
+                    Giriş Yap
+                  </Button>
+                </Link>
+              </>
+            )}
+            {/* TODO: <LanguageSelector />  */}
             <ToggleTheme />
           </SheetContent>
         </Sheet>
