@@ -136,7 +136,7 @@ const WeekThreeGameOnePage = () => {
                     width={200}
                     height={200}
                     draggable={false}
-                    className={cn("transition-all duration-1000", {
+                    className={cn("transition-all duration-1000 w-full h-full", {
                       "rotate-y-180 opacity-0": !shownImages[index],
                     })}
                   />

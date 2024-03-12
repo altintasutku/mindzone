@@ -18,8 +18,8 @@ const Welcome = () => {
           fontSans.className
         )}
       >
-        <span className="bg-clip-text bg-primary text-transparent bg-gradient-to-r from-primary to-purple-800">
-          MindZone&apos;a Hoşgeldiniz.
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">
+          MindZone&apos;a Hoş Geldiniz.
         </span>
       </h2>
       <div>
