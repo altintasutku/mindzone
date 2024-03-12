@@ -15,7 +15,7 @@ const ContactAndAboutButtons = () => {
         <Link href="/contact">İletişim</Link>
       </Button>
       <Button asChild variant={"link"} className="underline">
-        <Link href="/about">Hakkında</Link>
+        <Link href="/about">Hakkımızda</Link>
       </Button>
     </section>
   );
