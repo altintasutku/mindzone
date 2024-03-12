@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import IntroductionCF from "../working-memory/_introductions";
 import { Button } from "@/components/ui/button";
+import WeekTwoGameFourIntroductions from "./_introductions";
 
 type ImageFolder = {
   image1: string;
@@ -116,7 +117,7 @@ const Week2Game5Page = () => {
         <p>Finished</p>
       ) : round === 0 ? (
         <div>
-          <IntroductionCF />
+          <WeekTwoGameFourIntroductions />
 
           <div className='flex justify-center items-center mt-5'>
             <Button onClick={handleNext}>Devam</Button>
