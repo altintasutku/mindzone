@@ -7,7 +7,6 @@ import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import React from "react";
 import IntroductionsTestOne from "./_introductions";
-import { Progress } from "@/components/ui/progress";
 
 const imageColors = ["red", "green", "blue", "yellow"];
 const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
@@ -179,7 +178,6 @@ const PerformanceTestOnePage = () => {
               />
             ))}
           </div>
-          <Progress className="mt-7" value={(100 * round) / TOTAL_ROUNDS} showValue/>
         </>
       )}
     </div>

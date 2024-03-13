@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import IntroductionTestFour from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import FinishScreen from "@/components/game/FinishScreen";
-import { Progress } from "@/components/ui/progress";
 import { CheckCheckIcon } from "lucide-react";
 
 type CurrentModType = {
@@ -130,7 +129,6 @@ const PerformanceTestPageFour = () => {
               </div>
             ))}
           </div>
-          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue />
         </>
       )}
     </div>

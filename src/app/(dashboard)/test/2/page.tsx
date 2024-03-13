@@ -6,7 +6,6 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
 
 const LETTERS = [
   "A",
@@ -37,7 +36,7 @@ const TOTAL_ROUNDS = 400;
 
 const DURATION = 1300;
 
-const CHANCE_OF_LETTER = 0.35;
+const CHANCE_OF_LETTER = 0.4;
 
 const PerformanceTestPageTwo = () => {
   const [round, setRound] = React.useState<number>(0);
@@ -104,7 +103,7 @@ const PerformanceTestPageTwo = () => {
                   : LETTERS.length)
             )
           ]
-        : history[history.length - 1] || "A";
+        : history[history.length - 2] || "A";
     setCurrent(letter);
 
     if (history.length < 4) setHistory((prev) => [...prev, letter]);
@@ -166,19 +165,19 @@ const PerformanceTestPageTwo = () => {
                 <span
                   key={letter + index}
                   className={cn(
-                    "text-3xl font-bold min-h-10 bg-yellow-600 p-5 aspect-square flex justify-center items-center",
+                    "text-3xl font-bold min-h-10 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center",
                     {
                       "opacity-60": index !== 3,
                     }
                   )}
                 >
-                  {letter || ""}
+                  {letter}
                 </span>
               ))}
             </div>
           ) : (
-            <span className="text-3xl font-bold min-h-10 bg-yellow-700 p-5 aspect-square flex justify-center items-center">
-              {current || ""}
+            <span className="text-3xl font-bold min-h-16 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center">
+              {current}
             </span>
           )}
 
@@ -192,8 +191,6 @@ const PerformanceTestPageTwo = () => {
           >
             <EyeIcon size={36} />
           </Button>
-
-          <Progress value={(round * 100) / TOTAL_ROUNDS} className="mt-10" />
         </div>
       )}
     </div>

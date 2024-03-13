@@ -38,7 +38,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full flex justify-between items-center lg:grid grid-cols-3 py-4 px-5 sm:px-[10%] bg-primary text-primary-foreground text-white">
-      <Link href="/" className="flex gap-4 items-center">
+      <Link href="/?nav=true" className="flex gap-4 items-center">
         <Image
           loader={imageLoader}
           src={"brain-logo.png"}
