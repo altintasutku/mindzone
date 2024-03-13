@@ -6,7 +6,6 @@ import IntroductionTestThree from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Progress } from "@/components/ui/progress";
 
 enum GO_NOGO {
   GO = "GO",
@@ -98,8 +97,6 @@ const PerformanceTestPageThree = () => {
           <Button className="px-10" onClick={handleClick} disabled={current === GO_NOGO.NONE}>
             GIT
           </Button>
-          <Separator className="my-5" />
-          <Progress value={(100 * round) / TOTAL_ROUNDS} showValue />
         </div>
       )}
     </div>

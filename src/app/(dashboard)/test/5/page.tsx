@@ -2,12 +2,11 @@
 
 import { performanceTestFiveQuestions } from "@/assets/mockdata/performaceTests/performanceTestFive";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IntroductionTestFive from "./_introductions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import FinishScreen from "@/components/game/FinishScreen";
-import { Progress } from "@/components/ui/progress";
 
 const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
 
@@ -19,7 +18,6 @@ const DURATION = 600;
 
 const Page = () => {
   const [round, setRound] = useState(0);
-
   const [currentQuestion, setCurrentQuestion] = useState<TestFiveQuestion>();
 
   const [isFinished, setIsFinished] = useState(false);
@@ -28,12 +26,17 @@ const Page = () => {
 
   const [isTutorial, setIsTutorial] = useState(true);
 
+  useEffect(() => {
+    setCurrentQuestion(performanceTestFiveQuestions[round - 1]);
+  }, [round]);
+
   const handleNext = () => {
+    console.log(round);
+    console.log(TOTAL_ROUNDS);
     if (round >= TOTAL_ROUNDS) {
       setIsFinished(true);
       return;
     }
-    setCurrentQuestion(performanceTestFiveQuestions[round]);
     setRound((prev) => prev + 1);
   };
 
@@ -80,6 +83,7 @@ const Page = () => {
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(0)}
             variant={"ghost"}
+            className="text-wrap"
           >
             {currentQuestion.answers[0]}
           </Button>
@@ -88,13 +92,14 @@ const Page = () => {
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(1)}
             variant={"ghost"}
+            className="text-wrap"
           >
             {currentQuestion.answers[1]}
           </Button>
 
           <div></div>
           <div className="relative col-span-2">
-            {isCorrect === null || (isCorrect !== null && round > 1) ? (
+            {isCorrect === null ? (
               <></>
             ) : isCorrect ? (
               <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500">
@@ -122,6 +127,7 @@ const Page = () => {
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(2)}
             variant={"ghost"}
+            className="text-wrap"
           >
             {currentQuestion.answers[2]}
           </Button>
@@ -130,11 +136,10 @@ const Page = () => {
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(3)}
             variant={"ghost"}
+            className="text-wrap"
           >
             {currentQuestion.answers[3]}
           </Button>
-
-          <Progress className="col-span-4 mt-10" value={(100 * round) / TOTAL_ROUNDS} showValue />
         </div>
       ) : null}
     </div>
