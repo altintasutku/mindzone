@@ -69,10 +69,6 @@ const Navbar = () => {
       </div>
 
       <div className="hidden lg:flex justify-end items-center gap-1 col-span-1 flex-1">
-
-      <Link href={"/dashboard"}>
-              <Button variant={"ghost"}>Gösterge Paneli</Button>
-            </Link>
         {session.status === "loading" ? null : session.status ===
           "authenticated" ? (
           <>
@@ -117,11 +113,6 @@ const Navbar = () => {
               </Button>
             </Link>
             <Separator />
-                <Link href={"/dashboard"}>
-                  <Button variant={"ghost"} className="w-full">
-                    Gösterge Paneli
-                  </Button>
-                </Link>
             {session.status === "loading" ? null : session.status ===
               "authenticated" ? (
               <>
