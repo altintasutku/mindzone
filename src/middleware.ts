@@ -19,3 +19,11 @@ export async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
+
+export { default } from 'next-auth/middleware'
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+} as const;
