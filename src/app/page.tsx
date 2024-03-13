@@ -15,6 +15,7 @@ async function Home({
   if (session && searchParams.nav !== "true") {
     redirect("/dashboard");
   }
+  
 
   return (
     <main className="flex flex-col items-center gap-5 py-5 px-3 md:px-[10%] lg:px-[25%]">
