@@ -6,7 +6,8 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
 
   console.log("token", token);
-  
+  console.log("req", req);
+
   if (!token && req.nextUrl.pathname.includes("/dashboard")) {
     return NextResponse.redirect(new URL("/register", req.nextUrl));
   } else if (
