@@ -5,6 +5,8 @@ import type { NextRequest } from "next/server";
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
 
+  console.log("token", token);
+  
   if (!token && req.nextUrl.pathname.includes("/dashboard")) {
     return NextResponse.redirect(new URL("/register", req.nextUrl));
   } else if (
@@ -19,11 +21,3 @@ export async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
-
-export { default } from 'next-auth/middleware'
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-} as const;
