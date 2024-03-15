@@ -130,7 +130,7 @@ export const weekTwoGame4Data: Week2Game4[] = [
   {
     question:
       "Leyla sorun giderici olarak çalışıyor. Kendisine standart görünen bir sorun sunulur ancak bunun nasıl çözüleceğini çözemez. Leyla'nın hangi duyguyu hissetmesi en muhtemeldir?",
-    correctAnswer: "d) Hayal kırıklığına uğramış",
+    correctAnswer: "b) Hayal kırıklığına uğramış",
     ifWrong:
       "Hay aksi! Cevap hayal kırıklığına uğramış olacaktı. Bu gibi durumlarda birçok duyguyu aynı anda tecrübe edebiliriz. Şaşkınlık duygusu da burada hissedilmesi muhtemel olan bir duygudur. Hayal kırıklığına uğramak, kişinin bir beklentisinin aksi durumlardai durumunda hissettiği bir duygudur. Burada arkadaşı Berk’in olağan dışında yaptığı ve kendinden beklediği bir durum söz konusudur. Bu duygu, bir kişinin istediği veya beklediği bir şeyin olmadığını fark ettiğinde ortaya çıkar. Yine de yaşanılan duygular kişiden kişiye değişebilir.",
     options: [

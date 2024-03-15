@@ -10,6 +10,9 @@ const loader = ({ src }: { src: string }) => {
 const IntroductionTestFour = () => {
   return (
     <>
+      <h2 className="text-xl font-semibold text-center">
+        4. performans testi açıklaması
+      </h2>
       <p>
         Ekranda bazı insan fotoğrafları göreceksiniz. Fotoğrafı gördükten sonra
         “sizlerin nasıl hissettiğinizi” puanlamanızı istiyoruz. Bu puanlamayı

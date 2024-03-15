@@ -10,6 +10,9 @@ const loader = ({ src }: { src: string }) => {
 const IntroductionTestFive = () => {
   return (
     <>
+      <h2 className="text-xl font-semibold text-center">
+        5. performans testi açıklaması
+      </h2>
       <p>
         Ekranda “Göz” resimleri gösterilecektir. Resimdeki kişinin ne
         düşündüğünü ya da hissettiğini en iyi tanımlayan kelimeyi işaretlemeniz

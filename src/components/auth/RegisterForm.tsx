@@ -5,7 +5,11 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Form, FormDescription, FormLabel } from "@/components/ui/form";
+import {
+  Form,
+  FormDescription,
+  FormLabel,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -37,6 +41,7 @@ const RegisterForm = () => {
           weeklyStatus: "1",
           performanceTaskStep: "1",
           isActive: true,
+          userType: 0,
         }
       );
 
@@ -77,7 +82,9 @@ const RegisterForm = () => {
           {({ field }) => <Input placeholder="Email" {...field} />}
         </CustomFormField>
         <CustomFormField form={form} name="phone" small>
-          {({ field }) => <Input placeholder="Telefon" {...field} />}
+          {({ field }) => (
+            <Input placeholder="Telefon (+90 555 555 55 55)" {...field} />
+          )}
         </CustomFormField>
         <CustomFormField form={form} name="password">
           {({ field }) => (

@@ -9,6 +9,7 @@ const PerformanceTasks = () => {
   return (
     <section className="bg-white dark:bg-zinc-900 shadow p-4 text-center space-y-3 rounded-md">
       <h1 className="font-semibold text-xl">Performans Testleri</h1>
+      <small className="text-red-500">BURASI KALDIRILACAK</small>
       <div className="flex flex-wrap justify-evenly gap-2">
         {performanceTasksProgress.map((task, index) => (
           <Button variant={"ghost"} key={index} asChild>

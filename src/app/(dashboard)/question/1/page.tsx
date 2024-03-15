@@ -1,15 +1,23 @@
 "use client";
 
-import { stepOneQuestions } from "@/assets/mockdata/survey/questions";
-import { Button } from "@/components/ui/button";
-import { FrownIcon, LaughIcon, MehIcon, SmileIcon } from "lucide-react";
-import React from "react";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination";
+  stepOneAnswersAscending,
+  stepOneQuestions,
+} from "@/assets/mockdata/survey/questions";
+import { Button } from "@/components/ui/button";
+import {
+  FrownIcon,
+  LaughIcon,
+  Loader2Icon,
+  MehIcon,
+  SmileIcon,
+} from "lucide-react";
+import React, { useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/hooks/useUserStore";
 
 const options = [
   "Kesinlikle Katılıyorum",
@@ -19,13 +27,65 @@ const options = [
 ];
 
 const QuestionTestOne = () => {
-  const [answers, setAnswers] = React.useState<Record<string, string>>({});
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const updateUser = useUserStore((state) => state.updateUser);
+  const router = useRouter();
 
-  const handleAnswer = (questionId: string, answer: string) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+  if (!session) {
+    router.push("/login");
+  }
+
+  const [answers, setAnswers] = React.useState<Record<string, number>>({});
+  const [scoreBoard, setScoreBoard] = React.useState<Record<string, number>>(
+    {}
+  );
+  const [totalScore, setTotalScore] = React.useState(0);
+
+  // Calculate total score
+  useEffect(() => {
+    const total = Object.values(scoreBoard).reduce(
+      (acc, curr) => acc + curr,
+      0
+    );
+    setTotalScore(total);
+  }, [scoreBoard]);
+
+  const handleAnswer = (questionId: string, scoreIndex: number) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: scoreIndex }));
+
+    // If the question is in the ascending list, add the score as is, else subtract it from 4
+    if (stepOneAnswersAscending.includes(parseInt(questionId))) {
+      setScoreBoard((prev) => ({ ...prev, [questionId]: scoreIndex + 1 }));
+    } else {
+      setScoreBoard((prev) => ({ ...prev, [questionId]: 4 - scoreIndex }));
+    }
   };
 
   const [pages, setPages] = React.useState(1);
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["user", "update"],
+    mutationFn: async () => {
+      if (!session.data) {
+        return;
+      }
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            Status: user.userDetails.Status === "S1" ? "PT1" : "PT2",
+          },
+        },
+      });
+    },
+    onSuccess() {
+      router.push("/test");
+    },
+  });
 
   return (
     <div className="flex flex-col items-center">
@@ -42,14 +102,12 @@ const QuestionTestOne = () => {
                 {options.map((option, index) => (
                   <Button
                     variant={
-                      answers[question.id.toString()] === option
+                      answers[question.id.toString()] === index
                         ? "default"
                         : "secondary"
                     }
                     key={index}
-                    onClick={() =>
-                      handleAnswer(question.id.toString(), options[index])
-                    }
+                    onClick={() => handleAnswer(question.id.toString(), index)}
                   >
                     {index === 0 ? (
                       <LaughIcon size={18} className="mr-2" />
@@ -93,11 +151,13 @@ const QuestionTestOne = () => {
         <Button
           variant="default"
           onClick={() => {
-            console.log(answers); //TODO: Send answers to the server
+            mutate();
           }}
-          disabled={Object.keys(answers).length !== stepOneQuestions.length}
+          // disabled={
+          //   Object.keys(answers).length !== stepOneQuestions.length || isPending
+          // }
         >
-          Tamamla
+          {isPending ? <Loader2Icon className="animate-spin" /> : "Tamamla"}
         </Button>
       </nav>
     </div>
