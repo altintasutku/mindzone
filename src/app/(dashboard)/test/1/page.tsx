@@ -5,8 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
-import React from "react";
+import React, { use, useEffect } from "react";
 import IntroductionsTestOne from "./_introductions";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { useUserStore } from "@/hooks/useUserStore";
 
 const imageColors = ["red", "green", "blue", "yellow"];
 const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
@@ -44,12 +49,17 @@ const answers = [
   },
 ];
 
-const TOTAL_ROUNDS = 360;
+const TOTAL_ROUNDS = 3;
 
 const CORRECT_DURATION = 1000;
 
 const PerformanceTestOnePage = () => {
   const { toast } = useToast();
+
+  const router = useRouter();
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const updateUser = useUserStore((state) => state.updateUser);
 
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
 
@@ -76,12 +86,17 @@ const PerformanceTestOnePage = () => {
     }));
   };
 
+  const [timer, setTimer] = React.useState<number>(0);
+  let timeout: NodeJS.Timeout;
+
   const [stats, setStats] = React.useState<{
     totalWrongs: number;
     resistanceWrongs: number;
+    reactionTime: number;
   }>({
     totalWrongs: 0,
     resistanceWrongs: 0,
+    reactionTime: 0,
   });
 
   const [currentShape, setCurrentShape] = React.useState<{
@@ -89,12 +104,50 @@ const PerformanceTestOnePage = () => {
     color: string;
     shape: string;
   }>();
-
   const [currentRule, setCurrentRule] = React.useState<Rules>(Rules.shape);
-
   const [round, setRound] = React.useState<number>(0);
-
   const [isFinished, setIsFinished] = React.useState<boolean>(false);
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      if (!session.data) {
+        throw new Error("Session not found");
+      }
+
+      await sendPerformanceTaskData({
+        accessToken: session.data.user.accessToken,
+        stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
+        stepInfo: { step: 1, group: 1 },
+      });
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            PerformanceTaskStep: "2",
+          },
+        },
+      });
+    },
+    onSuccess: () => {
+      router.push("/test/2");
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    // Stop the timer
+    clearInterval(timeout);
+    setStats((prev) => ({ ...prev, reactionTime: timer }));
+
+    mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
@@ -114,6 +167,11 @@ const PerformanceTestOnePage = () => {
     else setCurrentRule(Rules.shape);
     setRound((prev) => prev + 1);
     setCurrentShape(generateRandomImage());
+    if (!timeout) {
+      timeout = setInterval(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const handleAnswer = (answerIndex: number) => {

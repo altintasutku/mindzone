@@ -41,7 +41,6 @@ const MAX_REACTION_TIME = 1400;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
-  console.log("🚀 ~ WeekTwoGameThreePage ~ round:", round);
   const [isFinished, setIsFinished] = useState(false);
 
   const [currentData, setCurrentData] = useState<DataType | null>(null);

@@ -117,6 +117,6 @@ const createNewLevel = (): GameImage[] => {
   return level.sort(() => Math.random() - 0.5);
 };
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 300; i++) {
   levels.push(createNewLevel());
 }

@@ -32,7 +32,7 @@ export default function ToggleTheme() {
           Karanlık
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          Sistem
+          Otomatik
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

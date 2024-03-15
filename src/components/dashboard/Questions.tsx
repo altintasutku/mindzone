@@ -7,6 +7,7 @@ const Questions = () => {
   return (
     <section className="bg-white dark:bg-zinc-900 shadow p-4 text-center space-y-3 rounded-md">
       <h1 className="font-semibold text-xl">Anketler</h1>
+      <small className="text-red-500">BURASI KALDIRILACAK</small>
       <ul className="flex flex-col sm:flex-row gap-3">
         {questionProgressList.map((question, index) => (
           <Link
