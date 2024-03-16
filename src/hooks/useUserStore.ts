@@ -6,7 +6,7 @@ import { z } from "zod";
 import { create } from "zustand";
 
 interface UserState {
-  user: z.infer<typeof userValidator>;
+  user: z.infer<typeof userValidator> | null;
   setUser: (user: z.infer<typeof userValidator>) => void;
   updateUser: ({
     accessToken,
@@ -17,33 +17,9 @@ interface UserState {
   }) => Promise<void>;
 }
 
-export const initialUserState: z.infer<typeof userValidator> = {
-  id: 0,
-  code: "",
-  name: "",
-  surname: "",
-  username: "",
-  email: "",
-  isActive: false,
-  isLocked: false,
-  userDetails: {
-    Age: "",
-    ChronicIllness: "",
-    ContactType: "",
-    Education: "",
-    Gender: "",
-    PerformanceTaskStep: "",
-    Phone: "",
-    PhysicalCondition: "",
-    PsychologicalHistory: "",
-    Status: "",
-    UserType: "",
-    WeeklyStatus: "",
-  },
-};
 
 export const useUserStore = create<UserState>()((set) => ({
-  user: initialUserState,
+  user: null,
   setUser: (user) => {
     set(() => ({
       user,
