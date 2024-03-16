@@ -2,11 +2,11 @@ import React from "react";
 
 const IntroductionCF = () => {
   return (
-    <>
+    <div>
+      <h2 className="text-xl font-semibold text-center">
+        2. egzersiz açıklaması
+      </h2>
       <p>
-        <h2 className="text-xl font-semibold text-center">
-          2. egzersiz açıklaması
-        </h2>
         Bu egzersizde ekranda harfler ve sayılar göreceksiniz. Takip etmeniz
         gereken birkaç kural belirledik ve bunlara göre yanıtlamanız
         gerekmektedir.
@@ -22,7 +22,7 @@ const IntroductionCF = () => {
         <strong>Sesli harf ve çift sayı ise Y</strong> butonuna basılması
         gerekmektedir.
       </p>
-    </>
+    </div>
   );
 };
 

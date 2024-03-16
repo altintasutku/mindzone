@@ -3,18 +3,20 @@ import React from "react";
 const IntroductionInh = () => {
   return (
     <>
-      <p>
+      <div>
         <h2 className="text-xl font-semibold text-center">
           3. egzersiz açıklaması
         </h2>
-        Şimdi size bazı kelimeler göstereceğiz. &apos;Başlayın&apos; dedikten
-        hemen sonra, sizden, bu kartlarda yazılı olan kelimelerin hangi renkte
-        yazıldığını aşağıdaki butona bakarak olabildiğince hızlı yanıtlamanız
-        gerekmektedir.
-        <br />
-        Renk ve kelimeler uyumsuz olduğunda cevap vermek zor olabilir, o yüzden
-        odaklanarak dikkatli ve hızlı yanıtlamaya çalışın.
-      </p>
+        <p>
+          Şimdi size bazı kelimeler göstereceğiz. &apos;Başlayın&apos; dedikten
+          hemen sonra, sizden, bu kartlarda yazılı olan kelimelerin hangi renkte
+          yazıldığını aşağıdaki butona bakarak olabildiğince hızlı yanıtlamanız
+          gerekmektedir.
+          <br />
+          Renk ve kelimeler uyumsuz olduğunda cevap vermek zor olabilir, o
+          yüzden odaklanarak dikkatli ve hızlı yanıtlamaya çalışın.
+        </p>{" "}
+      </div>
       <br />
       <ul>
         <li className="text-yellow-400">

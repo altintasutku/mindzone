@@ -34,7 +34,7 @@ export default function DashboardLayout({ children }: Props) {
     if (data) {
       setUser(data);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (session.status === "loading" || isLoading) {
@@ -55,7 +55,8 @@ export default function DashboardLayout({ children }: Props) {
   if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
     router.push("/question/1");
   } else if (
-    (user.userDetails.Status === "PT1" || user.userDetails.Status === "PT2")
+    user.userDetails.Status === "PT1" ||
+    user.userDetails.Status === "PT2"
   ) {
     router.push(`/test/${user.userDetails.PerformanceTaskStep || 1}`);
   } else if (
@@ -63,9 +64,15 @@ export default function DashboardLayout({ children }: Props) {
     user.userDetails.Status === "S4"
   ) {
     router.push("/question/2");
+  } else if (
+    user.userDetails.Status === "W1" &&
+    !pathname.startsWith("/week") &&
+    !pathname.startsWith("/dashboard")
+  ) {
+    router.push("/dashboard");
   }
 
-  if (!data){
+  if (!data) {
     return null;
   }
 
