@@ -52,24 +52,19 @@ export default function DashboardLayout({ children }: Props) {
     return null;
   }
 
+  if (pathname !== "/dashboard") {
+    return <>{children}</>;
+  }
+
   if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
     router.push("/question/1");
-  } else if (
-    user.userDetails.Status === "PT1" ||
-    user.userDetails.Status === "PT2"
-  ) {
+  } else if (user.userDetails.Status.includes("PT")) {
     router.push(`/test/${user.userDetails.PerformanceTaskStep || 1}`);
   } else if (
     user.userDetails.Status === "S2" ||
     user.userDetails.Status === "S4"
   ) {
     router.push("/question/2");
-  } else if (
-    user.userDetails.Status === "W1" &&
-    !pathname.startsWith("/week") &&
-    !pathname.startsWith("/dashboard")
-  ) {
-    router.push("/dashboard");
   }
 
   if (!data) {
