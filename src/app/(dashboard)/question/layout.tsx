@@ -1,13 +1,32 @@
+import { getUser } from "@/lib/api/user";
+import { getAuthSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
-const QuestionLayout = ({ children }: Props) => {
+const QuestionLayout = async ({ children }: Props) => {
+  const session = await getAuthSession();
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const user = await getUser({
+    accessToken: session.user.accessToken,
+    userId: session.user.id,
+  });
+
+  if (!user.userDetails.Status.includes("S")) {
+    redirect("/dashboard");
+  }
   return (
     <div className="flex justify-center items-center py-5">
-      <div className="bg-white dark:bg-zinc-900 p-5 shadow rounded-md">{children}</div>
+      <div className="bg-white dark:bg-zinc-900 p-5 shadow rounded-md">
+        {children}
+      </div>
     </div>
   );
 };
