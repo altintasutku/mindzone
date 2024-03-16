@@ -110,7 +110,7 @@ const PerformanceTestOnePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      if (!session.data) {
+      if (!session.data || !user) {
         throw new Error("Session not found");
       }
 

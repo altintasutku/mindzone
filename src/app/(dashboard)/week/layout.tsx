@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (!user.userDetails.WeeklyStatus) {
+  if (!user || !user.userDetails.WeeklyStatus) {
     return null;
   }
 

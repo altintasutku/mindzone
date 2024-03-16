@@ -56,6 +56,10 @@ export default function DashboardLayout({ children }: Props) {
     return <>{children}</>;
   }
 
+  if (!user) {
+    return null;
+  }
+
   if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
     router.push("/question/1");
   } else if (user.userDetails.Status.includes("PT")) {

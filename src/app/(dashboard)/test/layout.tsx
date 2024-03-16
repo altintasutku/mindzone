@@ -1,30 +1,31 @@
+"use client";
+
 import TestContainer from "@/components/game/TestContainer";
-import { getUser } from "@/lib/api/user";
-import { getAuthSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { useUserStore } from "@/hooks/useUserStore";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
-const Layout = async ({ children }: Props) => {
-  const session = await getAuthSession();
+const Layout = ({ children }: Props) => {
+  const user = useUserStore((state) => state.user);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  if (!session) {
-    redirect("/login");
+  if (!user || !user.userDetails.Status) {
+    return null;
   }
-
-  const user = await getUser({
-    accessToken: session.user.accessToken,
-    userId: session.user.id,
-  });
 
   if (!user.userDetails.Status.includes("PT")) {
-    redirect("/dashboard");
+    router.push("/dashboard");    
   }
 
-  redirect(`/test/${user.userDetails.PerformanceTaskStep || 1}`);
+  if(pathname !== "/test/" + user.userDetails.PerformanceTaskStep) {
+    router.push("/test/" + user.userDetails.PerformanceTaskStep);
+  }
+
   return <TestContainer>{children}</TestContainer>;
 };
 

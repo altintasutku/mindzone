@@ -67,7 +67,7 @@ const QuestionTestOne = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["user", "update"],
     mutationFn: async () => {
-      if (!session.data) {
+      if (!session.data || !user) {
         return;
       }
 
