@@ -1,14 +1,14 @@
 "use client";
 
 import { LoginType } from "@/lib/validators/auth";
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
 import { Loader2Icon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-const LoginForm = () => {
+const LoginFormInner = () => {
   const [isPending, setIsPending] = React.useState(false);
   const params = useSearchParams();
 
@@ -58,4 +58,10 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default function LoginForm() {
+  return (
+    <Suspense>
+      <LoginFormInner />;
+    </Suspense>
+  );
+}
