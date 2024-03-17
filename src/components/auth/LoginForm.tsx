@@ -1,53 +1,39 @@
 "use client";
 
-import { LoginType, loginValidator } from "@/lib/validators/auth";
+import { LoginType } from "@/lib/validators/auth";
 import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { Input } from "../ui/input";
-import CustomFormField from "./CustomFormField";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
-  // const { mutate: login, isPending } = useMutation({
-  //   mutationFn: async (credentials: LoginType) => {
-  //     console.log(credentials);
-      
-  //     const { data } = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/api/authentication`,
-  //       {
-  //         username: credentials.email,
-  //         password: credentials.password,
-  //       }
-  //     );
-
-  //     console.log("data", data);
-
-  //     return data;
-  //   },
-  // });
-
   const [isPending, setIsPending] = React.useState(false);
+  const params = useSearchParams();
+
+  const error = params.get("error") as string;
 
   const login = async (credentials: LoginType) => {
     setIsPending(true);
-    signIn("credentials",{
+    signIn("credentials", {
       email: credentials.email,
       password: credentials.password,
       callbackUrl: "/",
-    })
-  }
+    });
+  };
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   return (
     <form className="gap-2 flex flex-col w-full sm:w-auto">
+      {error && (
+        <p className="text-red-500 text-sm text-center">
+          E-posta veya şifre hatalı
+        </p>
+      )}
+
       <Input
         placeholder="E-posta"
         value={email}
