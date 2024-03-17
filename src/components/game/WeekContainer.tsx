@@ -42,6 +42,9 @@ const WeekContainer = ({ children, games }: Props) => {
         <Separator className="my-4" />
         <div className="flex flex-wrap justify-evenly items-center gap-5">
           {games.map((game, index) => {
+            const isCompleted =
+              (parseInt(user.userDetails.WeeklyStatus) - 1) % 5 > index;
+
             return (
               <div
                 key={index}
@@ -52,11 +55,11 @@ const WeekContainer = ({ children, games }: Props) => {
                       game.slug
                     ),
                     "bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200":
-                      game.isCompleted,
+                      isCompleted,
                   }
                 )}
                 onClick={() => {
-                  if (!game.isCompleted) {
+                  if (!isCompleted) {
                     router.push(`/week/${game.week}/${game.slug}`);
                   }
                 }}
@@ -69,7 +72,7 @@ const WeekContainer = ({ children, games }: Props) => {
                     width={150}
                     height={40}
                     className={cn("h-full w-full object-cover", {
-                      "opacity-50": game.isCompleted,
+                      "opacity-50": isCompleted,
                     })}
                   />
                 </div>

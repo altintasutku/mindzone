@@ -8,7 +8,11 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import FinishScreen from "@/components/game/FinishScreen";
-import { levels } from "@/assets/mockdata/weekGames/week1DirectorGame";
+import {
+  DirectorGame,
+  Level,
+  Size,
+} from "@/assets/mockdata/weekGames/week1DirectorGame";
 
 const boxImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
@@ -22,18 +26,22 @@ const itemImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
 };
 
-const TOTAL_ROUNDS = levels.length;
+const TOTAL_ROUNDS = 100;
 
 const WeekOneDirectorTaskPage = () => {
-  const [level, setLevel] = useState(-1);
-
+  const [level, setLevel] = useState<number>(-1);
   const [isFinished, setIsFinished] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const [currentLevel, setCurrentLevel] = useState(levels[level]);
+  const game = new DirectorGame(TOTAL_ROUNDS);
+
+  const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
+  console.log("🚀 ~ WeekOneDirectorTaskPage ~ currentLevel:", currentLevel);
 
   useEffect(() => {
     if (level === 0 || level === -1) return;
-    setCurrentLevel(levels[level - 1]);
+    setCurrentLevel(game.getLevel(level - 1));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   const handleNextRound = () => {
@@ -47,14 +55,18 @@ const WeekOneDirectorTaskPage = () => {
 
   const handleCellClick = (row: number, col: number) => {
     if (
-      col === levels[level - 1].answer[0] &&
-      row === levels[level - 1].answer[1]
+      currentLevel.directorSays.coordinates[0] === col &&
+      currentLevel.directorSays.coordinates[1] === row
     ) {
-      console.log("Doğru");
+      setIsCorrect(true);
     } else {
-      console.log("Yanlış");
+      setIsCorrect(false);
     }
-    handleNextRound();
+
+    setTimeout(() => {
+      handleNextRound();
+      setIsCorrect(null);
+    }, 1000);
   };
 
   return (
@@ -86,9 +98,9 @@ const WeekOneDirectorTaskPage = () => {
         </div>
       ) : currentLevel ? (
         <div className="space-y-10 sm:my-10">
-          <div className="flex flex-col-reverse sm:flex-row sm:gap-5 items-end sm:items-start">
-            <div className="flex flex-col items-center my-20">
-              {currentLevel.gameMap.map((row, j) => (
+          <div className="grid grid-cols-6 gap-5">
+            <div className="flex flex-col items-center my-20 col-span-4 mt-40 sm:mt-0">
+              {currentLevel.shelf.items.map((row, j) => (
                 <div key={j + "j"} className="flex">
                   {row.map((gameNode, k) => (
                     <div
@@ -106,7 +118,7 @@ const WeekOneDirectorTaskPage = () => {
                     >
                       <Image
                         loader={boxImageLoader}
-                        src={!gameNode.isShowing ? "full-box" : "empty-box"}
+                        src={!gameNode.isVisible ? "full-box" : "empty-box"}
                         alt="boxImage"
                         className="-m-[4px] sm:-m-[9px]"
                         height={140}
@@ -116,27 +128,27 @@ const WeekOneDirectorTaskPage = () => {
                         className={cn(
                           "absolute text-ls text-black group-hover:font-semibold",
                           {
-                            "text-white": !gameNode.isShowing,
+                            "text-white": !gameNode.isVisible,
                           }
                         )}
                       >
-                        {gameNode.value ? (
+                        {gameNode.image ? (
                           <Image
                             loader={itemImageLoader}
-                            src={gameNode.value.path}
+                            src={gameNode.image.path}
                             alt="itemImage"
                             height={
-                              gameNode.size === "küçük"
-                                ? 50
-                                : gameNode.size === "orta"
-                                ? 80
+                              gameNode.size === Size.SMALL
+                                ? 40
+                                : gameNode.size === Size.MEDIUM
+                                ? 70
                                 : 110
                             }
                             width={
-                              gameNode.size === "küçük"
-                                ? 50
-                                : gameNode.size === "orta"
-                                ? 80
+                              gameNode.size === Size.SMALL
+                                ? 40
+                                : gameNode.size === Size.MEDIUM
+                                ? 70
                                 : 110
                             }
                           />
@@ -149,9 +161,23 @@ const WeekOneDirectorTaskPage = () => {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col items-center gap-4">
-              <h1 className="font-bold text-xl border border-slate-100 rounded-lg px-4 py-2">
-                {currentLevel.directorSays}
+            <div className="flex flex-col items-center gap-4 col-span-2">
+              <h1
+                className={cn(
+                  "font-bold text-xl border border-slate-100 rounded-lg px-4 py-2",
+                  {
+                    "text-green-500 border-green-500": isCorrect === true,
+                    "text-red-500 border-red-500": isCorrect === false,
+                  }
+                )}
+              >
+                {isCorrect === null
+                  ? `Ben ${currentLevel.directorSays.size} ${currentLevel.directorSays.image?.name} istiyorum!`
+                  : isCorrect
+                  ? "Tebrikler!"
+                  : "Yanlış!"}
+                  <br />
+                {JSON.stringify(currentLevel.directorSays.coordinates, null, 2)}
               </h1>
               <Image
                 loader={directorImageLoader}
