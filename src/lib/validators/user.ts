@@ -54,4 +54,8 @@ export const userValidator = z.object({
   isActive: z.boolean(),
   isLocked: z.boolean(),
   userDetails: userDetailsValidator,
+  createdOn: z.string(),
+  createdBy: z.number(),
+  updatedOn: z.string(),
+  updatedBy: z.number(),
 });

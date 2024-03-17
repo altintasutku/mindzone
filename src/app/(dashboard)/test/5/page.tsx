@@ -70,8 +70,6 @@ const Page = () => {
   }, [isFinished]);
 
   const handleNext = () => {
-    console.log(round);
-    console.log(TOTAL_ROUNDS);
     if (round >= TOTAL_ROUNDS) {
       setIsFinished(true);
       return;

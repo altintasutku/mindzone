@@ -13,6 +13,11 @@ import {
   Level,
   Size,
 } from "@/assets/mockdata/weekGames/week1DirectorGame";
+import { WeekData, sendWeekData } from "@/lib/api/week";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { updateUser } from "@/lib/api/user";
 
 const boxImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
@@ -26,17 +31,59 @@ const itemImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
 };
 
-const TOTAL_ROUNDS = 100;
+const TOTAL_ROUNDS = 4;
 
 const WeekOneDirectorTaskPage = () => {
   const [level, setLevel] = useState<number>(-1);
   const [isFinished, setIsFinished] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+
   const game = new DirectorGame(TOTAL_ROUNDS);
 
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
-  console.log("🚀 ~ WeekOneDirectorTaskPage ~ currentLevel:", currentLevel);
+
+  const [timer, setTimer] = useState<number>(0);
+  let timeout: NodeJS.Timeout;
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 4,
+    group: "W1",
+  });
+
+  const {mutate} = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) {
+        return
+      }
+
+      await sendWeekData(data,session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+    }
+  })
+
+  useEffect(() => {
+    if (!isFinished) return;
+
+    mutate(stats);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished])
+  
 
   useEffect(() => {
     if (level === 0 || level === -1) return;
@@ -46,11 +93,23 @@ const WeekOneDirectorTaskPage = () => {
 
   const handleNextRound = () => {
     if (level === TOTAL_ROUNDS) {
+      clearInterval(timeout);
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+
       setIsFinished(true);
       return;
     }
 
     setLevel((prev) => prev + 1);
+
+    if (!timeout) {
+      timeout = setInterval(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const handleCellClick = (row: number, col: number) => {
@@ -58,8 +117,16 @@ const WeekOneDirectorTaskPage = () => {
       currentLevel.directorSays.coordinates[0] === col &&
       currentLevel.directorSays.coordinates[1] === row
     ) {
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setIsCorrect(true);
     } else {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setIsCorrect(false);
     }
 
@@ -176,8 +243,6 @@ const WeekOneDirectorTaskPage = () => {
                   : isCorrect
                   ? "Tebrikler!"
                   : "Yanlış!"}
-                  <br />
-                {JSON.stringify(currentLevel.directorSays.coordinates, null, 2)}
               </h1>
               <Image
                 loader={directorImageLoader}
