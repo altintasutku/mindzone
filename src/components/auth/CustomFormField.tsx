@@ -1,5 +1,5 @@
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { FormControl, FormField, FormItem } from "../ui/form";
+import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { cn } from "@/lib/utils";
 
 type Props = Readonly<{
@@ -11,14 +11,9 @@ type Props = Readonly<{
   }: {
     field: ControllerRenderProps<FieldValues>;
   }) => React.ReactNode;
-}>
+}>;
 
-const CustomFormField = ({
-  form,
-  name,
-  small = false,
-  children,
-}: Props) => {
+const CustomFormField = ({ form, name, small = false, children }: Props) => {
   return (
     <FormField
       control={form.control}
@@ -30,6 +25,7 @@ const CustomFormField = ({
           })}
         >
           <FormControl>{children({ field })}</FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

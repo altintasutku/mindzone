@@ -5,11 +5,7 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormDescription,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormDescription, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -57,12 +53,20 @@ const RegisterForm = () => {
   const form = useForm<RegisterType>({
     resolver: zodResolver(registerValidator),
     defaultValues: {
-      chronicIllness: "-",
-      psychologicalHistory: "-",
+      psychologicalHistory: "",
+      chronicIllness: "",
     },
   });
 
   function onSubmit(values: RegisterType) {
+    if (!values.psychologicalHistory) {
+      values.psychologicalHistory = "-";
+    }
+
+    if (!values.chronicIllness) {
+      values.chronicIllness = "-";
+    }
+    
     register(values);
   }
 
@@ -137,28 +141,24 @@ const RegisterForm = () => {
             </Select>
           )}
         </CustomFormField>
-        {form.watch("physicalCondition") === "Evet" && (
-          <>
-            <CustomFormField form={form} name="chronicIllness" small>
-              {({ field }) => (
-                <Textarea
-                  placeholder="Fiziksel - Kronik Rahatsızlıklar"
-                  className="resize-none"
-                  {...field}
-                />
-              )}
-            </CustomFormField>
-            <CustomFormField form={form} name="psychologicalHistory" small>
-              {({ field }) => (
-                <Textarea
-                  placeholder="Psikolojik/Psikiyatrik Geçmiş"
-                  className="resize-none"
-                  {...field}
-                />
-              )}
-            </CustomFormField>
-          </>
-        )}
+        <CustomFormField form={form} name="chronicIllness" small>
+          {({ field }) => (
+            <Textarea
+              placeholder="Fiziksel - Kronik Rahatsızlıklar"
+              className="resize-none"
+              {...field}
+            />
+          )}
+        </CustomFormField>
+        <CustomFormField form={form} name="psychologicalHistory" small>
+          {({ field }) => (
+            <Textarea
+              placeholder="Psikolojik/Psikiyatrik Geçmiş"
+              className="resize-none"
+              {...field}
+            />
+          )}
+        </CustomFormField>
         <CustomFormField form={form} name="contactType">
           {({ field }) => (
             <Select onValueChange={field.onChange} defaultValue={field.value}>

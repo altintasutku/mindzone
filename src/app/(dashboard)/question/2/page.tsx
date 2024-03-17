@@ -4,11 +4,6 @@ import { stepTwoQuestions } from "@/assets/mockdata/survey/questions";
 import { Button } from "@/components/ui/button";
 import { FrownIcon, LaughIcon, MehIcon, SmileIcon } from "lucide-react";
 import React from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination";
 import { Progress } from "@/components/ui/progress";
 
 const options = [

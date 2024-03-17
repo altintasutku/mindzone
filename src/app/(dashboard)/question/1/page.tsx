@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  stepOneAnswersAscending,
+  stepOneAnswersPositive,
   stepOneQuestions,
 } from "@/assets/mockdata/survey/questions";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/hooks/useUserStore";
+import { sendQuestionData } from "@/lib/api/questions";
 
 const options = [
   "Kesinlikle Katılıyorum",
@@ -42,23 +43,21 @@ const QuestionTestOne = () => {
   );
   const [totalScore, setTotalScore] = React.useState(0);
 
-  // Calculate total score
-  useEffect(() => {
-    const total = Object.values(scoreBoard).reduce(
-      (acc, curr) => acc + curr,
-      0
-    );
-    setTotalScore(total);
-  }, [scoreBoard]);
-
   const handleAnswer = (questionId: string, scoreIndex: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: scoreIndex }));
 
-    // If the question is in the ascending list, add the score as is, else subtract it from 4
-    if (stepOneAnswersAscending.includes(parseInt(questionId))) {
-      setScoreBoard((prev) => ({ ...prev, [questionId]: scoreIndex + 1 }));
+    if (stepOneAnswersPositive.includes(parseInt(questionId))) {
+      if (scoreIndex === 0 || scoreIndex === 1) {
+        setScoreBoard((prev) => ({ ...prev, [questionId]: 1 }));
+      } else {
+        setScoreBoard((prev) => ({ ...prev, [questionId]: 0 }));
+      }
     } else {
-      setScoreBoard((prev) => ({ ...prev, [questionId]: 4 - scoreIndex }));
+      if (scoreIndex === 2 || scoreIndex === 3) {
+        setScoreBoard((prev) => ({ ...prev, [questionId]: 1 }));
+      } else {
+        setScoreBoard((prev) => ({ ...prev, [questionId]: 0 }));
+      }
     }
   };
 
@@ -69,6 +68,24 @@ const QuestionTestOne = () => {
     mutationFn: async () => {
       if (!session.data || !user) {
         return;
+      }
+
+      for (let i = 1; i < 6; i++) {
+        const data = stepOneQuestions
+          .filter((item) => item.subType === i)
+          .map((item) => ({
+            score: scoreBoard[item.id.toString()],
+          }));
+
+        await sendQuestionData(
+          {
+            score: data.reduce((acc, item) => acc + item.score, 0),
+            subType: i,
+            type: 1,
+            group: "S1",
+          },
+          session.data.user.accessToken
+        );
       }
 
       await updateUser({
