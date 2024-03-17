@@ -15,3 +15,10 @@ declare type QuestionProgress = {
   locked: boolean;
   progress: number;
 };
+
+declare type QuestionTwo = {
+  id: number;
+  question: string;
+  type: 2 | 3 | 4 | 5;
+  subType: number | null;
+};
