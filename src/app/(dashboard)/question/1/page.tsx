@@ -170,9 +170,9 @@ const QuestionTestOne = () => {
           onClick={() => {
             mutate();
           }}
-          // disabled={
-          //   Object.keys(answers).length !== stepOneQuestions.length || isPending
-          // }
+          disabled={
+            Object.keys(answers).length !== stepOneQuestions.length || isPending
+          }
         >
           {isPending ? <Loader2Icon className="animate-spin" /> : "Tamamla"}
         </Button>

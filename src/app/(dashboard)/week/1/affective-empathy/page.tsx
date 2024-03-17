@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import FinishScreen from "@/components/game/FinishScreen";
 import { Progress } from "@/components/ui/progress";
+import { WeekData, sendWeekData } from "@/lib/api/week";
+import { set } from "zod";
+import { clearInterval } from "timers";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { updateUser } from "@/lib/api/user";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
@@ -14,7 +21,7 @@ const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
 const genderFolderName = ["Erkek", "Kadın"];
 const sexs = ["AM", "AF"];
 const personCountPerSex = 15;
-const MAXROUND = 52;
+const MAXROUND = 4;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);
@@ -25,16 +32,84 @@ const AffectiveEmpathyPage = () => {
   const [allRound1Images, setAllRound1Images] = useState<string[]>([]);
   const [isGameStarted, setIsGameStarted] = useState<boolean | null>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>();
+  const [isFinished, setIsFinished] = useState(false);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 5,
+    group: "W1",
+  });
+
+  const [timer, setTimer] = useState(0);
+  let timeout: NodeJS.Timeout;
+
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) return;
+
+    mutate(stats);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
+  useEffect(() => {
+    if (round >= MAXROUND) {
+      clearInterval(timeout);
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+      setIsFinished(true);
+      return;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round]);
 
   const handleNext = () => {
     setRound((prev) => prev + 1);
+
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const handleImageClick = (clickedImage: string) => {
     setSelectedImage(clickedImage);
     if (clickedImage.slice(0, 10) === samePerson[0].slice(0, 10)) {
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setIsCorrect(true);
     } else {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setIsCorrect(false);
     }
     setTimeout(handleNext, 1000);

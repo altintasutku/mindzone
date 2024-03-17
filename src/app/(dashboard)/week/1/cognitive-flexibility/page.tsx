@@ -7,6 +7,11 @@ import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import IntroductionCF from "./_intorductions";
 import { Progress } from "@/components/ui/progress";
+import { WeekData, sendWeekData } from "@/lib/api/week";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useSession } from "next-auth/react";
+import { updateUser } from "@/lib/api/user";
 
 const ALPABET = [
   "A",
@@ -49,12 +54,33 @@ enum CorrectState {
 
 const CORRECT_DURATION = 800;
 
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 2;
 
 const CognitiveFlexibilityPage = () => {
   const [correctState, setCorrectState] = useState<CorrectState>(
     CorrectState.None
   );
+
+  const user = useUserStore((state) => state.user);
+  const session = useSession();
+
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+    },
+  });
 
   const [currentItem, setCurrentItem] = useState<{
     item: string;
@@ -62,9 +88,32 @@ const CognitiveFlexibilityPage = () => {
   } | null>(null);
 
   const [round, setRound] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+
+  const [timer, setTimer] = useState<number>(0);
+  let timeout: NodeJS.Timeout;
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 2,
+    group: "W1",
+  });
+
+  useEffect(() => {
+    if (!isFinished) return;
+
+    const data = { ...stats, reactionTime: timer };
+    clearInterval(timeout);
+    mutate(data);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   const handleNewRound = () => {
     if (round >= TOTAL_ROUNDS) {
+      setIsFinished(true);
       return setCurrentItem(null);
     } else {
       if (round <= 16) {
@@ -85,10 +134,20 @@ const CognitiveFlexibilityPage = () => {
       }
       setRound((prev) => prev + 1);
     }
+
+    if (!timeout) {
+      timeout = setInterval(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const correctAnswer = () => {
     setCorrectState(CorrectState.Correct);
+    setStats((prev) => ({
+      ...prev,
+      totalAccuracy: prev.totalAccuracy + 1,
+    }));
     setTimeout(() => {
       setCorrectState(CorrectState.None);
       handleNewRound();
@@ -97,6 +156,10 @@ const CognitiveFlexibilityPage = () => {
 
   const incorrectAnswer = () => {
     setCorrectState(CorrectState.Incorrect);
+    setStats((prev) => ({
+      ...prev,
+      totalErrorCount: prev.totalErrorCount + 1,
+    }));
     setTimeout(() => {
       setCorrectState(CorrectState.None);
       handleNewRound();
@@ -131,7 +194,7 @@ const CognitiveFlexibilityPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-5">
-      {round >= TOTAL_ROUNDS ? (
+      {isFinished ? (
         <FinishScreen url="/week/1/inhibition" />
       ) : !currentItem ? (
         <div>
@@ -224,7 +287,7 @@ const CognitiveFlexibilityPage = () => {
             </Button>
           </div>
 
-          <Progress value={(100 * round) / TOTAL_ROUNDS}/>
+          <Progress value={(100 * round) / TOTAL_ROUNDS} />
         </>
       )}
     </div>

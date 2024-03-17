@@ -6,7 +6,7 @@ export const weekOneGames: Game[] = [
   },
   {
     isCompleted: false,
-    slug: "cognitive-flexbility",
+    slug: "cognitive-flexibility",
     week: "1",
   },
   {

@@ -35,6 +35,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     router.push(url);
   }
 
+  const day = Date.now() - new Date(user.createdOn).getTime()
+  
+  if (day < 7 * 24 * 60 * 60 * 1000 * (week - 1)) {
+    router.push("/dashboard");
+  }
+
   return <>{children}</>;
 };
 

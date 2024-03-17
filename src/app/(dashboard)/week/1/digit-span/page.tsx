@@ -19,8 +19,16 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
+import { WeekData, sendWeekData } from "@/lib/api/week";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useSession } from "next-auth/react";
+import { updateUser } from "@/lib/api/user";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 const SHOWING_TIME = 500;
+
+const MAX_ROUNDS = 8;
 
 const DigitspanPage = () => {
   const [randomNumber, setRandomNumber] = useState<number[]>([]);
@@ -29,6 +37,12 @@ const DigitspanPage = () => {
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [activeShowingIndex, setActiveShowingIndex] = useState<number>(0);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+
+  const [reactionTime, setReactionTime] = useState<number>(0);
+  let timeout: NodeJS.Timeout;
 
   const [currentShowingNumber, setCurrentShowingNumber] = useState<
     number | null
@@ -42,15 +56,59 @@ const DigitspanPage = () => {
     }
   }, [round]);
 
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 1,
+    group: "W1",
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) return;
+
+    mutate(stats);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
   const handleStart = () => {
     setRound(1);
     setIsShowing(true);
     setActiveShowingIndex(0);
+    if (!timeout) {
+      timeout = setInterval(() => {
+        setReactionTime((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const handleNext = () => {
-    if (round == 8) {
+    if (round == MAX_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: reactionTime,
+      }));
       setIsFinished(true);
+      clearInterval(timeout);
     } else {
       setRound((prev) => prev + 1);
       setIsShowing(true);
@@ -103,6 +161,7 @@ const DigitspanPage = () => {
           randomNumber={randomNumber}
           handleNext={handleNext}
           handleStart={handleStart}
+          setStats={setStats}
         />
       ) : null}
     </div>
@@ -115,10 +174,12 @@ const NumPad = ({
   randomNumber,
   handleNext,
   handleStart,
+  setStats,
 }: {
   randomNumber: number[];
   handleNext: () => void;
   handleStart: () => void;
+  setStats: React.Dispatch<React.SetStateAction<WeekData>>;
 }) => {
   const [userInput, setUserInput] = useState<number[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -139,12 +200,20 @@ const NumPad = ({
     const isCorrect = userInput.join("") === randomNumber.join("");
     if (isCorrect) {
       setIsCorrect(true);
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setTimeout(() => {
         setIsCorrect(null);
         handleNext();
       }, CORRECT_DURATION);
     } else {
       setIsCorrect(false);
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setTimeout(() => {
         setIsCorrect(null);
         handleNext();
@@ -253,7 +322,11 @@ const NumPad = ({
         </Button>
       </div>
 
-      <Progress className="mt-10" value={(100 * (randomNumber.length - 1)) / 80} showValue/>
+      <Progress
+        className="mt-10"
+        value={(100 * (randomNumber.length - 1)) / 80}
+        showValue
+      />
     </div>
   );
 };
