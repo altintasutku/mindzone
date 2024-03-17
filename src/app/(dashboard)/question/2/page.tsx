@@ -167,6 +167,18 @@ const QuestionTestTwo = () => {
         },
         session.data.user.accessToken
       );
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            PerformanceTaskStep: "1",
+            Status: "W1",
+          },
+        },
+      });
     },
     onSuccess() {
       router.push("/test");
@@ -276,30 +288,6 @@ const QuestionTestTwo = () => {
                 ) : (
                   <p>Unknown type</p>
                 )}
-                {/* {stepTwoQuestions.map((option, index) => (
-                  <Button
-                    variant={
-                      answers[question.id.toString()] === option
-                        ? "default"
-                        : "secondary"
-                    }
-                    key={index}
-                    onClick={() =>
-                      handleAnswer(question.id.toString(), options[index])
-                    }
-                  >
-                    {index === 0 ? (
-                      <LaughIcon size={18} className='mr-2' />
-                    ) : index === 1 ? (
-                      <SmileIcon size={18} className='mr-2' />
-                    ) : index === 2 ? (
-                      <MehIcon size={18} className='mr-2' />
-                    ) : (
-                      <FrownIcon size={18} className='mr-2' />
-                    )}
-                    <small className='text-sm'>{option}</small>
-                  </Button>
-                ))} */}
               </div>
             </li>
           ))}
