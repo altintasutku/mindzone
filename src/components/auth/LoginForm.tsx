@@ -61,7 +61,7 @@ const LoginFormInner = () => {
 export default function LoginForm() {
   return (
     <Suspense>
-      <LoginFormInner />;
+      <LoginFormInner />
     </Suspense>
   );
 }
