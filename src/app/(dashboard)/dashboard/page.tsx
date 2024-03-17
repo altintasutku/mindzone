@@ -9,9 +9,9 @@ const DashboardPage = () => {
     <div className="flex flex-col px-3 sm:px-16 lg:px-32 py-3 sm:py-10 gap-4">
       <Information />
 
-      <Questions />
+      {/* <Questions />
 
-      <PerformanceTasks />
+      <PerformanceTasks /> */}
 
       <WeeklyTasks />
     </div>
