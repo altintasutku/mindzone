@@ -4,8 +4,16 @@ import React, { useEffect, useState } from "react";
 import IntroductionsTestTwo from "./_introductions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { Session } from "inspector";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { set } from "zod";
+import { updateUser } from "@/lib/api/user";
+import { useRouter } from "next/navigation";
 
 const LETTERS = [
   "A",
@@ -43,7 +51,6 @@ const PerformanceTestPageTwo = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const [correct, setCorrect] = useState<number>(0);
-  const [wrong, setWrong] = useState<number>(0);
 
   const [isBreakActive, setIsBreakActive] = useState<boolean>(true);
 
@@ -52,6 +59,53 @@ const PerformanceTestPageTwo = () => {
   const [current, setCurrent] = useState<string | null>(null);
 
   const [history, setHistory] = useState<string[]>([]);
+
+  const user = useUserStore((state) => state.user);
+
+  const [timer, setTimer] = useState<number>(0);
+  let timeout: NodeJS.Timeout;
+
+  const [stats, setStats] = useState<{
+    totalWrongs: number;
+    resistanceWrongs: number;
+    reactionTime: number;
+  }>({
+    totalWrongs: 0,
+    resistanceWrongs: 0,
+    reactionTime: 0,
+  });
+
+  const session = useSession();
+
+  const router = useRouter();
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      if (!session.data || !user) {
+        throw new Error("Session not found");
+      }
+
+      await sendPerformanceTaskData({
+        accessToken: session.data.user.accessToken,
+        stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
+        stepInfo: { step: 2, group: user.userDetails.Status },
+      });
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            PerformanceTaskStep: "3",
+          },
+        },
+      });
+    },
+    onSuccess: () => {
+      router.push("/test/3");
+    },
+  });
 
   useEffect(() => {
     if (round === 0 || isFinished || (correct === 1 && isBreakActive)) {
@@ -70,6 +124,21 @@ const PerformanceTestPageTwo = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
+
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    clearInterval(timeout);
+    setStats((prev) => ({
+      ...prev,
+      reactionTime: timer,
+    }));
+
+    mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
@@ -110,6 +179,11 @@ const PerformanceTestPageTwo = () => {
     else {
       setHistory((prev) => [...prev.slice(1, 5), letter]);
     }
+    if (!timeout) {
+      timeout = setInterval(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const handleAnswer = () => {
@@ -120,7 +194,7 @@ const PerformanceTestPageTwo = () => {
       setCorrect((prev) => prev + 1);
     } else {
       setIsCorrect(false);
-      setWrong((prev) => prev + 1);
+      setStats((prev) => ({ ...prev, totalWrongs: prev.totalWrongs + 1 }));
     }
 
     setTimeout(() => {
@@ -130,37 +204,41 @@ const PerformanceTestPageTwo = () => {
 
   const finishBreak = () => {
     setCorrect(0);
-    setWrong(0);
+    setStats({
+      totalWrongs: 0,
+      resistanceWrongs: 0,
+      reactionTime: 0,
+    });
     setRound(1);
     setHistory([]);
     setIsBreakActive(false);
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
+    <div className='flex flex-col items-center py-10'>
       {isFinished ? (
-        <FinishScreen url="/test/3" />
+        <FinishScreen url='/test/3' />
       ) : round === 0 ? (
-        <div className="flex flex-col">
+        <div className='flex flex-col'>
           <IntroductionsTestTwo />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : correct === 1 && isBreakActive ? (
-        <div className="flex flex-col items-center gap-4">
+        <div className='flex flex-col items-center gap-4'>
           <div>
-            <span className="text-green-500">Tebrikler! Doğru bildin.</span>{" "}
+            <span className='text-green-500'>Tebrikler! Doğru bildin.</span>{" "}
             Deneme bitti hadi oyuna geçelim
           </div>
           <Button onClick={finishBreak}>Devam Et</Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-7 justify-center items-center w-full">
+        <div className='flex flex-col gap-7 justify-center items-center w-full'>
           {correct < 1 && isBreakActive ? (
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               {history.map((letter, index) => (
                 <span
                   key={letter + index}
@@ -176,14 +254,14 @@ const PerformanceTestPageTwo = () => {
               ))}
             </div>
           ) : (
-            <span className="text-3xl font-bold min-h-16 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center">
+            <span className='text-3xl font-bold min-h-16 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center'>
               {current}
             </span>
           )}
 
           <Button
             onClick={handleAnswer}
-            variant="outline"
+            variant='outline'
             className={cn("flex justify-center px-16 py-4", {
               "bg-green-500 text-white hover:bg-green-500": isCorrect === true,
               "bg-red-500 text-white hover:bg-red-500": isCorrect === false,

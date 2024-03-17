@@ -1,13 +1,13 @@
 import axios from "axios";
+import { access } from "fs";
 
-export const sendPerformanceTaskData = async ({
+export const sendWeekGameData = async ({
   stats,
   accessToken,
   stepInfo,
 }: {
   stats: {
     totalWrongs: number;
-    resistanceWrongs: number;
     reactionTime: number;
     totalAccuracy: number;
   };
@@ -15,11 +15,11 @@ export const sendPerformanceTaskData = async ({
   stepInfo: { step: number; group: string };
 }) => {
   const { status } = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/performance-tasks`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/week-games`,
     {
-      totalErrorCount: stats.totalWrongs, // total wrongs
-      totalAccuracy: stats.totalAccuracy, // total corrects
-      reactionTime: stats.reactionTime / 1000, // milisecond to second
+      totalErrorCount: stats.totalWrongs,
+      totalAccuracy: stats.totalAccuracy,
+      reactionTime: stats.reactionTime / 1000,
       ...stepInfo,
     },
     {
@@ -28,6 +28,5 @@ export const sendPerformanceTaskData = async ({
       },
     }
   );
-
   if (status !== 200) throw new Error("Error while sending data");
 };

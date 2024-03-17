@@ -2,11 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import IntroductionTestFour from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import FinishScreen from "@/components/game/FinishScreen";
 import { CheckCheckIcon } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { updateUser } from "@/lib/api/user";
+import { useUserStore } from "@/hooks/useUserStore";
 
 type CurrentModType = {
   mod: "negative" | "notr" | "positive";
@@ -61,6 +67,25 @@ const PerformanceTestPageFour = () => {
 
   const [isFinished, setIsFinished] = useState(false);
 
+  const [timer, setTimer] = useState<number>(0);
+  let timeout: NodeJS.Timeout;
+
+  const [stats, setStats] = useState<{
+    totalWrongs: number;
+    resistanceWrongs: number;
+    reactionTime: number;
+  }>({
+    totalWrongs: 0,
+    resistanceWrongs: 0,
+    reactionTime: 0,
+  });
+
+  const [totalPoint, setTotalPoint] = useState(0);
+
+  const session = useSession();
+  const router = useRouter();
+  const user = useUserStore((state) => state.user);
+
   const handleNext = () => {
     if (round === TOTAL_ROUNDS) {
       setIsFinished(true);
@@ -73,25 +98,77 @@ const PerformanceTestPageFour = () => {
       setCurrentMod(allMods[round]);
       setRound((prev) => prev + 1);
     }, DURATION);
+
+    if (!timeout) {
+      timeout = setInterval(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
+    }
   };
 
   const handleOption = (option: number) => {
+    setTotalPoint((prev) => prev + option);
+
     handleNext();
   };
 
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    console.log(totalPoint);
+
+    clearInterval(timeout);
+    setStats((prev) => ({
+      ...prev,
+      reactionTime: timer,
+    }));
+    mutate();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      if (!session.data || !user) {
+        throw new Error("Session not found");
+      }
+      await sendPerformanceTaskData({
+        accessToken: session.data.user.accessToken,
+        stats: { ...stats, totalAccuracy: totalPoint },
+        stepInfo: { step: 4, group: user.userDetails.Status },
+      });
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            PerformanceTaskStep: "5",
+          },
+        },
+      });
+    },
+    onSuccess: () => {
+      router.push("/test/5");
+    },
+  });
+
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className='flex flex-col items-center gap-5'>
       {isFinished ? (
-        <FinishScreen url="/test/5" />
+        <FinishScreen url='/test/5' />
       ) : round === 0 ? (
         <>
           <IntroductionTestFour />
-          <Separator className="my-4" />
+          <Separator className='my-4' />
           <Button onClick={handleNext}>Başla</Button>
         </>
       ) : (
         <>
-          <div className="h-[400px] flex justify-center items-center">
+          <div className='h-[400px] flex justify-center items-center'>
             {currentMod ? (
               <Image
                 loader={imageLoader}
@@ -99,20 +176,20 @@ const PerformanceTestPageFour = () => {
                 alt={`modImage`}
                 height={300}
                 width={300}
-                className="rounded-md"
+                className='rounded-md'
               />
             ) : (
-              <div className="flex flex-col items-center animate-ping delay-200">
+              <div className='flex flex-col items-center animate-ping delay-200'>
                 <CheckCheckIcon size={50} />
                 <p>Cevabın Kaydedildi!</p>
               </div>
             )}
           </div>
-          <div className="grid grid-cols-3 sm:flex">
+          <div className='grid grid-cols-3 sm:flex'>
             {Array.from({ length: 9 }).map((_, index) => (
               <div
                 key={index}
-                className="text-center cursor-pointer hover:bg-slate-100 p-1 rounded-md"
+                className='text-center cursor-pointer hover:bg-slate-100 p-1 rounded-md'
                 onClick={() => {
                   if (currentMod) handleOption(index + 1);
                 }}
@@ -123,7 +200,7 @@ const PerformanceTestPageFour = () => {
                   src={`points/${index + 1}`}
                   width={50}
                   height={50}
-                  className="rounded-sm"
+                  className='rounded-sm'
                 />
                 {index + 1}
               </div>
