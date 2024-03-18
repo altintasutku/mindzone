@@ -1,6 +1,4 @@
-import {
-  dilrubaEmail,
-} from "@/config/contactInfos";
+import { dilrubaEmail, mindzoneEmail } from "@/config/contactInfos";
 import React from "react";
 
 const ContactPage = () => {
@@ -13,6 +11,10 @@ const ContactPage = () => {
         Herhangi bir sorunuzda araştırmacıya{" "}
         <a className="text-blue-600 underline" href={`mailto:${dilrubaEmail}`}>
           {dilrubaEmail}
+        </a>{" "}
+        ve ya{" "}
+        <a className="text-blue-600 underline" href={`mailto:${mindzoneEmail}`}>
+          {mindzoneEmail}
         </a>{" "}
         adresinden ulaşabilirsiniz.
       </span>
