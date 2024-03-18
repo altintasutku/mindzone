@@ -4,7 +4,7 @@ import { RegisterType, registerValidator } from "@/lib/validators/auth";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormDescription, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,6 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -49,6 +50,7 @@ const RegisterForm = () => {
   });
 
   const [formAccepted, setFormAccepted] = useState(false);
+  const [kvkkAccepted, setKvkkAccepted] = useState(false);
 
   const form = useForm<RegisterType>({
     resolver: zodResolver(registerValidator),
@@ -66,7 +68,7 @@ const RegisterForm = () => {
     if (!values.chronicIllness) {
       values.chronicIllness = "-";
     }
-    
+
     register(values);
   }
 
@@ -175,7 +177,7 @@ const RegisterForm = () => {
         </CustomFormField>
         <CustomFormField form={form} name="approveJoining">
           {({ field }) => (
-            <div className="flex justify-center items-center p-2 gap-2 bg-white dark:bg-zinc-900">
+            <div className="flex items-center p-2 gap-2 bg-white dark:bg-zinc-900">
               <Checkbox
                 checked={formAccepted}
                 onCheckedChange={() => setFormAccepted(!formAccepted)}
@@ -190,9 +192,33 @@ const RegisterForm = () => {
             </div>
           )}
         </CustomFormField>
+        <CustomFormField form={form} name="approveKVKK">
+          {({ field }) => (
+            <div className="flex items-center p-2 gap-2 bg-white dark:bg-zinc-900">
+              <Checkbox
+                checked={kvkkAccepted}
+                onCheckedChange={() => setKvkkAccepted(!kvkkAccepted)}
+              />
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  <Link
+                    className="underline"
+                    href={process.env.NEXT_PUBLIC_ASSETS_URL + "/KVKK.docx"}
+                  >
+                    KVKK ve Açık Rıza Beyanı
+                  </Link>
+                </FormLabel>
+                <FormDescription className="hidden sm:block">
+                  Bunu da kayıt kısmında Kişisel Verileri Koruma Kanunu
+                  Bilgilendirmesi onaylıyorum
+                </FormDescription>
+              </div>
+            </div>
+          )}
+        </CustomFormField>
 
         <Button
-          disabled={!formAccepted || isPending}
+          disabled={!formAccepted || isPending || !kvkkAccepted}
           type="submit"
           className="col-span-2"
         >
