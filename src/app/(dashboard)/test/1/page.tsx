@@ -49,7 +49,7 @@ const answers = [
   },
 ];
 
-const TOTAL_ROUNDS = 3;
+const TOTAL_ROUNDS = 200;
 
 const CORRECT_DURATION = 1000;
 
