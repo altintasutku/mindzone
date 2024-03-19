@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: false,
   images: {
     loader: 'imgix',
-    path: 'http://localhost:3000/images/',
+    path: 'https://mindzone.vercel.app/images/',
     remotePatterns: [
       {
         protocol: "https",
