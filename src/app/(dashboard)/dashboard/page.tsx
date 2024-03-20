@@ -21,7 +21,7 @@ const DashboardPage = async () => {
       userId: session.user.id!,
     });
   } catch (e) {
-    redirect("/auth/logout");
+    redirect("/login");
   }
 
   if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
