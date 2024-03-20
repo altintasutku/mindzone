@@ -14,10 +14,15 @@ const QuestionLayout = async ({ children }: Props) => {
     redirect("/login");
   }
 
-  const user = await getUser({
-    accessToken: session.user.accessToken,
-    userId: session.user.id,
-  });
+  let user;
+  try {
+    user = await getUser({
+      accessToken: session.user.accessToken!,
+      userId: session.user.id!,
+    });
+  } catch (e) {
+    redirect("/auth/logout");
+  }
 
   if (!user.userDetails.Status.includes("S")) {
     redirect("/dashboard");
