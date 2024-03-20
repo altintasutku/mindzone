@@ -17,7 +17,6 @@ interface UserState {
   }) => Promise<void>;
 }
 
-
 export const useUserStore = create<UserState>()((set) => ({
   user: null,
   setUser: (user) => {
@@ -35,6 +34,11 @@ export const useUserStore = create<UserState>()((set) => ({
       {
         headers: {
           Token: accessToken,
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT",
+          "Access-Control-Allow-Headers":
+            "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
         },
       }
     );
@@ -46,7 +50,7 @@ export const useUserStore = create<UserState>()((set) => ({
     const data = await getUser({
       accessToken,
       userId: user.id,
-    })
+    });
 
     const userSchema = userValidator.parse(data);
 

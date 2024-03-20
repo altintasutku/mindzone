@@ -187,7 +187,6 @@ const QuestionTestTwo = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <h1 className='font-bold text-xl mb-10'>Anket</h1>
       <ul className='flex flex-col gap-14'>
         {stepTwoQuestions
           .slice((pages - 1) * 6, (pages - 1) * 6 + 6)

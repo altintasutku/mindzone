@@ -43,36 +43,6 @@ const AboutPage = () => {
           className="w-full md:w-60 self-center aspect-square object-cover rounded-full"
         />
         <h2 className="font-semibold text-center text-2xl">Dilruba Sönmez</h2>
-        <h3>Eğitim:</h3>
-        <ul>
-          <li className="shadow p-3 rounded-md space-y-1">
-            <div>
-              <span className="font-semibold">İbn Haldun Üniversitesi</span>
-              <span className="text-sm">, Yüksek Lisans ve Doktora</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Klinik Psikoloji</span>
-              <span className="font-semibold">Türkiye</span>
-            </div>
-            <Separator />
-            <div>
-              <b>Yüksek Lisans</b>: 2018-2020
-            </div>
-            <div>
-              <b>Doktora</b>: 2020-Devam
-            </div>
-          </li>
-          <li className="shadow p-3 rounded-md space-y-1">
-            <div>
-              <span className="font-semibold">İstanbul Şehir Üniversitesi</span>
-              <span className="text-sm">, Lisans</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Psikoloji (İngilizce)</span>
-              <span className="font-semibold">Türkiye</span>
-            </div>
-          </li>
-        </ul>
         <Separator />
         <p>
           Dilruba Sönmez, İstanbul Şehir Üniversitesi Psikoloji bölümünden
@@ -108,37 +78,6 @@ const AboutPage = () => {
         <h2 className="font-semibold text-center text-2xl">
           Profesör Dr. Timothy Richard Jordan
         </h2>
-        <h3>Eğitim:</h3>
-        <ul>
-          <li className="shadow p-3 rounded-md space-y-1">
-            <div>
-              <span className="font-semibold">The University of Reading</span>
-              <span className="text-sm">, Doktora</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Psychology/Cognitive Psychology</span>
-              <span className="font-semibold">İngiltere</span>
-            </div>
-            <Separator />
-            <div>
-              <b>Doktora</b>: 1981-1985
-            </div>
-          </li>
-          <li className="shadow p-3 rounded-md space-y-1">
-            <div>
-              <span className="font-semibold">The University of Reading</span>
-              <span className="text-sm">, Lisans</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Psychology</span>
-              <span className="font-semibold">İngiltere</span>
-            </div>
-            <Separator />
-            <div>
-              <b>Lisans</b>: 1978-1981
-            </div>
-          </li>
-        </ul>
         <Separator />
         <p>
           Profesör Dr. Tim Jordan, İngiltere&apos;deki Reading

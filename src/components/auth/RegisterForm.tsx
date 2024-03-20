@@ -209,8 +209,7 @@ const RegisterForm = () => {
                   </Link>
                 </FormLabel>
                 <FormDescription className="hidden sm:block">
-                  Bunu da kayıt kısmında Kişisel Verileri Koruma Kanunu
-                  Bilgilendirmesi onaylıyorum
+                  Kişisel Verileri Koruma Kanunu Bilgilendirmesi onaylıyorum
                 </FormDescription>
               </div>
             </div>

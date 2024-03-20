@@ -106,7 +106,12 @@ const QuestionTestOne = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="font-bold text-xl mb-10">Anket</h1>
+      <div className="font-semibold w-fill p-4">
+        Hoş Geldiniz! Egzersizlerimize başlamadan birkaç dakika sürecek soruları
+        yanıtlamanız gerekmektedir. Daha sonra sizler için tasarladığımız
+        ücretsiz egzersizlerimize ulaşabileceksiniz! Çalışmamıza katıldığınız
+        için teşekkür ederiz. MindZone Ekibi
+      </div>
       <ul className="flex flex-col gap-14">
         {stepOneQuestions
           .slice((pages - 1) * 5, (pages - 1) * 5 + 5)

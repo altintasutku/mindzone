@@ -1,4 +1,6 @@
 import RegisterForm from "@/components/auth/RegisterForm";
+import WhatIs from "@/components/home/WhatIs";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import React from "react";
 
@@ -18,6 +20,10 @@ const RegisterPage = () => {
           Giriş Yap
         </Link>
       </div>
+
+      <Separator />
+
+      <WhatIs />
     </div>
   );
 };
