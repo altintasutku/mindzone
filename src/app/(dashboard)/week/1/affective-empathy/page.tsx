@@ -36,6 +36,7 @@ const AffectiveEmpathyPage = () => {
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -64,6 +65,8 @@ const AffectiveEmpathyPage = () => {
           },
         },
       });
+
+      setUser({...user, userDetails: {...user.userDetails, WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + ""}})
     },
   });
 

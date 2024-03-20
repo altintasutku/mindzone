@@ -37,6 +37,7 @@ const PerformanceTestPageThree = () => {
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
 
   const [stats, setStats] = useState<{
@@ -137,6 +138,8 @@ const PerformanceTestPageThree = () => {
           },
         },
       });
+
+      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "4" } });
     },
     onSuccess: () => {
       router.push("/test/4");

@@ -40,6 +40,7 @@ const DigitspanPage = () => {
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const [reactionTime, setReactionTime] = useState<number>(0);
   let timeout: NodeJS.Timeout;
@@ -78,6 +79,13 @@ const DigitspanPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
+        },
+      });
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

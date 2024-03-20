@@ -12,11 +12,8 @@ type Props = Readonly<{ children: React.ReactNode }>;
 
 export default function DashboardLayout({ children }: Props) {
   const session = useSession();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const setUser = useUserStore((state) => state.setUser);
-  const user = useUserStore((state) => state.user);
 
   const { data, isLoading } = useQuery({
     queryKey: ["user"],
@@ -45,34 +42,6 @@ export default function DashboardLayout({ children }: Props) {
         </div>
       </div>
     );
-  }
-
-  if (session.status === "unauthenticated") {
-    router.push("/login");
-    return null;
-  }
-
-  if (pathname !== "/dashboard") {
-    return <>{children}</>;
-  }
-
-  if (!user) {
-    return null;
-  }
-
-  if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
-    router.push("/question/1");
-  } else if (user.userDetails.Status.includes("PT")) {
-    router.push(`/test/${user.userDetails.PerformanceTaskStep}`);
-  } else if (
-    user.userDetails.Status === "S2" ||
-    user.userDetails.Status === "S4"
-  ) {
-    router.push("/question/2");
-  }
-
-  if (!data) {
-    return null;
   }
 
   return <>{children}</>;

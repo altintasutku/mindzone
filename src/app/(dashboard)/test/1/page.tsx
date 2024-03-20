@@ -59,6 +59,7 @@ const PerformanceTestOnePage = () => {
   const router = useRouter();
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const updateUser = useUserStore((state) => state.updateUser);
 
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
@@ -130,6 +131,8 @@ const PerformanceTestOnePage = () => {
           },
         },
       });
+
+      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "2" } });
     },
     onSuccess: () => {
       router.push("/test/2");

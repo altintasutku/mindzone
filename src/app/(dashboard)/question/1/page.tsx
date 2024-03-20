@@ -30,6 +30,7 @@ const options = [
 const QuestionTestOne = () => {
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const updateUser = useUserStore((state) => state.updateUser);
   const router = useRouter();
 
@@ -98,6 +99,8 @@ const QuestionTestOne = () => {
           },
         },
       });
+
+      setUser({...user, userDetails: {...user.userDetails, Status: user.userDetails.Status === "S1" ? "PT1" : "PT2"}})
     },
     onSuccess() {
       router.push("/test");

@@ -2,7 +2,6 @@
 
 import { stepTwoQuestions } from "@/assets/mockdata/survey/questions";
 import { Button } from "@/components/ui/button";
-import { FrownIcon, LaughIcon, MehIcon, SmileIcon } from "lucide-react";
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { sendQuestionData } from "@/lib/api/questions";
@@ -10,15 +9,16 @@ import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { subtle } from "crypto";
-import { set } from "zod";
 import { useRouter } from "next/navigation";
-import axios from "axios";
-import { m } from "framer-motion";
-
 const das = ["Hiçbir Zaman", "Bazen ve ara sıra", "Oldukça sık", "Her zaman"];
 
-const iri = ["1", "2", "3", "4", "5"];
+const iri = [
+  "1 - (Beni iyi bir şekilde tanımlamıyor)",
+  "2",
+  "3",
+  "4",
+  "5 - (Beni iyi bir şekilde tanımlıyor)",
+];
 
 const gad = [
   "Hiçbir zaman",
@@ -48,6 +48,7 @@ const QuestionTestTwo = () => {
   >([]);
 
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
   const session = useSession();
 
@@ -179,6 +180,8 @@ const QuestionTestTwo = () => {
           },
         },
       });
+
+      setUser({ ...user, userDetails: { ...user.userDetails, Status: "W1" } });
     },
     onSuccess() {
       router.push("/week/1");
@@ -186,16 +189,16 @@ const QuestionTestTwo = () => {
   });
 
   return (
-    <div className='flex flex-col items-center'>
-      <ul className='flex flex-col gap-14'>
+    <div className="flex flex-col items-center">
+      <ul className="flex flex-col gap-14">
         {stepTwoQuestions
           .slice((pages - 1) * 6, (pages - 1) * 6 + 6)
           .map((question, index) => (
-            <li key={index} className='flex flex-col gap-4'>
-              <p className='text-center text-lg font-semibold'>
+            <li key={index} className="flex flex-col gap-4">
+              <p className="text-center text-lg font-semibold">
                 {question.question}
               </p>
-              <div className='flex flex-col sm:flex-row justify-center gap-4 flex-wrap'>
+              <div className="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
                 {question.type === 2 ? (
                   das.map((option, index) => (
                     <Button
@@ -215,7 +218,7 @@ const QuestionTestTwo = () => {
                         )
                       }
                     >
-                      <small className='text-sm'>{option}</small>
+                      <small className="text-sm">{option}</small>
                     </Button>
                   ))
                 ) : question.type === 3 ? (
@@ -237,7 +240,7 @@ const QuestionTestTwo = () => {
                         );
                       }}
                     >
-                      <small className='text-sm'>{option}</small>
+                      <small className="text-sm">{option}</small>
                     </Button>
                   ))
                 ) : question.type === 4 ? (
@@ -259,7 +262,7 @@ const QuestionTestTwo = () => {
                         );
                       }}
                     >
-                      <small className='text-sm'>{option}</small>
+                      <small className="text-sm">{option}</small>
                     </Button>
                   ))
                 ) : question.type === 5 ? (
@@ -281,7 +284,7 @@ const QuestionTestTwo = () => {
                         );
                       }}
                     >
-                      <small className='text-sm'>{option}</small>
+                      <small className="text-sm">{option}</small>
                     </Button>
                   ))
                 ) : (
@@ -292,29 +295,29 @@ const QuestionTestTwo = () => {
           ))}
       </ul>
       <Progress
-        className='my-5 max-w-96'
+        className="my-5 max-w-96"
         value={(Object.keys(answers).length * 100) / stepTwoQuestions.length}
       />
 
-      <nav role='navigation' className='grid grid-cols-3 gap-4'>
+      <nav role="navigation" className="grid grid-cols-3 gap-4">
         <Button
-          variant='outline'
-          className='flex-1 sm:flex-none'
+          variant="outline"
+          className="flex-1 sm:flex-none"
           disabled={pages === 1}
           onClick={() => setPages((prev) => prev - 1)}
         >
           Geri
         </Button>
         <Button
-          variant='outline'
-          className='flex-1 sm:flex-none'
+          variant="outline"
+          className="flex-1 sm:flex-none"
           disabled={pages === 11}
           onClick={() => setPages((prev) => prev + 1)}
         >
           İleri
         </Button>
         <Button
-          variant='default'
+          variant="default"
           onClick={() => {
             console.log(answers);
             mutate();

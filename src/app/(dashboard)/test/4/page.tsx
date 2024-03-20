@@ -85,6 +85,7 @@ const PerformanceTestPageFour = () => {
   const session = useSession();
   const router = useRouter();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleNext = () => {
     if (round === TOTAL_ROUNDS) {
@@ -150,6 +151,8 @@ const PerformanceTestPageFour = () => {
           },
         },
       });
+
+      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "5" } });
     },
     onSuccess: () => {
       router.push("/test/5");
