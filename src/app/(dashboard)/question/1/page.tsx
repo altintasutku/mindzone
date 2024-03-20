@@ -106,12 +106,19 @@ const QuestionTestOne = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="font-semibold w-fill p-4">
-        Hoş Geldiniz! Egzersizlerimize başlamadan birkaç dakika sürecek soruları
-        yanıtlamanız gerekmektedir. Daha sonra sizler için tasarladığımız
-        ücretsiz egzersizlerimize ulaşabileceksiniz! Çalışmamıza katıldığınız
-        için teşekkür ederiz. MindZone Ekibi
-      </div>
+      {pages === 1 && (
+        <div className="font-normal w-fill p-4 bg-slate-700 rounded-md mb-3">
+          <b>Hoş Geldiniz!</b>
+          <br />
+          Egzersizlerimize başlamadan birkaç dakika sürecek soruları
+          yanıtlamanız gerekmektedir. Daha sonra sizler için tasarladığımız
+          ücretsiz egzersizlerimize ulaşabileceksiniz!
+          <br />
+          <em className="font-normal text-slate-400">
+            Çalışmamıza katıldığınız için teşekkür ederiz. MindZone Ekibi
+          </em>
+        </div>
+      )}
       <ul className="flex flex-col gap-14">
         {stepOneQuestions
           .slice((pages - 1) * 5, (pages - 1) * 5 + 5)
