@@ -45,7 +45,6 @@ const WeekOneDirectorTaskPage = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
-  console.log("🚀 ~ WeekOneDirectorTaskPage ~ currentLevel:", currentLevel)
 
   const [timer, setTimer] = useState<number>(0);
   let timeout: NodeJS.Timeout;
