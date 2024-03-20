@@ -4,7 +4,7 @@ import { useUserStore } from "@/hooks/useUserStore";
 import { getUser } from "@/lib/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2Icon } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -18,11 +18,16 @@ export default function DashboardLayout({ children }: Props) {
   const { data, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const data = await getUser({
-        accessToken: session.data?.user.accessToken!,
-        userId: session.data?.user.id!,
-      });
-      return data;
+      try{
+        const data = await getUser({
+          accessToken: session.data?.user.accessToken!,
+          userId: session.data?.user.id!,
+        });
+        return data;
+      }catch(e){
+        signOut();
+        return null;
+      }
     },
     enabled: session.status === "authenticated",
   });
