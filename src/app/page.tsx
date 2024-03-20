@@ -20,8 +20,6 @@ async function Home({ searchParams }: Props) {
     <main className="flex flex-col items-center gap-5 py-5 px-3 md:px-[10%] lg:px-[25%]">
       <Welcome />
 
-      <WhatIs />
-
       <AuthButtons />
 
       <ContactAndAboutButtons />
