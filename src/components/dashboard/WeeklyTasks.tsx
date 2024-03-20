@@ -26,7 +26,7 @@ const WeeklyTasks = async () => {
       userId: session.user.id!,
     });
   } catch (e) {
-    redirect("/auth/logout");
+    redirect("/login");
   }
 
   return (

@@ -12,6 +12,7 @@ type Props = Readonly<{ children: React.ReactNode }>;
 
 export default function DashboardLayout({ children }: Props) {
   const session = useSession();
+  const router = useRouter();
 
   const setUser = useUserStore((state) => state.setUser);
 
@@ -47,6 +48,10 @@ export default function DashboardLayout({ children }: Props) {
         </div>
       </div>
     );
+  }
+
+  if (session.status === "unauthenticated") {
+      router.push("/");
   }
 
   return <>{children}</>;

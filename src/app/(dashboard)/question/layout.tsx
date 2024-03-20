@@ -23,7 +23,7 @@ const QuestionLayout = async ({ children }: Props) => {
       userId: session.user.id!,
     });
   } catch (e) {
-    redirect("/auth/logout");
+    redirect("/login");
   }
 
   if (!user.userDetails.Status.includes("S")) {
