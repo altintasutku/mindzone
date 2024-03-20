@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 type Props = Readonly<{ children: React.ReactNode }>;
 
@@ -63,7 +63,7 @@ export default function DashboardLayout({ children }: Props) {
   if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
     router.push("/question/1");
   } else if (user.userDetails.Status.includes("PT")) {
-    router.push(`/test/${user.userDetails.PerformanceTaskStep || 1}`);
+    router.push(`/test/${user.userDetails.PerformanceTaskStep}`);
   } else if (
     user.userDetails.Status === "S2" ||
     user.userDetails.Status === "S4"
