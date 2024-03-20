@@ -30,14 +30,11 @@ const ALPABET = [
   "N",
   "O",
   "P",
-  "Q",
   "R",
   "S",
   "T",
   "U",
   "V",
-  "W",
-  "X",
   "Y",
   "Z",
 ];
@@ -192,7 +189,7 @@ const CognitiveFlexibilityPage = () => {
     } else {
       if (ODD_NUMBERS.includes(currentItem.item[1]) && button === "X") {
         return correctAnswer();
-      } else if (!ODD_NUMBERS.includes(currentItem.item[0]) && button === "Y") {
+      } else if (!ODD_NUMBERS.includes(currentItem.item[1]) && button === "Y") {
         return correctAnswer();
       }
     }
@@ -278,16 +275,16 @@ const CognitiveFlexibilityPage = () => {
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
+          <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-10">
             <Button
-              className="px-0 sm:px-20 py-5 text-xl font-bold text-white"
+              className="px-0 sm:px-20 py-8 text-xl font-bold text-white"
               onClick={() => handleButton("X")}
               disabled={correctState !== CorrectState.None}
             >
               X
             </Button>
             <Button
-              className="px-0 sm:px-20 py-5 text-xl font-bold text-white"
+              className="px-0 sm:px-20 py-8 text-xl font-bold text-white"
               onClick={() => handleButton("Y")}
               disabled={correctState !== CorrectState.None}
             >
