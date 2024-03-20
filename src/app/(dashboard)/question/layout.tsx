@@ -1,7 +1,9 @@
 import { getUser } from "@/lib/api/user";
 import { getAuthSession } from "@/lib/auth";
+import { userValidator } from "@/lib/validators/user";
 import { redirect } from "next/navigation";
 import React from "react";
+import { z } from "zod";
 
 type Props = Readonly<{
   children: React.ReactNode;
@@ -14,7 +16,7 @@ const QuestionLayout = async ({ children }: Props) => {
     redirect("/login");
   }
 
-  let user;
+  let user: z.infer<typeof userValidator>;
   try {
     user = await getUser({
       accessToken: session.user.accessToken!,

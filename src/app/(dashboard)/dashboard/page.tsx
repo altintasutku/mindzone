@@ -2,8 +2,10 @@ import Information from "@/components/dashboard/Information";
 import WeeklyTasks from "@/components/dashboard/WeeklyTasks";
 import { getUser } from "@/lib/api/user";
 import { getAuthSession } from "@/lib/auth";
+import { userValidator } from "@/lib/validators/user";
 import { redirect } from "next/navigation";
 import React from "react";
+import { z } from "zod";
 
 const DashboardPage = async () => {
   const session = await getAuthSession();
@@ -12,7 +14,7 @@ const DashboardPage = async () => {
     redirect("/login");
   }
 
-  let user;
+  let user: z.infer<typeof userValidator>;
   try {
     user = await getUser({
       accessToken: session.user.accessToken!,

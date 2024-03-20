@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { getUser } from "@/lib/api/user";
 import { getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+import { userValidator } from "@/lib/validators/user";
 
 const WeeklyTasks = async () => {
   const session = await getAuthSession();
@@ -17,7 +19,7 @@ const WeeklyTasks = async () => {
     return null;
   }
 
-  let user;
+  let user: z.infer<typeof userValidator>;
   try {
     user = await getUser({
       accessToken: session.user.accessToken!,
