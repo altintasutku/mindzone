@@ -1,13 +1,16 @@
+"use client";
+
 import React from "react";
-import { Button, buttonVariants } from "../ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 type Props = {
   url: string;
 };
 
 const FinishScreen = ({ url }: Props) => {
+  const router = useRouter();
+
   return (
     <div>
       <p>
@@ -15,7 +18,9 @@ const FinishScreen = ({ url }: Props) => {
         <br />
         Bir sonraki egzersize geçebilirsiniz.
       </p>
-      <Link href={url} className={cn(buttonVariants(),"my-3")}>Sonraki Egzersize Geç</Link>
+      <Button onClick={() => router.push(url)} className="my-3">
+        Sonraki Egzersize Geç
+      </Button>
     </div>
   );
 };
