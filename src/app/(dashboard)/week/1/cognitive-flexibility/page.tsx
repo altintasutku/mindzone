@@ -62,6 +62,7 @@ const CognitiveFlexibilityPage = () => {
   );
 
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const session = useSession();
 
   const { mutate } = useMutation({
@@ -77,6 +78,13 @@ const CognitiveFlexibilityPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
+        },
+      });
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

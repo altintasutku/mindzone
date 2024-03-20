@@ -45,6 +45,7 @@ const InhibitionPage = () => {
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const [currentColor, setCurrentColor] = useState<Color | null>(null);
 
@@ -79,6 +80,14 @@ const InhibitionPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

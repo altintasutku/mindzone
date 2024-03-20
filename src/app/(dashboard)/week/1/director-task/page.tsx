@@ -40,6 +40,7 @@ const WeekOneDirectorTaskPage = () => {
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const game = new DirectorGame(TOTAL_ROUNDS);
 
@@ -74,6 +75,8 @@ const WeekOneDirectorTaskPage = () => {
           },
         },
       });
+
+      setUser({...user, userDetails: {...user.userDetails, WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + ""}})
     }
   })
 
