@@ -33,6 +33,8 @@ const itemImageLoader = ({ src }: { src: string }) => {
 
 const TOTAL_ROUNDS = 200;
 
+const game = new DirectorGame(TOTAL_ROUNDS);
+
 const WeekOneDirectorTaskPage = () => {
   const [level, setLevel] = useState<number>(-1);
   const [isFinished, setIsFinished] = useState(false);
@@ -42,9 +44,8 @@ const WeekOneDirectorTaskPage = () => {
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
 
-  const game = new DirectorGame(TOTAL_ROUNDS);
-
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
+  console.log("🚀 ~ WeekOneDirectorTaskPage ~ currentLevel:", currentLevel)
 
   const [timer, setTimer] = useState<number>(0);
   let timeout: NodeJS.Timeout;
@@ -57,13 +58,13 @@ const WeekOneDirectorTaskPage = () => {
     group: "W1",
   });
 
-  const {mutate} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) {
-        return
+        return;
       }
 
-      await sendWeekData(data,session.data.user.accessToken);
+      await sendWeekData(data, session.data.user.accessToken);
 
       await updateUser({
         accessToken: session.data.user.accessToken,
@@ -76,17 +77,22 @@ const WeekOneDirectorTaskPage = () => {
         },
       });
 
-      setUser({...user, userDetails: {...user.userDetails, WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + ""}})
-    }
-  })
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
 
   useEffect(() => {
     if (!isFinished) return;
 
     mutate(stats);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFinished])
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   useEffect(() => {
     if (level === 0 || level === -1) return;

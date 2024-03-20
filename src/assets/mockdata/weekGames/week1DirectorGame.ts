@@ -94,7 +94,7 @@ function generateLevel() {
       item.isContainsRowItem = isRowContainsItem(row, item);
       item.isContainsShelfItem = isShellContainsItem(shelf, item);
 
-      if (shelf.items.length === 0) {
+      if (shelf.items.length === 0 && row.length === 0) {
         row.push({ ...item, isVisible: randomVisible, entryPoint: "if" });
       } else if (
         isShellContainsItem(shelf, item) ||
