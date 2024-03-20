@@ -12,10 +12,15 @@ const DashboardPage = async () => {
     redirect("/login");
   }
 
-  const user = await getUser({
-    accessToken: session.user.accessToken,
-    userId: session.user.id,
-  });
+  let user;
+  try {
+    user = await getUser({
+      accessToken: session.user.accessToken!,
+      userId: session.user.id!,
+    });
+  } catch (e) {
+    redirect("/auth/logout");
+  }
 
   if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
     redirect("/question/1");

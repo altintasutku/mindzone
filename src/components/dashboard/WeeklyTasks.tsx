@@ -8,6 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getUser } from "@/lib/api/user";
 import { getAuthSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const WeeklyTasks = async () => {
   const session = await getAuthSession();
@@ -16,10 +17,15 @@ const WeeklyTasks = async () => {
     return null;
   }
 
-  const user = await getUser({
-    accessToken: session?.user.accessToken,
-    userId: session?.user.id,
-  });
+  let user;
+  try {
+    user = await getUser({
+      accessToken: session.user.accessToken!,
+      userId: session.user.id!,
+    });
+  } catch (e) {
+    redirect("/auth/logout");
+  }
 
   return (
     <section className="dark:bg-zinc-900 shadow text-center pt-5 rounded-md space-y-5">
