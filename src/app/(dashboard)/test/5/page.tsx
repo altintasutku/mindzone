@@ -44,8 +44,7 @@ const Page = () => {
   });
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const session = useSession();
   const router = useRouter();
   const user = useUserStore((state) => state.user);
@@ -60,7 +59,7 @@ const Page = () => {
       return;
     }
 
-    clearInterval(timeout);
+    clearInterval(timeout!);
     setStats((prev) => ({
       ...prev,
       reactionTime: timer,
@@ -77,9 +76,11 @@ const Page = () => {
     }
     setRound((prev) => prev + 1);
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

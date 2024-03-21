@@ -43,8 +43,7 @@ const DigitspanPage = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   const [reactionTime, setReactionTime] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [currentShowingNumber, setCurrentShowingNumber] = useState<
     number | null
   >(null);
@@ -103,9 +102,11 @@ const DigitspanPage = () => {
     setIsShowing(true);
     setActiveShowingIndex(0);
     if (!timeout) {
-      timeout = setInterval(() => {
-        setReactionTime((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setReactionTime((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 
@@ -116,7 +117,7 @@ const DigitspanPage = () => {
         reactionTime: reactionTime,
       }));
       setIsFinished(true);
-      clearInterval(timeout);
+      clearInterval(timeout!);
     } else {
       setRound((prev) => prev + 1);
       setIsShowing(true);

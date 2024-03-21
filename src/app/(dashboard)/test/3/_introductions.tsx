@@ -15,6 +15,10 @@ const IntroductionTestThree = () => {
           Aşağıdaki kırmızı mesajı görürseniz hiçbir şey yapmayın (gitmeyin).
         </li>
       </ul>
+      <p>
+        Önce birkaç alıştırma yapacağız. Alıştırma bittiğinde, asıl test
+        başlayacak.
+      </p>
     </>
   );
 };

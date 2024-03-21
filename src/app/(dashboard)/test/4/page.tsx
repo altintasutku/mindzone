@@ -68,8 +68,7 @@ const PerformanceTestPageFour = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<{
     totalWrongs: number;
     resistanceWrongs: number;
@@ -101,9 +100,11 @@ const PerformanceTestPageFour = () => {
     }, DURATION);
 
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 
@@ -118,9 +119,7 @@ const PerformanceTestPageFour = () => {
       return;
     }
 
-    console.log(totalPoint);
-
-    clearInterval(timeout);
+    clearInterval(timeout!);
     setStats((prev) => ({
       ...prev,
       reactionTime: timer,
