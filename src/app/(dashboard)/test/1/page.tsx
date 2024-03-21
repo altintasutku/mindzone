@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import IntroductionsTestOne from "./_introductions";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -62,7 +62,7 @@ const PerformanceTestOnePage = () => {
   const setUser = useUserStore((state) => state.setUser);
   const updateUser = useUserStore((state) => state.updateUser);
 
-  const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const correctToats = () => {
     setIsCorrect(true);
@@ -87,10 +87,9 @@ const PerformanceTestOnePage = () => {
     }));
   };
 
-  const [timer, setTimer] = React.useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
-  const [stats, setStats] = React.useState<{
+  const [timer, setTimer] = useState<number>(0);
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [stats, setStats] = useState<{
     totalWrongs: number;
     resistanceWrongs: number;
     reactionTime: number;
@@ -100,14 +99,14 @@ const PerformanceTestOnePage = () => {
     reactionTime: 0,
   });
 
-  const [currentShape, setCurrentShape] = React.useState<{
+  const [currentShape, setCurrentShape] = useState<{
     number: string;
     color: string;
     shape: string;
   }>();
-  const [currentRule, setCurrentRule] = React.useState<Rules>(Rules.shape);
-  const [round, setRound] = React.useState<number>(0);
-  const [isFinished, setIsFinished] = React.useState<boolean>(false);
+  const [currentRule, setCurrentRule] = useState<Rules>(Rules.shape);
+  const [round, setRound] = useState<number>(0);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -145,7 +144,7 @@ const PerformanceTestOnePage = () => {
     }
 
     // Stop the timer
-    clearInterval(timeout);
+    clearInterval(timeout!);
     setStats((prev) => ({ ...prev, reactionTime: timer }));
 
     mutate();
@@ -171,9 +170,11 @@ const PerformanceTestOnePage = () => {
     setRound((prev) => prev + 1);
     setCurrentShape(generateRandomImage());
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

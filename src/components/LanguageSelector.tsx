@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React from "react";
 import {
@@ -12,8 +12,8 @@ import { Button } from "./ui/button";
 import { LanguagesIcon } from "lucide-react";
 
 const LanguageSelector = () => {
-  const changeLanguage = (lang: 'tr' | 'en') => {
-    console.log(lang); // TODO: Implement language change
+  const changeLanguage = (lang: "tr" | "en") => {
+    // TODO: Implement language change
   };
 
   return (

@@ -47,8 +47,7 @@ const AffectiveEmpathyPage = () => {
   });
 
   const [timer, setTimer] = useState(0);
-  let timeout: NodeJS.Timeout;
-
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -66,7 +65,13 @@ const AffectiveEmpathyPage = () => {
         },
       });
 
-      setUser({...user, userDetails: {...user.userDetails, WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + ""}})
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
     },
   });
 
@@ -79,7 +84,7 @@ const AffectiveEmpathyPage = () => {
 
   useEffect(() => {
     if (round >= MAXROUND) {
-      clearInterval(timeout);
+      clearInterval(timeout!);
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -87,16 +92,18 @@ const AffectiveEmpathyPage = () => {
       setIsFinished(true);
       return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
   const handleNext = () => {
     setRound((prev) => prev + 1);
 
     if (!timeout) {
-      timeout = setTimeout(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

@@ -56,8 +56,7 @@ const InhibitionPage = () => {
   const [answers, setAnswers] = useState<Color[]>([]);
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
     totalAccuracy: 0,
@@ -102,7 +101,7 @@ const InhibitionPage = () => {
 
   const handleNext = () => {
     if (round >= TOTAL_ROUNDS) {
-      clearInterval(timeout);
+      clearInterval(timeout!);
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -160,9 +159,11 @@ const InhibitionPage = () => {
     setAnswers(answerArr);
 
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

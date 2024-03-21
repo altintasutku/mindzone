@@ -47,8 +47,7 @@ const WeekOneDirectorTaskPage = () => {
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
     totalAccuracy: 0,
@@ -101,7 +100,7 @@ const WeekOneDirectorTaskPage = () => {
 
   const handleNextRound = () => {
     if (level === TOTAL_ROUNDS) {
-      clearInterval(timeout);
+      clearInterval(timeout!);
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -114,9 +113,11 @@ const WeekOneDirectorTaskPage = () => {
     setLevel((prev) => prev + 1);
 
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

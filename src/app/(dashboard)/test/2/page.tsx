@@ -64,8 +64,7 @@ const PerformanceTestPageTwo = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<{
     totalWrongs: number;
     resistanceWrongs: number;
@@ -133,7 +132,7 @@ const PerformanceTestPageTwo = () => {
       return;
     }
 
-    clearInterval(timeout);
+    clearInterval(timeout!);
     setStats((prev) => ({
       ...prev,
       reactionTime: timer,
@@ -183,9 +182,11 @@ const PerformanceTestPageTwo = () => {
       setHistory((prev) => [...prev.slice(1, 5), letter]);
     }
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

@@ -22,6 +22,7 @@ enum GO_NOGO {
 const REACTION_TIME = 1000;
 
 const TOTAL_ROUNDS = (15 * 60) / (REACTION_TIME / 1000 + 0.5);
+const TRAINING_ROUNDS = 20;
 
 const PerformanceTestPageThree = () => {
   const { toast } = useToast();
@@ -33,12 +34,14 @@ const PerformanceTestPageThree = () => {
   const [isFinished, setIsFinished] = React.useState(false);
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
+
+  const [isTraining, setIsTraining] = useState(true);
 
   const [stats, setStats] = useState<{
     totalWrongs: number;
@@ -62,10 +65,12 @@ const PerformanceTestPageThree = () => {
       setCurrent(Math.random() > 0.3 ? GO_NOGO.GO : GO_NOGO.NOGO);
     else setCurrent(GO_NOGO.NONE);
 
-    if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+    if (!timeout && round >= TRAINING_ROUNDS) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 
@@ -89,7 +94,7 @@ const PerformanceTestPageThree = () => {
         return;
       }
 
-      clearInterval(timeout);
+      clearInterval(timeout!);
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -139,7 +144,10 @@ const PerformanceTestPageThree = () => {
         },
       });
 
-      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "4" } });
+      setUser({
+        ...user,
+        userDetails: { ...user.userDetails, PerformanceTaskStep: "4" },
+      });
     },
     onSuccess: () => {
       router.push("/test/4");
@@ -149,25 +157,44 @@ const PerformanceTestPageThree = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/test/4' />
+        <FinishScreen url="/test/4" />
+      ) : isTraining && round >= TRAINING_ROUNDS ? (
+        <div>
+          <p>
+            <b>Eğitim bitti</b>. Şimdi gerçek test başlıyor. Hazır olduğunda
+            başla butonuna tıkla.
+          </p>
+          <Separator className="my-5" />
+          <div className="flex justify-center my-5">
+            <Button
+              onClick={() => {
+                setIsTraining(false);
+                setTimer(0);
+                nextRound();
+              }}
+            >
+              Başla
+            </Button>
+          </div>
+        </div>
       ) : round === 0 ? (
         <div>
           <IntroductionTestThree />
-          <Separator className='my-5' />
+          <Separator className="my-5" />
 
-          <div className='flex justify-center my-5'>
+          <div className="flex justify-center my-5">
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className='min-h-96 flex flex-col justify-center items-center'>
-          <div className='h-24'>
+        <div className="min-h-96 flex flex-col justify-center items-center">
+          <div className="h-24">
             {current === GO_NOGO.GO ? (
-              <div className='text-green-500 text-4xl flex justify-center items-center'>
+              <div className="text-green-500 text-4xl flex justify-center items-center">
                 Git
               </div>
             ) : current === GO_NOGO.NOGO ? (
-              <div className='text-red-500 text-4xl flex justify-center items-center'>
+              <div className="text-red-500 text-4xl flex justify-center items-center">
                 Gitme
               </div>
             ) : (
@@ -175,7 +202,7 @@ const PerformanceTestPageThree = () => {
             )}
           </div>
           <Button
-            className='px-10'
+            className="px-10"
             onClick={handleClick}
             disabled={current === GO_NOGO.NONE}
           >

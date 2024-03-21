@@ -96,8 +96,7 @@ const CognitiveFlexibilityPage = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const [timer, setTimer] = useState<number>(0);
-  let timeout: NodeJS.Timeout;
-
+ const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
     totalAccuracy: 0,
@@ -110,7 +109,7 @@ const CognitiveFlexibilityPage = () => {
     if (!isFinished) return;
 
     const data = { ...stats, reactionTime: timer };
-    clearInterval(timeout);
+    clearInterval(timeout!);
     mutate(data);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -141,9 +140,11 @@ const CognitiveFlexibilityPage = () => {
     }
 
     if (!timeout) {
-      timeout = setInterval(() => {
-        setTimer((prev) => prev + 10);
-      }, 10);
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
     }
   };
 

@@ -329,7 +329,6 @@ const QuestionTestTwo = () => {
         <Button
           variant="default"
           onClick={() => {
-            console.log(answers);
             mutate();
           }}
           disabled={Object.keys(answers).length !== stepTwoQuestions.length}
