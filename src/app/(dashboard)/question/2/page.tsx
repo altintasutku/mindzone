@@ -2,7 +2,7 @@
 
 import { stepTwoQuestions } from "@/assets/mockdata/survey/questions";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { sendQuestionData } from "@/lib/api/questions";
 import { updateUser } from "@/lib/api/user";
@@ -109,6 +109,10 @@ const QuestionTestTwo = () => {
       ]);
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pages]);
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["user", "update"],

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
-import { MenuIcon } from "lucide-react";
+import { Loader2Icon, MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
@@ -69,8 +69,9 @@ const Navbar = () => {
       </div>
 
       <div className="hidden lg:flex justify-end items-center gap-1 col-span-1 flex-1">
-        {session.status === "loading" ? null : session.status ===
-          "authenticated" ? (
+        {session.status === "loading" ? (
+          <Loader2Icon size={24} className="animate-spin mr-8" />
+        ) : session.status === "authenticated" ? (
           <>
             <Link href={"/dashboard"}>
               <Button variant={"ghost"}>Gösterge Paneli</Button>
@@ -113,8 +114,9 @@ const Navbar = () => {
               </Button>
             </Link>
             <Separator />
-            {session.status === "loading" ? null : session.status ===
-              "authenticated" ? (
+            {session.status === "loading" ? (
+              <Loader2Icon size={24} className="animate-spin mr-8" />
+            ) : session.status === "authenticated" ? (
               <>
                 <Link href={"/dashboard"}>
                   <Button variant={"ghost"} className="w-full">

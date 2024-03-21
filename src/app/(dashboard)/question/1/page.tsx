@@ -64,6 +64,10 @@ const QuestionTestOne = () => {
 
   const [pages, setPages] = React.useState(1);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pages]);
+
   const { mutate, isPending } = useMutation({
     mutationKey: ["user", "update"],
     mutationFn: async () => {
@@ -100,7 +104,13 @@ const QuestionTestOne = () => {
         },
       });
 
-      setUser({...user, userDetails: {...user.userDetails, Status: user.userDetails.Status === "S1" ? "PT1" : "PT2"}})
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          Status: user.userDetails.Status === "S1" ? "PT1" : "PT2",
+        },
+      });
     },
     onSuccess() {
       router.push("/test");
