@@ -84,7 +84,7 @@ const AffectiveEmpathyPage = () => {
 
   useEffect(() => {
     if (round >= MAXROUND) {
-      clearInterval(timeout!);
+      
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,

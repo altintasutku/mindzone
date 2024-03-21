@@ -59,7 +59,7 @@ const Page = () => {
       return;
     }
 
-    clearInterval(timeout!);
+    
     setStats((prev) => ({
       ...prev,
       reactionTime: timer,

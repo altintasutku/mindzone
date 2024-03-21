@@ -109,7 +109,7 @@ const CognitiveFlexibilityPage = () => {
     if (!isFinished) return;
 
     const data = { ...stats, reactionTime: timer };
-    clearInterval(timeout!);
+    
     mutate(data);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

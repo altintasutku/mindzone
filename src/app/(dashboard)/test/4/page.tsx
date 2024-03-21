@@ -119,7 +119,7 @@ const PerformanceTestPageFour = () => {
       return;
     }
 
-    clearInterval(timeout!);
+    
     setStats((prev) => ({
       ...prev,
       reactionTime: timer,

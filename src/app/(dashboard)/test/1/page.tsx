@@ -144,7 +144,7 @@ const PerformanceTestOnePage = () => {
     }
 
     // Stop the timer
-    clearInterval(timeout!);
+    
     setStats((prev) => ({ ...prev, reactionTime: timer }));
 
     mutate();

@@ -101,7 +101,7 @@ const InhibitionPage = () => {
 
   const handleNext = () => {
     if (round >= TOTAL_ROUNDS) {
-      clearInterval(timeout!);
+      
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
