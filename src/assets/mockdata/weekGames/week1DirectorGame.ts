@@ -49,28 +49,46 @@ const images: ShelfImage[] = [
     name: "traktörü",
     path: "Tractor",
   },
-  {
-    name: "kalemi",
-    path: "Pencil",
-  },
+  // {
+  //   name: "kalemi",
+  //   path: "Pencil",
+  // },
   {
     name: "anahtarı",
     path: "Key",
   },
 ];
 
-function isRowContainsItem(row: ShelfItem[], item: ShelfItem) {
+function isRowContainsItemByPathAndSize(row: ShelfItem[], item: ShelfItem) {
   if (row.length === 0 || !item.image) return false;
   return row.some(
-    (i) => i.image?.path === item.image?.path && i.size === item.size
+    (i) =>
+      i.isVisible && i.image?.path === item.image?.path && i.size === item.size
   );
 }
 
-function isShellContainsItem(shelf: Shelf, item: ShelfItem) {
+function isRowContainsItemByPath(row: ShelfItem[], item: ShelfItem) {
+  if (row.length === 0 || !item.image) return false;
+  return row.some((i) => i.isVisible && i.image?.path === item.image?.path);
+}
+
+function isShellContainsItemByPathAndSize(shelf: Shelf, item: ShelfItem) {
   if (shelf.items.length === 0 || !item.image) return false;
   return shelf.items
     .flat()
-    .some((i) => i.image?.path === item.image?.path && i.size === item.size);
+    .some(
+      (i) =>
+        i.isVisible &&
+        i.image?.path === item.image?.path &&
+        i.size === item.size
+    );
+}
+
+function isShellContainsItemByPath(shelf: Shelf, item: ShelfItem) {
+  if (shelf.items.length === 0 || !item.image) return false;
+  return shelf.items
+    .flat()
+    .some((i) => i.isVisible && i.image?.path === item.image?.path);
 }
 
 function generateLevel() {
@@ -91,19 +109,26 @@ function generateLevel() {
         coordinates: [i, j],
       };
 
-      item.isContainsRowItem = isRowContainsItem(row, item);
-      item.isContainsShelfItem = isShellContainsItem(shelf, item);
+      item.isContainsRowItem = isRowContainsItemByPathAndSize(row, item);
+      item.isContainsShelfItem = isShellContainsItemByPathAndSize(shelf, item);
 
       if (shelf.items.length === 0 && row.length === 0) {
+        // if shelf and row are empty make it visible or invisible randomly
         row.push({ ...item, isVisible: randomVisible, entryPoint: "if" });
       } else if (
-        isShellContainsItem(shelf, item) ||
-        isRowContainsItem(row, item)
+        // if shell contains item by path and size or row contains item by path and size make it invisible
+        isShellContainsItemByPathAndSize(shelf, item) ||
+        isRowContainsItemByPathAndSize(row, item)
       ) {
         row.push({ ...item, isVisible: false, entryPoint: "else if 1" });
-      } else if (!randomVisible) {
-        row.push({ ...item, isVisible: randomVisible, entryPoint: "else if2" });
+      } else if (
+        // if shell contains item by path or row contains item by path but not size make it visible
+        isShellContainsItemByPath(shelf, item) ||
+        isRowContainsItemByPath(row, item)
+      ) {
+        row.push({ ...item, isVisible: true, entryPoint: "else if2" });
       } else {
+        // else make it visible or invisible randomly
         row.push({ ...item, isVisible: randomVisible, entryPoint: "else" });
       }
     }
@@ -113,14 +138,19 @@ function generateLevel() {
 }
 
 function generateRandomImageOrNull() {
-  return Math.random() > 0.3
+  return Math.random() > 0.2
     ? images[Math.floor(Math.random() * images.length)]
     : null;
 }
 
-function generateRandomSize() {
-  const sizes = Object.values(Size);
-  return sizes[Math.floor(Math.random() * sizes.length)];
+function generateRandomSize(isMiddleActive: boolean = true) {
+  if (isMiddleActive) {
+    const sizes = Object.values(Size);
+    return sizes[Math.floor(Math.random() * sizes.length)];
+  } else {
+    const sizes = [Size.SMALL, Size.LARGE];
+    return sizes[Math.floor(Math.random() * sizes.length)];
+  }
 }
 
 function generateRandomVisible() {
@@ -128,14 +158,25 @@ function generateRandomVisible() {
 }
 
 function createDirectorSays(level: Shelf): ShelfItem {
-  const randomSize = generateRandomSize();
-
   const visibleItems = level.items
     .flat()
     .filter((item) => item.isVisible && item.image !== null);
 
+  let randomImage =
+    visibleItems[Math.floor(Math.random() * visibleItems.length)];
+
+  let numberOfImage = 0;
+  visibleItems.forEach((item) => {
+    if (item.image?.path === randomImage.image?.path && item.isVisible) {
+      numberOfImage++;
+    }
+  });
+
+  const randomSize =
+    numberOfImage === 1 ? randomImage.size : generateRandomSize(false);
+
   return {
-    image: visibleItems[Math.floor(Math.random() * visibleItems.length)].image,
+    image: randomImage.image,
     size: randomSize,
     isVisible: true,
     coordinates: [0, 0],
