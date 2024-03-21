@@ -190,6 +190,12 @@ const QuestionTestTwo = () => {
 
   return (
     <div className="flex flex-col items-center">
+      {pages === 1 && (
+        <div className="font-normal w-fill p-4 bg-slate-700 rounded-md mb-3">
+          Lütfen her bir ifadeyi okuyun ve ifadeyi son bir haftadaki durumunuzu
+          göz önünde bulundurarak cevaplayın. Doğru ya da yanlış cevap yoktur.
+        </div>
+      )}
       <ul className="flex flex-col gap-14">
         {stepTwoQuestions
           .slice((pages - 1) * 6, (pages - 1) * 6 + 6)
