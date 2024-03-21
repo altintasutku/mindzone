@@ -96,7 +96,7 @@ const CognitiveFlexibilityPage = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
     totalAccuracy: 0,
@@ -116,6 +116,10 @@ const CognitiveFlexibilityPage = () => {
   }, [isFinished]);
 
   const handleNewRound = () => {
+    if (round === 32) {
+      setTimer(0);
+    }
+
     if (round >= TOTAL_ROUNDS) {
       setIsFinished(true);
       return setCurrentItem(null);

@@ -47,6 +47,7 @@ const WeekOneDirectorTaskPage = () => {
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
 
   const [timer, setTimer] = useState<number>(0);
+  console.log("🚀 ~ WeekOneDirectorTaskPage ~ timer:", timer)
  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -112,7 +113,7 @@ const WeekOneDirectorTaskPage = () => {
 
     setLevel((prev) => prev + 1);
 
-    if (!timeout) {
+    if (!timeout && level > -1) {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
