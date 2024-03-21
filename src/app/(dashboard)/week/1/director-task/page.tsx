@@ -101,7 +101,7 @@ const WeekOneDirectorTaskPage = () => {
 
   const handleNextRound = () => {
     if (level === TOTAL_ROUNDS) {
-      clearInterval(timeout!);
+      
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,

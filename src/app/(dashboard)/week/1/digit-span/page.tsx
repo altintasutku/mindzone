@@ -117,7 +117,7 @@ const DigitspanPage = () => {
         reactionTime: reactionTime,
       }));
       setIsFinished(true);
-      clearInterval(timeout!);
+      
     } else {
       setRound((prev) => prev + 1);
       setIsShowing(true);

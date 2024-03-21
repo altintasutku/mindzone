@@ -94,7 +94,7 @@ const PerformanceTestPageThree = () => {
         return;
       }
 
-      clearInterval(timeout!);
+      
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
