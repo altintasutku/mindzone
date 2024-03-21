@@ -121,8 +121,7 @@ const QuestionTestOne = () => {
     <div className="flex flex-col items-center">
       {pages === 1 && (
         <div className="font-normal w-fill p-4 bg-slate-700 rounded-md mb-3">
-          <b>Hoş Geldiniz!</b>
-          <br />
+          <div className="text-2xl text-center font-bold">Hoş Geldiniz!</div>
           Egzersizlerimize başlamadan birkaç dakika sürecek soruları
           yanıtlamanız gerekmektedir. Daha sonra sizler için tasarladığımız
           ücretsiz egzersizlerimize ulaşabileceksiniz!
