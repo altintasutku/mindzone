@@ -1,6 +1,7 @@
-import LoginForm from '@/components/auth/LoginForm'
-import Link from 'next/link'
-import React from 'react'
+import LoginForm from "@/components/auth/LoginForm";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import React from "react";
 
 const LoginPage = () => {
   return (
@@ -13,13 +14,19 @@ const LoginPage = () => {
       </div>
       <LoginForm />
       <div>
+        Şifrenizi mi unuttunuz?{" "}
+        <Link href="/forgot-password" className="text-primary">
+          Şifremi Sıfırla
+        </Link>
+      </div>
+      <div>
         Henüz bir hesabınız yok mu?{" "}
         <Link href="/register" className="text-primary">
           Kayıt Ol
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
