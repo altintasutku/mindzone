@@ -12,15 +12,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { updateUser } from "@/lib/api/user";
+import { generateImages } from "@/assets/mockdata/weekGames/week1AffectiveEmpathy";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
 };
 
-const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
-const genderFolderName = ["Erkek", "Kadın"];
-const sexs = ["AM", "AF"];
-const personCountPerSex = 15;
 const MAXROUND = 200;
 
 const AffectiveEmpathyPage = () => {
@@ -84,7 +81,6 @@ const AffectiveEmpathyPage = () => {
 
   useEffect(() => {
     if (round >= MAXROUND) {
-      
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -96,7 +92,18 @@ const AffectiveEmpathyPage = () => {
   }, [round]);
 
   const handleNext = () => {
+    if (round >= MAXROUND) return;
+
+    setAllRound1Images([]);
+    setImageString([]);
+    setSelectedCheckboxes([]);
+    setSelectedImage("");
+    setSamePerson([]);
+    setIsGameStarted(false);
+    setIsCorrect(null);
+
     setRound((prev) => prev + 1);
+    selectImageFunction();
 
     if (!timeout) {
       setMyTimeout(
@@ -125,46 +132,13 @@ const AffectiveEmpathyPage = () => {
     setTimeout(handleNext, 1000);
   };
 
-  const selectSamePerson = () => {
-    let x = Math.floor(Math.random() * emotionNamelist.length);
-    let z = Math.ceil(Math.random() * personCountPerSex);
-    let t = Math.floor(Math.random() * genderFolderName.length);
-    let y = t === 0 ? 0 : 1;
-    let formattedZ = z < 10 ? `0${z}` : `${z}`;
-    let imageString = `${genderFolderName[t]}/${sexs[y]}${formattedZ}/${sexs[y]}${formattedZ}${emotionNamelist[x]}`;
-    setSamePerson((prev) => [...prev, imageString]);
-    let newX;
-    do {
-      newX = Math.floor(Math.random() * emotionNamelist.length);
-    } while (newX === x);
-    let newImageString = `${genderFolderName[t]}/${sexs[y]}${formattedZ}/${sexs[y]}${formattedZ}${emotionNamelist[newX]}`;
-    setSamePerson((prev) => [...prev, newImageString]);
-    setAllRound1Images((prev) => [...prev, newImageString]);
+  const selectImageFunction = () => {
+    let { allRound1Images, samePersonArray } = generateImages();
+    setSamePerson(samePersonArray);
     setTimeout(() => {
       setIsGameStarted(true);
     }, 3000);
-  };
-
-  const selectImage = () => {
-    let newImageString: string;
-    let isUnique = false;
-
-    while (!isUnique) {
-      let x = Math.floor(Math.random() * emotionNamelist.length);
-      let z = Math.ceil(Math.random() * personCountPerSex);
-      let t = Math.floor(Math.random() * genderFolderName.length);
-      let y = t === 0 ? 0 : 1;
-      let formattedZ = z < 10 ? `0${z}` : `${z}`;
-      newImageString = `${genderFolderName[t]}/${sexs[y]}${formattedZ}/${sexs[y]}${formattedZ}${emotionNamelist[x]}`;
-
-      // Yeni imageString listedeki diğer imageString'lerle eşleşmiyor mu kontrol et
-      isUnique = !allRound1Images.some(
-        (item) => item.slice(0, 10) === newImageString.slice(0, 10)
-      );
-    }
-
-    setImageString((prev) => [...prev, newImageString]);
-    setAllRound1Images((prev) => [...prev, newImageString]);
+    setAllRound1Images(allRound1Images);
   };
 
   const shuffleArray = (array: any[]) => {
@@ -176,46 +150,30 @@ const AffectiveEmpathyPage = () => {
   };
 
   useEffect(() => {
-    setAllRound1Images([]);
-    setImageString([]);
-    setSelectedCheckboxes([]);
-    setSelectedImage("");
-    setSamePerson([]);
-    setIsGameStarted(false);
-    setIsCorrect(null);
-    for (let i = 0; i < 1; i++) {
-      selectSamePerson();
-    }
-    for (let i = 0; i < 3; i++) {
-      selectImage();
-    }
-
     setAllRound1Images((prev) => shuffleArray(prev));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
   return (
     <div>
       {round >= MAXROUND ? (
-        <FinishScreen url="/week/2/" />
+        <FinishScreen url='/week/2/' />
       ) : round === 0 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <IntroductionCF />
-          <Button onClick={handleNext} className="my-5">
+          <Button onClick={handleNext} className='my-5'>
             Hadi Başlayalım
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col items-center space-y-10">
-          <div className="min-h-72 flex flex-col justify-center items-center">
+        <div className='flex flex-col items-center space-y-10'>
+          <div className='min-h-72 flex flex-col justify-center items-center'>
             {isCorrect === true ? (
-              <p className=" text-green-600 text-5xl">Doğru</p>
+              <p className=' text-green-600 text-5xl'>Doğru</p>
             ) : isCorrect === false ? (
-              <p className=" text-red-600 text-5xl">Yanlış</p>
+              <p className=' text-red-600 text-5xl'>Yanlış</p>
             ) : isGameStarted === false ? (
               <Image
-                className="rounded-md"
+                className='rounded-md'
                 width={200}
                 height={270}
                 alt={`${samePerson[0]}`}
@@ -223,7 +181,7 @@ const AffectiveEmpathyPage = () => {
                 loader={imageLoader}
               />
             ) : (
-              <div className="grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center">
+              <div className='grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center'>
                 {allRound1Images.map((image, index) => (
                   <Image
                     className={`rounded-md cursor-pointer ${
