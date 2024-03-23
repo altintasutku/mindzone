@@ -44,14 +44,17 @@ const Page = () => {
   });
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  let timeout: NodeJS.Timeout;
+
   const session = useSession();
   const router = useRouter();
   const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
-    setCurrentQuestion(performanceTestFiveQuestions[round - 1]);
+    if (round === 1 || isTutorial) {
+      setCurrentQuestion(performanceTestFiveQuestions[round - 1]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
   useEffect(() => {
@@ -59,7 +62,7 @@ const Page = () => {
       return;
     }
 
-    
+    clearInterval(timeout);
     setStats((prev) => ({
       ...prev,
       reactionTime: timer,
@@ -76,11 +79,9 @@ const Page = () => {
     }
     setRound((prev) => prev + 1);
     if (!timeout) {
-      setMyTimeout(
-        setInterval(() => {
-          setTimer((prev) => prev + 10);
-        }, 10)
-      );
+      timeout = setInterval(() => {
+        setTimer((prev) => prev + 10);
+      }, 10);
     }
   };
 
@@ -100,6 +101,7 @@ const Page = () => {
         totalWrongs: prev.totalWrongs + 1,
       }));
     }
+    setCurrentQuestion(performanceTestFiveQuestions[round - 1]);
 
     setTimeout(() => {
       handleNext();
@@ -132,15 +134,6 @@ const Page = () => {
           },
         },
       });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          PerformanceTaskStep: "1",
-          Status: "S2",
-        },
-      });
     },
     onSuccess: () => {
       router.push("/question/2");
@@ -150,58 +143,58 @@ const Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/question/2" />
+        <FinishScreen url='/question/2' />
       ) : round === 0 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <IntroductionTestFive />
-          <Button className="my-5 w-24" onClick={handleNext}>
+          <Button className='my-5 w-24' onClick={handleNext}>
             Başla
           </Button>
         </div>
       ) : isTutorial && round == 2 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <p>Tebrikler deneme bitti! Şimdi devam edelim</p>
-          <Button className="my-5 w-24" onClick={() => setIsTutorial(false)}>
+          <Button className='my-5 w-24' onClick={() => setIsTutorial(false)}>
             Devam
           </Button>
         </div>
       ) : currentQuestion ? (
-        <div className="grid grid-cols-4">
+        <div className='grid grid-cols-4'>
           <Button
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(0)}
             variant={"ghost"}
-            className="text-wrap"
+            className='text-wrap'
           >
             {currentQuestion.answers[0]}
           </Button>
-          <div className="col-span-2"></div>
+          <div className='col-span-2'></div>
           <Button
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(1)}
             variant={"ghost"}
-            className="text-wrap"
+            className='text-wrap'
           >
             {currentQuestion.answers[1]}
           </Button>
 
           <div></div>
-          <div className="relative col-span-2">
+          <div className='relative col-span-2'>
             {isCorrect === null ? (
               <></>
             ) : isCorrect ? (
-              <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500">
+              <div className='absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500'>
                 Doğru
               </div>
             ) : (
-              <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-red-500">
+              <div className='absolute inset-0 text-xl font-semibold flex justify-center items-center text-red-500'>
                 Yanlış
               </div>
             )}
             <Image
               loader={loader}
               src={currentQuestion.path}
-              alt="testFiveImage"
+              alt='testFiveImage'
               className={cn("w-full rounded-md", {
                 "opacity-0": isCorrect !== null,
               })}
@@ -215,16 +208,16 @@ const Page = () => {
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(2)}
             variant={"ghost"}
-            className="text-wrap"
+            className='text-wrap'
           >
             {currentQuestion.answers[2]}
           </Button>
-          <div className="col-span-2"></div>
+          <div className='col-span-2'></div>
           <Button
             disabled={isCorrect !== null}
             onClick={() => handleAnswer(3)}
             variant={"ghost"}
-            className="text-wrap"
+            className='text-wrap'
           >
             {currentQuestion.answers[3]}
           </Button>
