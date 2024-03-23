@@ -17,7 +17,7 @@ const ForgotPasswordForm = () => {
     mutationFn: async () => {
       if (!isEmailValid) return;
 
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/authentication/forgot-password`, {
         email,
       });
     },
