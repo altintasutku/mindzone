@@ -36,7 +36,7 @@ const SettingsPage = () => {
 
   return (
     <div className="flex w-full h-full justify-center items-center py-4">
-      <div className="flex w-full sm:w-2/4 bg-white dark:bg-zinc-900 shadow rounded-md">
+      <div className="flex w-full sm:w-3/4 xl:w-2/4 bg-white dark:bg-zinc-900 shadow rounded-md">
         <nav className="border-r border-r-gray-400 py-4 space-y-2 min-w-56">
           <h1 className="text-center font-semibold text-lg">Ayarlar</h1>
           <Separator />
@@ -63,17 +63,21 @@ const SettingsPage = () => {
 };
 
 const PasswordTab = ({ sessionData }: { sessionData: Session }) => {
+  const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
+
+  const router = useRouter();
 
   const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/authentication/change-password`,
         {
-          password,
+          currentPassword: oldPassword,
+          newPassword: password,
         },
         {
           headers: {
@@ -81,6 +85,8 @@ const PasswordTab = ({ sessionData }: { sessionData: Session }) => {
           },
         }
       );
+
+      router.refresh();
     },
     onSuccess: () => {
       toast({
@@ -97,6 +103,12 @@ const PasswordTab = ({ sessionData }: { sessionData: Session }) => {
       <Separator />
       <div className="p-7 my-10 text-center flex flex-col gap-5 border border-slate-200 dark:border-slate-600 rounded-md">
         <h2 className="text-lg">Şifre Değiştir</h2>
+        <span>Eski şifre</span>
+        <Input
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
+          type="password"
+        />
         <span>Yeni şifre</span>
         <Input value={password} onChange={(e) => setPassword(e.target.value)} />
         <span>Yeni şifre tekrar</span>
@@ -104,7 +116,15 @@ const PasswordTab = ({ sessionData }: { sessionData: Session }) => {
           value={passwordAgain}
           onChange={(e) => setPasswordAgain(e.target.value)}
         />
-        <Button disabled={isPending} onClick={() => mutate()}>
+        <Button
+          disabled={
+            isPending ||
+            password.length < 8 ||
+            password !== passwordAgain ||
+            !oldPassword
+          }
+          onClick={() => mutate()}
+        >
           Şifreyi Değiştir
         </Button>
       </div>
