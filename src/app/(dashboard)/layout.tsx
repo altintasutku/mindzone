@@ -1,12 +1,12 @@
 "use client";
 
-import { useUserStore } from "@/hooks/useUserStore";
-import { getUser } from "@/lib/api/user";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2Icon } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import {useUserStore} from "@/hooks/useUserStore";
+import {getUser} from "@/lib/api/user";
+import {useQuery} from "@tanstack/react-query";
+import {Loader2Icon} from "lucide-react";
+import {signOut, useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
+import React, {useEffect} from "react";
 
 type Props = Readonly<{ children: React.ReactNode }>;
 
@@ -20,13 +20,12 @@ export default function DashboardLayout({ children }: Props) {
     queryKey: ["user"],
     queryFn: async () => {
       try{
-        const data = await getUser({
+        return await getUser({
           accessToken: session.data?.user.accessToken!,
           userId: session.data?.user.id!,
         });
-        return data;
       }catch(e){
-        signOut();
+        await signOut();
         return null;
       }
     },

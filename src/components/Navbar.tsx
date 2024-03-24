@@ -87,6 +87,8 @@ const Navbar = () => {
                 <SettingsIcon size={24} />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
+                <DropdownMenuLabel>Hoşgeldin {session.data.user.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 <DropdownMenuLabel>Ayarlar</DropdownMenuLabel>
                 <DropdownMenuItem>
                   <Link href={"/settings"} className="flex items-center">
