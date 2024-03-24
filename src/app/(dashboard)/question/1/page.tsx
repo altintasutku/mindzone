@@ -120,7 +120,7 @@ const QuestionTestOne = () => {
   return (
     <div className="flex flex-col items-center">
       {pages === 1 && (
-        <div className="font-normal w-fill p-4 bg-slate-700 rounded-md mb-3">
+        <div className="font-normal w-fill p-4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3">
           <div className="text-2xl text-center font-bold">Hoş Geldiniz!</div>
           Egzersizlerimize başlamadan birkaç dakika sürecek soruları
           yanıtlamanız gerekmektedir. Daha sonra sizler için tasarladığımız

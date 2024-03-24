@@ -29,23 +29,28 @@ const WeeklyTasks = async () => {
         redirect("/login");
     }
 
+    const notCeiled = parseInt(user.userDetails.WeeklyStatus) / 5;
+
+    const weekNumber = Math.ceil(notCeiled);
+    const remainingDay = calculateDaysDiff(new Date(user.createdOn));
+    console.log(user.name, ":", new Date(), "-", new Date(user.createdOn), "=", remainingDay);
+
     return (
         <section className="dark:bg-zinc-900 shadow text-center pt-5 rounded-md space-y-5">
             <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10 p-4">
                 {weeks.map((week, index) => {
-                    const notCeiled = parseInt(user.userDetails.WeeklyStatus) / 5;
-
-                    const weekNumber = Math.ceil(notCeiled);
+                    const isActiveWeek = weekNumber === index + 1;
+                    const percentage = (parseInt(user.userDetails.WeeklyStatus) - 1) % 5 * 20
 
                     const progress =
-                        weekNumber === index + 1
-                            ? (parseInt(user.userDetails.WeeklyStatus) - 1) % 5 * 20
+                        isActiveWeek
+                            ? percentage
                             : weekNumber > index + 1
                                 ? 100
                                 : -1;
 
-                    const remainingDay = calculateDaysDiff(new Date(user.createdOn));
+                    const isWeekAccessible = (index) * 7 < remainingDay && progress !== -1;
 
                     return (
                         <div
@@ -70,7 +75,7 @@ const WeeklyTasks = async () => {
                             </div>
                             <div className="flex w-full px-5">
                                 <>
-                                    {progress === -1 ? (
+                                    {!isWeekAccessible ? (
                                         <Button className="w-full" variant={"outline"}>
                                             Kilitli
                                         </Button>
@@ -89,12 +94,14 @@ const WeeklyTasks = async () => {
                                 </>
                             </div>
 
-                            {progress === -1 && (
+                            {!isWeekAccessible && (
                                 <div
                                     className="absolute w-full h-full bg-black/40 backdrop-blur-sm z-40 inset-0 flex justify-center items-center text-white">
                                     {Math.floor((remainingDay + 7) / 7) === index ?
                                         <div className="font-bold flex flex-col items-center">
-                                            <h3 className="text-5xl">{remainingDay % 7}</h3>
+                                            <h3 className="text-5xl">{
+                                                remainingDay % 7 === 0 ? 7 : 7 - remainingDay % 7
+                                            }</h3>
                                             <span>gün sonra açılacak</span>
                                         </div> : (index) * 7 < remainingDay ?
                                             <div className={"p-4"}>
