@@ -37,7 +37,7 @@ const SettingsPage = () => {
   return (
     <div className="flex w-full h-full justify-center items-center py-4">
       <div className="flex w-full sm:w-3/4 xl:w-2/4 bg-white dark:bg-zinc-900 shadow rounded-md">
-        <nav className="border-r border-r-gray-400 py-4 space-y-2 min-w-56">
+        <nav className="hidden sm:block border-r border-r-gray-400 py-4 space-y-2 min-w-56">
           <h1 className="text-center font-semibold text-lg">Ayarlar</h1>
           <Separator />
           <h2 className="text-center">Hesap Ayarları</h2>
