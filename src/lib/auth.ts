@@ -21,19 +21,21 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const { email, password } = loginValidator.parse(credentials);
+        try {
+          const { email, password } = loginValidator.parse(credentials);
 
-        const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/authentication`,
-          {
-            username: email,
-            password,
+          const { data } = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/authentication`,
+            {
+              username: email,
+              password,
+            }
+          );
+
+          if (data) {
+            return { ...data.authUser, accessToken: data.token };
           }
-        );
-
-        if (data) {
-          return { ...data.authUser, accessToken: data.token };
-        }
+        } catch (error) {}
 
         return null;
       },
