@@ -1,27 +1,41 @@
 "use client";
 
 import { LoginType } from "@/lib/validators/auth";
-import React, { Suspense, use } from "react";
+import React, { Suspense, use, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
 import { Loader2Icon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { z } from "zod";
 
 const LoginFormInner = () => {
-  const [isPending, setIsPending] = React.useState(false);
   const params = useSearchParams();
-
   const router = useRouter();
-
   const error = params.get("error") as string;
 
-  const login = async (credentials: LoginType) => {
+  const [isPending, setIsPending] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async () => {
+    const { success } = z
+      .object({
+        email: z.string().email(),
+        password: z.string().min(8),
+      })
+      .safeParse({ email, password });
+
+    if (!success) {
+      return;
+    }
+
     setIsPending(true);
     try {
       signIn("credentials", {
-        email: credentials.email,
-        password: credentials.password,
+        email,
+        password,
         callbackUrl: "/",
       });
     } catch (error) {
@@ -29,9 +43,6 @@ const LoginFormInner = () => {
       router.push("/login?error=true");
     }
   };
-
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
 
   return (
     <form className="gap-2 flex flex-col w-full sm:w-auto">
@@ -55,7 +66,7 @@ const LoginFormInner = () => {
 
       <Button
         type="button"
-        onClick={() => login({ email, password })}
+        onClick={login}
         className="col-span-2"
         disabled={isPending || !email || !password}
       >
