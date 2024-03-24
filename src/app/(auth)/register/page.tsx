@@ -16,7 +16,7 @@ const RegisterPage = () => {
       <RegisterForm />
       <div>
         Zaten bir hesabınız var mı?{" "}
-        <Link href="/login" className="text-primary">
+        <Link href={"/login"} className="text-primary">
           Giriş Yap
         </Link>
       </div>

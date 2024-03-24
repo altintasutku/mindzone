@@ -6,8 +6,6 @@ import Image from "next/image";
 import FinishScreen from "@/components/game/FinishScreen";
 import { Progress } from "@/components/ui/progress";
 import { WeekData, sendWeekData } from "@/lib/api/week";
-import { set } from "zod";
-import { clearInterval } from "timers";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
@@ -22,8 +20,8 @@ const MAX_ROUND = 3;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);
-  const [imageString, setImageString] = useState<string[]>([]);
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const [, setImageString] = useState<string[]>([]);
+  const [, setSelectedCheckboxes] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState("");
   const [samePerson, setSamePerson] = useState<string[]>([]);
   const [allRound1Images, setAllRound1Images] = useState<string[]>([]);

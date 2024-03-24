@@ -14,13 +14,13 @@ const LoginPage = () => {
       <LoginForm />
       <div>
         Şifrenizi mi unuttunuz?{" "}
-        <Link href="/forgot-password" className="text-primary">
+        <Link href={"/forgot-password"} className="text-primary">
           Şifremi Sıfırla
         </Link>
       </div>
       <div>
         Henüz bir hesabınız yok mu?{" "}
-        <Link href="/register" className="text-primary">
+        <Link href={"/register"} className="text-primary">
           Kayıt Ol
         </Link>
       </div>

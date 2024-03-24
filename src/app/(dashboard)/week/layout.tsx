@@ -11,12 +11,8 @@ import {usePathname, useRouter} from "next/navigation";
 import React from "react";
 import {calculateDaysDiff} from "@/lib/utils";
 
-const weekGames = [weekOneGames, weekTwoGames, weekThreeGames];
-
 const Layout = ({children}: { children: React.ReactNode }) => {
     const user = useUserStore((state) => state.user);
-
-    const {toast} = useToast();
 
     const pathname = usePathname();
     const router = useRouter();
