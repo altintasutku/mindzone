@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2Icon, LockIcon } from "lucide-react";
 import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -89,6 +89,11 @@ const PasswordTab = ({ sessionData }: { sessionData: Session }) => {
       router.refresh();
     },
     onSuccess: () => {
+      signIn("credentials", {
+        email: sessionData.user.email,
+        password: password,
+        callbackUrl: "/settings",
+      });
       toast({
         title: "Şifre başarıyla değiştirildi!",
         variant: "success",
