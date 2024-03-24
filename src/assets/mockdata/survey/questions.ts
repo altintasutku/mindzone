@@ -330,7 +330,7 @@ export const stepOneAnswersPositive = [
 export const stepTwoQuestions: QuestionTwo[] = [
   {
     id: 1,
-    question: "Gevşeyip rahatlamakta zorluk çektim.",
+    question: `Lütfen her bir ifadeyi okuyun ve ifadeyi son bir haftadaki durumunuzu göz önünde bulundurarak cevaplayın. Doğru ya da yanlış cevap yoktur. ${"\n"} Gevşeyip rahatlamakta zorluk çektim.`,
     type: 2,
     subType: 1,
   },
@@ -646,7 +646,7 @@ export const stepTwoQuestions: QuestionTwo[] = [
   },
   {
     id: 50,
-    question: "Kendini sinirli, kaygılı veya çok gergin hissetme",
+    question: `Son 2 hafta içerisinde, aşağıdaki sorunlardan herhangi biri sizi ne sıklıkla rahatsız etti? ${"\n"} Kendini sinirli, kaygılı veya çok gergin hissetme`,
     type: 4,
     subType: null,
   },
@@ -688,7 +688,7 @@ export const stepTwoQuestions: QuestionTwo[] = [
   },
   {
     id: 57,
-    question: "Bir şeyleri yapmaya az ilgi veya zevk duymak",
+    question: `Geçen 2 hafta süresince, aşağıdaki sorunlardan ne sıklıkla rahatsız oldunuz? ${"\n"}Bir şeyleri yapmaya az ilgi veya zevk duymak`,
     type: 5,
     subType: null,
   },
