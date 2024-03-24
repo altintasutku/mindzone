@@ -1,9 +1,8 @@
 import AuthButtons from "@/components/home/AuthButtons";
 import ContactAndAboutButtons from "@/components/home/ContactAndAboutButtons";
 import Welcome from "@/components/home/Welcome";
-import WhatIs from "@/components/home/WhatIs";
-import { getAuthSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import {getAuthSession} from "@/lib/auth";
+import {redirect} from "next/navigation";
 
 type Props = Readonly<{
   searchParams: { nav: string | undefined };

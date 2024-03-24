@@ -18,7 +18,7 @@ const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
 };
 
-const MAXROUND = 200;
+const MAX_ROUND = 3;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);
@@ -80,7 +80,7 @@ const AffectiveEmpathyPage = () => {
   }, [isFinished]);
 
   useEffect(() => {
-    if (round >= MAXROUND) {
+    if (round >= MAX_ROUND) {
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -92,7 +92,7 @@ const AffectiveEmpathyPage = () => {
   }, [round]);
 
   const handleNext = () => {
-    if (round >= MAXROUND) return;
+    if (round >= MAX_ROUND) return;
 
     setAllRound1Images([]);
     setImageString([]);
@@ -155,7 +155,7 @@ const AffectiveEmpathyPage = () => {
 
   return (
     <div>
-      {round >= MAXROUND ? (
+      {round >= MAX_ROUND ? (
         <FinishScreen url='/week/2/' />
       ) : round === 0 ? (
         <div className='flex flex-col items-center'>
@@ -200,7 +200,7 @@ const AffectiveEmpathyPage = () => {
             )}
           </div>
 
-          <Progress value={(round * 100) / MAXROUND} />
+          <Progress value={(round * 100) / MAX_ROUND} />
         </div>
       )}
     </div>

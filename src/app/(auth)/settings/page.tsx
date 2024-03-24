@@ -1,17 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Separator} from "@/components/ui/separator";
+import {useToast} from "@/components/ui/use-toast";
+import {cn} from "@/lib/utils";
+import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
-import { Loader2Icon, LockIcon } from "lucide-react";
-import { Session } from "next-auth";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import {Loader2Icon, LockIcon} from "lucide-react";
+import {Session} from "next-auth";
+import {signIn, useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
+import React, {useState} from "react";
 
 type Tab = "security" | "email" | "profile";
 
