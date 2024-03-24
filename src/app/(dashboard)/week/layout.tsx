@@ -1,11 +1,5 @@
 "use client";
 
-import {
-    weekOneGames,
-    weekThreeGames,
-    weekTwoGames,
-} from "@/assets/mockdata/weekGames/weekGames";
-import {useToast} from "@/components/ui/use-toast";
 import {useUserStore} from "@/hooks/useUserStore";
 import {usePathname, useRouter} from "next/navigation";
 import React from "react";
