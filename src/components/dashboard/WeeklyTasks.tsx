@@ -1,7 +1,7 @@
 import React from "react";
 import {Progress} from "../ui/progress";
 import {Button, buttonVariants} from "../ui/button";
-import {LockIcon} from "lucide-react";
+import {InfoIcon, LockIcon} from "lucide-react";
 import {weeks} from "@/assets/mockdata/progresses/weeks";
 import WeeklyTasksImage from "./WeeklyTasksImage";
 import Link from "next/link";
@@ -33,11 +33,16 @@ const WeeklyTasks = async () => {
 
     const weekNumber = Math.ceil(notCeiled);
     const remainingDay = calculateDaysDiff(new Date(user.createdOn));
-    console.log(user.name, ":", new Date(), "-", new Date(user.createdOn), "=", remainingDay);
 
     return (
         <section className="dark:bg-zinc-900 shadow text-center pt-5 rounded-md space-y-5">
             <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
+            {parseInt(user.userDetails.UserType) === 0 && (
+                <div className={"flex items-center justify-center gap-4 p-4 bg-blue-500 text-white mx-10 rounded-md"}>
+                    <InfoIcon />
+                    Egzersizlerimiz sizler için hazırlanıyor. Yakında başlayacaksınız!
+                </div>
+            )}
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10 p-4">
                 {weeks.map((week, index) => {
                     const isActiveWeek = weekNumber === index + 1;
@@ -50,7 +55,11 @@ const WeeklyTasks = async () => {
                                 ? 100
                                 : -1;
 
-                    const isWeekAccessible = (index) * 7 < remainingDay && progress !== -1;
+                    let isWeekAccessible = (index) * 7 < remainingDay && progress !== -1;
+
+                    if (parseInt(user.userDetails.UserType) === 0) {
+                        isWeekAccessible = false;
+                    }
 
                     return (
                         <div
@@ -97,17 +106,19 @@ const WeeklyTasks = async () => {
                             {!isWeekAccessible && (
                                 <div
                                     className="absolute w-full h-full bg-black/40 backdrop-blur-sm z-40 inset-0 flex justify-center items-center text-white">
-                                    {Math.floor((remainingDay + 7) / 7) === index ?
-                                        <div className="font-bold flex flex-col items-center">
-                                            <h3 className="text-5xl">{
-                                                remainingDay % 7 === 0 ? 7 : 7 - remainingDay % 7
-                                            }</h3>
-                                            <span>gün sonra açılacak</span>
-                                        </div> : (index) * 7 < remainingDay ?
-                                            <div className={"p-4"}>
-                                                Bir önceki haftayı bitirerek devam edebilirsiniz.
-                                            </div> :
-                                            <LockIcon size={64} className="text-yellow-500"/>}
+                                    {parseInt(user.userDetails.UserType) === 0 ?
+                                        <LockIcon size={64} className="text-yellow-500"/>
+                                        : Math.floor((remainingDay + 7) / 7) === index ?
+                                            <div className="font-bold flex flex-col items-center">
+                                                <h3 className="text-5xl">{
+                                                    remainingDay % 7 === 0 ? 7 : 7 - remainingDay % 7
+                                                }</h3>
+                                                <span>gün sonra açılacak</span>
+                                            </div> : (index) * 7 < remainingDay ?
+                                                <div className={"p-4"}>
+                                                    Bir önceki haftayı bitirerek devam edebilirsiniz.
+                                                </div> :
+                                                <LockIcon size={64} className="text-yellow-500"/>}
                                 </div>
                             )}
                         </div>
