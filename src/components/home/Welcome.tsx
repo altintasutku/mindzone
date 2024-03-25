@@ -10,7 +10,7 @@ export const fontSans = Kalam({
 
 const Welcome = () => {
   return (
-    <section className="bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full">
+    <section className='bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full'>
       {/* TODO: yazilar degisebilir cok uzun ve okumak sıkıcı gelebilir */}
       <h2
         className={cn(
@@ -18,14 +18,14 @@ const Welcome = () => {
           fontSans.className
         )}
       >
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">
+        <span className='bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800'>
           MindZone&apos;a Hoş Geldiniz.
         </span>
       </h2>
       <div>
         <p>
           Sizler için ruh sağlığına yönelik hazırladığımız{" "}
-          <span className="font-bold border border-slate-400 dark:border-slate-200 px-1 rounded-sm">
+          <span className='font-bold border border-slate-400 dark:border-slate-200 px-1 rounded-sm'>
             online ve ücretsiz
           </span>{" "}
           egzersiz programımıza hoş geldiniz.
@@ -42,9 +42,9 @@ const Welcome = () => {
           Egzersizleri tamamladığınızda aşağıdaki hediye çeklerini kazanma
           fırsatınız olacaktır!
         </p>
-        <div className="font-bold">
+        <div className='font-bold'>
           <InfiniteMovingCards
-            speed="faster"
+            speed='faster'
             pauseOnHover={false}
             items={[
               {
@@ -71,9 +71,9 @@ const Welcome = () => {
           />
         </div>{" "}
         <p>
-          Araştırma hakkında bilgi edinmek ya da bizim hakkımızda merak
-          ettikleriniz var ise “Hakkımızda ve İletişim” kısımından detaylı
-          bilgiye ulaşabilirsiniz.
+          Araştırmacılar ya da bu çalışma hakkında merak ettikleriniz var ise
+          detaylı bilgi için “Hakkımızda” bölümünü ziyaret edebilirsiniz ve
+          `iletişim` bölümünden bizlere ulaşabilirsiniz.
         </p>
       </div>
     </section>

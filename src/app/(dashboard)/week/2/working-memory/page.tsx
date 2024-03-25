@@ -2,14 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { set } from "zod";
 import IntroductionCF from "./_introductions";
+import { selectImagesFunction } from "@/assets/mockdata/weekGames/week2WorkingMemory";
 
-const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
-const genderFolderName = ["Erkek", "Kadın"];
-const sexs = ["AM", "AF"];
-const personCountPerSex = 15;
 const MAXROUND = 52;
 
 type CurrentPersonType = {
@@ -33,6 +30,7 @@ const WorkingMemory = () => {
     CurrentPersonType[]
   >([]);
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
+  const [isRotated, setIsRotated] = useState(false);
 
   useEffect(() => {
     if (isFinished || round === 0) {
@@ -43,29 +41,31 @@ const WorkingMemory = () => {
     setSelectedPersons([]);
     setRotateStates([]);
     setIsCorrect(null);
+    setIsRotated(false);
 
-    for (let i = 0; i < 2; i++) {
-      selectPerson();
-    }
+    selectPersons();
+
     setTimeout(() => {
       setRotateStates(new Array(4).fill(true));
+      setIsRotated(true);
     }, 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
-  useEffect(() => {
-    if (isFinished || round === 0) {
-      return;
+  const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+  };
 
-    if (persons.length === 4) {
-      return;
-    }
-
-    selectAnswer();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [persons]);
+  const selectPersons = () => {
+    let { persons, answer } = selectImagesFunction();
+    setPersons(persons);
+    setAnswer(answer);
+    shuffleArray(persons);
+  };
 
   useEffect(() => {
     if (selectedPersons.length === 2) {
@@ -99,94 +99,31 @@ const WorkingMemory = () => {
     setRound((prev) => prev + 1);
   };
 
-  const selectPerson = () => {
-    let isUnique = false;
-
-    let newElement: CurrentPersonType;
-
-    while (!isUnique) {
-      const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
-      const sex = genderFolder === "Erkek" ? sexs[0] : sexs[1];
-      const index = Math.floor(Math.random() * personCountPerSex) + 1;
-      const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-      newElement = {
-        emotionName,
-        genderFolder,
-        index,
-        sex,
-      };
-
-      isUnique = !persons.some(
-        (item) =>
-          item.index === index &&
-          item.emotionName === emotionName &&
-          item.sex === sex &&
-          item.genderFolder === genderFolder
-      );
-
-      setPersons((prev) => [...prev, newElement]);
-    }
-  };
-
-  const selectAnswer = () => {
-    const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
-    const sex = genderFolder === "Erkek" ? sexs[0] : sexs[1];
-    const index = Math.floor(Math.random() * personCountPerSex) + 1;
-    const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-    const newElement = {
-      emotionName,
-      genderFolder,
-      index,
-      sex,
-    };
-
-    if (persons.some((item) => item.index === index && item === newElement)) {
-      selectAnswer();
-    } else {
-      setAnswer([newElement]);
-    }
-
-    selectSecondAnswer(newElement);
-  };
-
-  const selectSecondAnswer = (lastElement: CurrentPersonType) => {
-    const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-    const newElement = {
-      emotionName,
-      genderFolder: lastElement.genderFolder,
-      index: lastElement.index,
-      sex: lastElement.sex,
-    };
-
-    if (lastElement.emotionName === emotionName) {
-      selectSecondAnswer(lastElement);
-      return;
-    } else {
-      setAnswer((prev) => [...prev, newElement]);
-      setPersons((prev) => [...prev, lastElement, newElement]);
-      setPersons((prev) => prev.sort(() => Math.random() - 0.5));
-    }
-  };
-
   const handleImageClick = (index: number) => {
-    setRotateStates((prev) => {
-      const newState = [...prev];
-      newState[index] = !newState[index];
-      return newState;
-    });
+    if (rotateStates[index] === true) {
+      setRotateStates((prev) => {
+        const newState = [...prev];
+        newState[index] = !newState[index];
+        return newState;
+      });
+    } else {
+      return;
+    }
+
     //check is same or not
   };
 
-  const handleSelectPerson = (person: CurrentPersonType) => {
-    setSelectedPersons((prev) => {
-      if (prev.length === 2) {
-        return [person];
-      }
-      return [...prev, person];
-    });
+  const handleSelectPerson = (person: CurrentPersonType, index: number) => {
+    if (isRotated) {
+      setSelectedPersons((prev) => {
+        if (prev.length === 2) {
+          return [person];
+        }
+        return [...prev, person];
+      });
+    } else {
+      return;
+    }
   };
 
   return (
@@ -222,7 +159,7 @@ const WorkingMemory = () => {
                 width={150}
                 onClick={() => {
                   handleImageClick(index);
-                  handleSelectPerson(person);
+                  handleSelectPerson(person, index);
                 }}
               />
             </div>

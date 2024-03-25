@@ -13,18 +13,19 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const AboutPage = () => {
   return (
-    <div className="grid grid-cols-2 gap-5 py-5 px-10 md:px-[5%] lg:px-[15%]">
-      <section className="bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2">
-        <h2 className="font-semibold text-xl text-primary">Biz Kimiz?</h2>
+    <div className='grid grid-cols-2 gap-5 py-5 px-10 md:px-[5%] lg:px-[15%]'>
+      <section className='bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2'>
+        <h2 className='font-semibold text-xl text-primary'>Biz Kimiz?</h2>
         <p>
           Bu çalışma Uzm. Klinik Psikolog Dilruba Sönmez’in doktora programı
           kapsamında tasarladığı bir web sitedir. Prof. Dr. Timothy Jordan
           tarafından danışmanlık verilmektedir. Bu web sitesindeki uygulamaları
-          denemek ve devamlılık sağlamada gönüllülük esastır ve sizler için
-          herhangi bir risk bulunmamaktadır. Herhangi bir sorunuzda
-          araştırmacıya{" "}
+          denemede ve uygulamalarda devamlılık sağlamada gönüllülük esastır ve
+          sizler için fiziksel ya da psikolojik bir risk bulunmamaktadır.
+          Çalışmamız İbn Haldun Üniversitesi Etik Kurul’u tarafından
+          onaylanmıştır. Herhangi bir sorunuzda araştırmacıya{" "}
           <a
-            className="text-blue-600 underline"
+            className='text-blue-600 underline'
             href={`mailto:${dilrubaEmail}`}
           >
             {dilrubaEmail}
@@ -33,16 +34,16 @@ const AboutPage = () => {
         </p>
       </section>
 
-      <section className="flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
+      <section className='flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1'>
         <Image
           loader={imageLoader}
-          alt="Dilruba Sönmez"
+          alt='Dilruba Sönmez'
           src={"dilruba-sonmez.png"}
           width={240}
           height={240}
-          className="w-full md:w-60 self-center aspect-square object-cover rounded-full"
+          className='w-full md:w-60 self-center aspect-square object-cover rounded-full'
         />
-        <h2 className="font-semibold text-center text-2xl">Dilruba Sönmez</h2>
+        <h2 className='font-semibold text-center text-2xl'>Dilruba Sönmez</h2>
         <Separator />
         <p>
           Dilruba Sönmez, İstanbul Şehir Üniversitesi Psikoloji bölümünden
@@ -59,23 +60,23 @@ const AboutPage = () => {
           klinik psikolog olarak ergen ve yetişkin alanında danışanlarını kabul
           etmektedir.
         </p>
-        <Button asChild variant={"link"} className="underline">
-          <Link href="https://scholar.google.com/citations?user=92I4Dw8AAAAJ&hl=tr">
+        <Button asChild variant={"link"} className='underline'>
+          <Link href='https://scholar.google.com/citations?user=92I4Dw8AAAAJ&hl=tr'>
             Akademik Çalışmalar
           </Link>
         </Button>
       </section>
 
-      <section className="flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
+      <section className='flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1'>
         <Image
           loader={imageLoader}
-          alt="Profesör Dr. Timothy Richard Jordan"
+          alt='Profesör Dr. Timothy Richard Jordan'
           src={"timothy-r-jordan.png"}
           width={240}
           height={240}
-          className="w-full md:w-60 self-center aspect-square object-cover rounded-full"
+          className='w-full md:w-60 self-center aspect-square object-cover rounded-full'
         />
-        <h2 className="font-semibold text-center text-2xl">
+        <h2 className='font-semibold text-center text-2xl'>
           Profesör Dr. Timothy Richard Jordan
         </h2>
         <Separator />
@@ -96,25 +97,27 @@ const AboutPage = () => {
           incelemek için uygular. İbn Haldun Üniversitesi&apos;nde Biliş ve Algı
           Laboratuvarlarını kurmuştur ve yönetmektedir.
         </p>
-        <Button asChild variant={"link"} className="underline">
-          <Link href="https://scholar.google.ae/citations?user=_iw29XQAAAAJ&hl=en">
+        <Button asChild variant={"link"} className='underline'>
+          <Link href='https://scholar.google.ae/citations?user=_iw29XQAAAAJ&hl=en'>
             Akademik Çalışmalar
           </Link>
         </Button>
       </section>
 
-      <h2 className="col-span-2 text-center font-bold text-xl">Proje Asistanları</h2>
+      <h2 className='col-span-2 text-center font-bold text-xl'>
+        Proje Asistanları
+      </h2>
 
-      <section className="flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1">
+      <section className='flex flex-col ic gap-4 bg-white dark:bg-zinc-900 p-4 shadow-md rounded-md w-full col-span-2 sm:col-span-1'>
         <Image
           loader={imageLoader}
-          alt="Esmahan Banu Yıldız"
+          alt='Esmahan Banu Yıldız'
           src={"esmahan-banu-yildiz.png"}
           width={240}
           height={240}
-          className="w-full md:w-60 self-center aspect-square object-cover rounded-full"
+          className='w-full md:w-60 self-center aspect-square object-cover rounded-full'
         />
-        <h2 className="font-semibold text-center text-2xl">
+        <h2 className='font-semibold text-center text-2xl'>
           Esmahan Banu Yıldız
         </h2>
         <Separator />
@@ -123,9 +126,9 @@ const AboutPage = () => {
           Esmahan Banu Yıldız klinik psikoloji alanına ilgi duymaktadır ve daha
           önce Asst. Prof. Dr. Beyza Ateş tarafından yürütülen KULE projesinde
           ve Prof. Dr. Sibel Halfon tarafından yürütülen Psikoterapi Araştırma
-          Laboratuvarı&apos;nda araştırma asistanlığı yapmıştır. Şu anda Uzm. Klinik
-          Psikolog Dilruba Sönmez tarafından yürütülen MindZone projesinde
-          asistanlık yapmaktadır.
+          Laboratuvarı&apos;nda araştırma asistanlığı yapmıştır. Şu anda Uzm.
+          Klinik Psikolog Dilruba Sönmez tarafından yürütülen MindZone
+          projesinde asistanlık yapmaktadır.
         </p>
       </section>
     </div>
