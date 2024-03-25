@@ -6,24 +6,22 @@ def rename_files_in_directory(directory):
         print("Belirtilen dizin bulunamadı.")
         return
 
-    mods = ["İğrenmiş", "Kızgın", "Korkmuş",
-            "Mutlu", "Nötr", "Üzgün", "Şaşırmış"]
-
     sexs = ["Erkek", "Kadın"]
 
-    for mod in mods:
-        for sex in sexs:
-            file_list = os.listdir(directory + mod + "/" + sex + "/")
+    mods = ["Olumlu", "Olumsuz"]
+
+    for sex in sexs:
+        for mod in mods:
+            file_list = os.listdir(directory + sex + "/" + mod + "/")
             file_list.sort()
             count = 1
             for old_name in file_list:
                 file_path = os.path.join(
-                    directory + mod + "/" + sex + "/", old_name)
+                    directory + sex + "/" + mod + "/", old_name)
                 if os.path.isfile(file_path):
-                    # file_extension = os.path.splitext(old_name)[1]
                     file_extension = ".jpg"
                     new_name = str(count) + file_extension
-                    new_path = os.path.join(directory + mod + "/" + sex + "/", new_name)
+                    new_path = os.path.join(directory + sex + "/" + mod + "/", new_name)
                     os.rename(file_path, new_path)
                     print(f"{old_name} -> {new_name}")
                     count += 1
@@ -31,6 +29,6 @@ def rename_files_in_directory(directory):
                     print(f"{file_path} bulunamadı.")
 
 
-directory_path = "/Users/altintas/Developer/NextJS/mindzone/public/images/weekGames/week_three/working_memory/"
+directory_path = "../public/images/weekGames/week_three/cognitive_flexibility/"
 
 rename_files_in_directory(directory_path)
