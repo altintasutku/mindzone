@@ -102,7 +102,7 @@ const WeekThreeGameOnePage = () => {
     <div>
       {isFinished ? (
         <div className="flex justify-center items-center">
-          <FinishScreen url="/week/3/cognitive-flexibilty" />
+          <FinishScreen url="/week/3/cognitive-flexibility" />
         </div>
       ) : round === 0 ? (
         <div className="flex flex-col items-center gap-10">
