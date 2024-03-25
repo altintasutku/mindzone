@@ -9,7 +9,7 @@ const WelcomeToWeek = ({ week }: Props) => {
     <div className="text-center">
       <strong>{week}</strong> hoşgeldiniz!
       <br />
-      Aşağıdaki oyunlardan birini seçebilirsiniz:
+      Aşağıdan kaldığınız yerden devam edebilirsiniz.
     </div>
   );
 };
