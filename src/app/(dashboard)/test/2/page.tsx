@@ -64,7 +64,7 @@ const PerformanceTestPageTwo = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<{
     totalWrongs: number;
     resistanceWrongs: number;
@@ -102,7 +102,10 @@ const PerformanceTestPageTwo = () => {
         },
       });
 
-      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "3" } });
+      setUser({
+        ...user,
+        userDetails: { ...user.userDetails, PerformanceTaskStep: "3" },
+      });
     },
     onSuccess: () => {
       router.push("/test/3");
@@ -132,18 +135,16 @@ const PerformanceTestPageTwo = () => {
       return;
     }
 
-    
-    setStats((prev) => ({
-      ...prev,
-      reactionTime: timer,
-    }));
-
     mutate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
@@ -219,30 +220,30 @@ const PerformanceTestPageTwo = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
+    <div className='flex flex-col items-center py-10'>
       {isFinished ? (
-        <FinishScreen url="/test/3" />
+        <FinishScreen url='/test/3' />
       ) : round === 0 ? (
-        <div className="flex flex-col">
+        <div className='flex flex-col'>
           <IntroductionsTestTwo />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : correct === 1 && isBreakActive ? (
-        <div className="flex flex-col items-center gap-4">
+        <div className='flex flex-col items-center gap-4'>
           <div>
-            <span className="text-green-500">Tebrikler! Doğru bildin.</span>{" "}
+            <span className='text-green-500'>Tebrikler! Doğru bildin.</span>{" "}
             Deneme bitti hadi oyuna geçelim
           </div>
           <Button onClick={finishBreak}>Devam Et</Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-7 justify-center items-center w-full">
+        <div className='flex flex-col gap-7 justify-center items-center w-full'>
           {correct < 1 && isBreakActive ? (
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               {history.map((letter, index) => (
                 <span
                   key={letter + index}
@@ -258,14 +259,14 @@ const PerformanceTestPageTwo = () => {
               ))}
             </div>
           ) : (
-            <span className="text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center">
+            <span className='text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center'>
               {current}
             </span>
           )}
 
           <Button
             onClick={handleAnswer}
-            variant="outline"
+            variant='outline'
             className={cn("flex justify-center px-16 py-4", {
               "bg-green-500 text-white hover:bg-green-500": isCorrect === true,
               "bg-red-500 text-white hover:bg-red-500": isCorrect === false,

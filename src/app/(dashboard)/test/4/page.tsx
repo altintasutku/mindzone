@@ -68,7 +68,7 @@ const PerformanceTestPageFour = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<{
     totalWrongs: number;
     resistanceWrongs: number;
@@ -88,6 +88,10 @@ const PerformanceTestPageFour = () => {
 
   const handleNext = () => {
     if (round === TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
@@ -119,12 +123,8 @@ const PerformanceTestPageFour = () => {
       return;
     }
 
-    
-    setStats((prev) => ({
-      ...prev,
-      reactionTime: timer,
-    }));
     mutate();
+    clearInterval(timeout!);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
@@ -151,7 +151,10 @@ const PerformanceTestPageFour = () => {
         },
       });
 
-      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "5" } });
+      setUser({
+        ...user,
+        userDetails: { ...user.userDetails, PerformanceTaskStep: "5" },
+      });
     },
     onSuccess: () => {
       router.push("/test/5");

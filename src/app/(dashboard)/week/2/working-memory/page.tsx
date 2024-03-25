@@ -6,8 +6,15 @@ import React, { useEffect, useState } from "react";
 import { set } from "zod";
 import IntroductionCF from "./_introductions";
 import { selectImagesFunction } from "@/assets/mockdata/weekGames/week2WorkingMemory";
+import { sendWeekData, WeekData } from "@/lib/api/week";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "@/lib/api/user";
+import { clear } from "console";
 
-const MAXROUND = 52;
+// const MAXROUND = 52;
+const MAXROUND = 3;
 
 type CurrentPersonType = {
   emotionName: string;
@@ -31,6 +38,60 @@ const WorkingMemory = () => {
   >([]);
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
   const [isRotated, setIsRotated] = useState(false);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 1,
+    group: "W2",
+  });
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    mutate(stats);
+    console.log("stats", stats);
+
+    clearInterval(timeout!);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   useEffect(() => {
     if (isFinished || round === 0) {
@@ -75,6 +136,10 @@ const WorkingMemory = () => {
       ) {
         setTimeout(() => {
           setIsCorrect(true);
+          setStats((prev) => ({
+            ...prev,
+            totalAccuracy: prev.totalAccuracy + 1,
+          }));
           setTimeout(() => {
             handleNext();
           }, 1000);
@@ -82,6 +147,10 @@ const WorkingMemory = () => {
       } else {
         setTimeout(() => {
           setIsCorrect(false);
+          setStats((prev) => ({
+            ...prev,
+            totalErrorCount: prev.totalErrorCount + 1,
+          }));
           setTimeout(() => {
             handleNext();
           }, 1000);
@@ -93,10 +162,21 @@ const WorkingMemory = () => {
 
   const handleNext = () => {
     if (round === MAXROUND) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
     setRound((prev) => prev + 1);
+    if (!timeout) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
+    }
   };
 
   const handleImageClick = (index: number) => {

@@ -29,6 +29,8 @@ const PerformanceTestPageThree = () => {
 
   const [current, setCurrent] = React.useState<GO_NOGO>(GO_NOGO.NONE);
 
+  const [corrects, setCorrects] = useState<number>(0);
+
   const [round, setRound] = React.useState(0);
 
   const [isFinished, setIsFinished] = React.useState(false);
@@ -55,6 +57,10 @@ const PerformanceTestPageThree = () => {
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
@@ -94,11 +100,6 @@ const PerformanceTestPageThree = () => {
         return;
       }
 
-      
-      setStats((prev) => ({
-        ...prev,
-        reactionTime: timer,
-      }));
       mutate();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,6 +108,7 @@ const PerformanceTestPageThree = () => {
 
   const handleClick = () => {
     if (current === GO_NOGO.GO) {
+      setCorrects((prev) => prev + 1);
       nextRound();
     } else {
       toast({
@@ -129,7 +131,7 @@ const PerformanceTestPageThree = () => {
       }
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
-        stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
+        stats: { ...stats, totalAccuracy: corrects },
         stepInfo: { step: 3, group: user.userDetails.Status },
       });
 
@@ -157,15 +159,15 @@ const PerformanceTestPageThree = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/test/4" />
+        <FinishScreen url='/test/4' />
       ) : isTraining && round >= TRAINING_ROUNDS ? (
         <div>
           <p>
             <b>Eğitim bitti</b>. Şimdi gerçek test başlıyor. Hazır olduğunda
             başla butonuna tıkla.
           </p>
-          <Separator className="my-5" />
-          <div className="flex justify-center my-5">
+          <Separator className='my-5' />
+          <div className='flex justify-center my-5'>
             <Button
               onClick={() => {
                 setIsTraining(false);
@@ -180,21 +182,21 @@ const PerformanceTestPageThree = () => {
       ) : round === 0 ? (
         <div>
           <IntroductionTestThree />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className="min-h-96 flex flex-col justify-center items-center">
-          <div className="h-24">
+        <div className='min-h-96 flex flex-col justify-center items-center'>
+          <div className='h-24'>
             {current === GO_NOGO.GO ? (
-              <div className="text-green-500 text-4xl flex justify-center items-center">
+              <div className='text-green-500 text-4xl flex justify-center items-center'>
                 Git
               </div>
             ) : current === GO_NOGO.NOGO ? (
-              <div className="text-red-500 text-4xl flex justify-center items-center">
+              <div className='text-red-500 text-4xl flex justify-center items-center'>
                 Gitme
               </div>
             ) : (
@@ -202,7 +204,7 @@ const PerformanceTestPageThree = () => {
             )}
           </div>
           <Button
-            className="px-10"
+            className='px-10'
             onClick={handleClick}
             disabled={current === GO_NOGO.NONE}
           >

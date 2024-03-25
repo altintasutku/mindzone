@@ -5,6 +5,11 @@ import Image from "next/image";
 import IntroductionCF from "../working-memory/_introductions";
 import { Button } from "@/components/ui/button";
 import WeekTwoGameFourIntroductions from "./_introductions";
+import { useMutation } from "@tanstack/react-query";
+import { sendWeekData, WeekData } from "@/lib/api/week";
+import { updateUser } from "@/lib/api/user";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useSession } from "next-auth/react";
 
 type ImageFolder = {
   image1: string;
@@ -80,15 +85,88 @@ const Week2Game5Page = () => {
   const [current, setCurrent] = useState<Question>();
   const [isModeEmotion, setIsModeEmotion] = useState<boolean | null>(null);
 
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 5,
+    group: "W2",
+  });
+
+  const [timer, setTimer] = useState(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (isFinished) {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: allData.length - prev.totalAccuracy,
+      }));
+      setIsFinished(true);
+      mutate(stats);
+      console.log(stats);
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round, isFinished]);
+
   const handleNext = () => {
+    if (isFinished) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+    }
     setRound((prev) => prev + 1);
 
     setCurrent(allData[round]);
+
+    if (!timeout) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
+    }
   };
 
   const handleCheck = (item: string) => {
     if (item === "true") {
       setIsCorrect(true);
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setTimeout(() => {
         handleNext();
       }, 1000);

@@ -15,7 +15,8 @@ import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 
-const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
+// const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
+const TOTAL_ROUNDS = 6;
 
 const loader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/eyes/${src}.png`;
@@ -61,19 +62,19 @@ const Page = () => {
     if (!isFinished) {
       return;
     }
+    mutate();
 
     clearInterval(timeout);
-    setStats((prev) => ({
-      ...prev,
-      reactionTime: timer,
-    }));
-    mutate();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
   const handleNext = () => {
     if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
