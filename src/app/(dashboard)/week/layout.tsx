@@ -14,6 +14,11 @@ const Layout = ({children}: { children: React.ReactNode }) => {
         return null;
     }
 
+    if (parseInt(user.userDetails.UserType) === 0) {
+        router.push("/dashboard");
+        return null;
+    }
+
     // If user is not in weekly status, redirect to dashboard
     if (!user.userDetails.Status.includes("W")) {
         router.push("/dashboard");
