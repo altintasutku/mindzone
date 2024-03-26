@@ -18,6 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   if (!user || !user.userDetails.WeeklyStatus) {
+    router.push("/");
     return null;
   }
 
