@@ -13,8 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "@/lib/api/user";
 import { clear } from "console";
 
-// const MAXROUND = 52;
-const MAXROUND = 3;
+const MAXROUND = 52;
 
 type CurrentPersonType = {
   emotionName: string;
@@ -86,7 +85,6 @@ const WorkingMemory = () => {
     }
 
     mutate(stats);
-    console.log("stats", stats);
 
     clearInterval(timeout!);
 

@@ -10,6 +10,7 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
+import { all } from "axios";
 
 type ImageFolder = {
   image1: string;
@@ -128,24 +129,20 @@ const Week2Game5Page = () => {
 
   useEffect(() => {
     if (isFinished) {
-      setStats((prev) => ({
-        ...prev,
-        totalErrorCount: allData.length - prev.totalAccuracy,
-      }));
-      setIsFinished(true);
       mutate(stats);
-      console.log(stats);
+      clearInterval(timeout!);
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round, isFinished]);
 
   const handleNext = () => {
-    if (isFinished) {
+    if (round >= allData.length) {
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
       }));
+      setIsFinished(true);
     }
     setRound((prev) => prev + 1);
 
@@ -172,6 +169,10 @@ const Week2Game5Page = () => {
       }, 1000);
     } else {
       setIsCorrect(false);
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setTimeout(() => {
         handleNext();
       }, 1000);
