@@ -1,19 +1,19 @@
 "use client";
 
-import { performanceTestFiveQuestions } from "@/assets/mockdata/performaceTests/performanceTestFive";
+import {performanceTestFiveQuestions} from "@/assets/mockdata/performaceTests/performanceTestFive";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import IntroductionTestFive from "./_introductions";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {Button} from "@/components/ui/button";
+import {cn} from "@/lib/utils";
 import FinishScreen from "@/components/game/FinishScreen";
-import { useSession } from "next-auth/react";
+import {useSession} from "next-auth/react";
 
-import { useUserStore } from "@/hooks/useUserStore";
-import { useMutation } from "@tanstack/react-query";
-import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { updateUser } from "@/lib/api/user";
-import { useRouter } from "next/navigation";
+import {useUserStore} from "@/hooks/useUserStore";
+import {useMutation} from "@tanstack/react-query";
+import {sendPerformanceTaskData} from "@/lib/api/performanceTasks";
+import {updateUser} from "@/lib/api/user";
+import {useRouter} from "next/navigation";
 
 const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
 
@@ -160,23 +160,14 @@ const Page = () => {
         </div>
       ) : currentQuestion ? (
         <div className='grid grid-cols-4'>
-          <Button
-            disabled={isCorrect !== null}
-            onClick={() => handleAnswer(0)}
-            variant={"ghost"}
-            className='text-wrap'
-          >
+
+          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={0}>
             {currentQuestion.answers[0]}
-          </Button>
+          </AnswerButton>
           <div className='col-span-2'></div>
-          <Button
-            disabled={isCorrect !== null}
-            onClick={() => handleAnswer(1)}
-            variant={"ghost"}
-            className='text-wrap'
-          >
+          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={1}>
             {currentQuestion.answers[1]}
-          </Button>
+          </AnswerButton>
 
           <div></div>
           <div className='relative col-span-2'>
@@ -204,27 +195,39 @@ const Page = () => {
           </div>
           <div></div>
 
-          <Button
-            disabled={isCorrect !== null}
-            onClick={() => handleAnswer(2)}
-            variant={"ghost"}
-            className='text-wrap'
-          >
+          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={2}>
             {currentQuestion.answers[2]}
-          </Button>
+          </AnswerButton>
           <div className='col-span-2'></div>
-          <Button
-            disabled={isCorrect !== null}
-            onClick={() => handleAnswer(3)}
-            variant={"ghost"}
-            className='text-wrap'
-          >
+          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={3}>
             {currentQuestion.answers[3]}
-          </Button>
+          </AnswerButton>
         </div>
       ) : null}
     </div>
   );
 };
+
+type AnswerProps = {
+  isCorrect: boolean | null,
+  handleAnswer: (answer: number) => void,
+  children: React.ReactNode,
+  idx: number
+}
+
+const AnswerButton = ({isCorrect, handleAnswer, children, idx}: AnswerProps) => {
+  return (
+      <div
+          onClick={() => {
+            if (isCorrect === null) {
+              handleAnswer(idx)
+            }
+          }}
+          className='text-wrap cursor-pointer flex justify-center items-center text-center bg-slate-100 dark:bg-slate-600 rounded-md'
+      >
+        {children}
+      </div>
+  )
+}
 
 export default Page;
