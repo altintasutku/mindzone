@@ -5,6 +5,12 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import WeekTwoGameTwoIntroductions from "./_introductions";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { sendWeekData, WeekData } from "@/lib/api/week";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "@/lib/api/user";
+import { clear } from "console";
 
 const data = {
   openMount: {
@@ -108,7 +114,8 @@ const imageLoader = ({ src }: { src: string }) => {
 };
 
 const DURATION = 800;
-const TOTAL_ROUNDS = 200;
+// const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 6;
 
 const WeekTwoGameTwoPage = () => {
   const [round, setRound] = useState(0);
@@ -121,6 +128,47 @@ const WeekTwoGameTwoPage = () => {
   const [rule, setRule] = useState<"mod" | "mount">("mod");
 
   const [isFinished, setIsFinished] = useState(false);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 1,
+    group: "W2",
+  });
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
 
   useEffect(() => {
     if (!current || round === 0) return;
@@ -171,8 +219,7 @@ const WeekTwoGameTwoPage = () => {
   }, [current]);
 
   useEffect(() => {
-    if (round >= TOTAL_ROUNDS) {
-      setIsFinished(true);
+    if (isFinished) {
       return;
     }
     if (round === 0) {
@@ -192,12 +239,34 @@ const WeekTwoGameTwoPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
-  const handleNext = () => {
-    if (isFinished) {
+  useEffect(() => {
+    if (!isFinished) {
       return;
     }
+    mutate(stats);
+    clearInterval(timeout!);
 
-    setRound((round) => round + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
+  const handleNext = () => {
+    if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+      setIsFinished(true);
+      return;
+    } else {
+      setRound((round) => round + 1);
+      if (!timeout) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10)
+        );
+      }
+    }
   };
 
   const handleAnswer = (answer: DataType) => {
@@ -206,10 +275,22 @@ const WeekTwoGameTwoPage = () => {
     }
 
     if (rule === "mod" && answer.mod === current.mod) {
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setIsCorrect(true);
     } else if (rule === "mount" && answer.mount === current.mount) {
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setIsCorrect(true);
     } else {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setIsCorrect(false);
     }
 
@@ -223,43 +304,47 @@ const WeekTwoGameTwoPage = () => {
     <div>
       {/* TODO: FINISH SCREEN */}
       {round === 0 ? (
-        <div className="flex flex-col items-center gap-5">
+        <div className='flex flex-col items-center gap-5'>
           <WeekTwoGameTwoIntroductions />
           <Separator />
           <Button onClick={handleNext}>Start</Button>
         </div>
       ) : isCorrect === null && current ? (
-        <div className="flex flex-col items-center gap-8">
+        <div className='flex flex-col items-center gap-8'>
           <div>
             <Image
               loader={imageLoader}
               src={`${current.mount}/${current.sex}/${current.mod}/${current.index}`}
-              alt="currentQuestion"
+              alt='currentQuestion'
               width={170}
               height={170}
-              className="border border-slate-200 rounded-md"
+              className='border border-slate-200 rounded-md'
             />
           </div>
           <Separator />
-          <div className="flex gap-4 flex-wrap justify-center">
+          <div className='flex gap-4 flex-wrap justify-center'>
             {answers.map((answer, index) => (
               <Image
                 key={index}
                 loader={imageLoader}
                 src={`${answer.mount}/${answer.sex}/${answer.mod}/${answer.index}`}
-                alt="answerImg"
+                alt='answerImg'
                 width={170}
                 height={170}
-                className="border border-slate-200 rounded-md cursor-pointer"
+                className='border border-slate-200 rounded-md cursor-pointer'
                 onClick={() => handleAnswer(answer)}
               />
             ))}
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className="flex items-center justify-center text-green-500 font-semibold text-4xl">Doğru</div>
+        <div className='flex items-center justify-center text-green-500 font-semibold text-4xl'>
+          Doğru
+        </div>
       ) : isCorrect === false ? (
-        <div className="flex items-center justify-center text-red-500 font-semibold text-4xl">Yanlış</div>
+        <div className='flex items-center justify-center text-red-500 font-semibold text-4xl'>
+          Yanlış
+        </div>
       ) : null}
     </div>
   );

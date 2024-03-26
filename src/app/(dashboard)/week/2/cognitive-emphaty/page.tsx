@@ -1,16 +1,76 @@
 "use client";
 import { weekTwoGame4Data } from "@/assets/mockdata/weekGames/week2game4data";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Ghost } from "lucide-react";
 import { set } from "zod";
 import FinishScreen from "@/components/game/FinishScreen";
 import WeekTwoGameFourIntroductions from "./_introductions";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useMutation } from "@tanstack/react-query";
+import { sendWeekData, WeekData } from "@/lib/api/week";
+import { updateUser } from "@/lib/api/user";
+
+const MAXROUND = weekTwoGame4Data.length - 1;
 
 const WeekTwoGameFourPage = () => {
   const [round, setRound] = React.useState(0);
   const [isFinished, setIsFinished] = React.useState(false);
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 1,
+    group: "W2",
+  });
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    mutate(stats);
+
+    clearInterval(timeout!);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   useEffect(() => {
     if (!isFinished) {
@@ -20,10 +80,22 @@ const WeekTwoGameFourPage = () => {
   }, [round]);
 
   const handleNext = () => {
-    if (round < weekTwoGame4Data.length - 1) {
-      setRound(round + 1);
-    } else {
+    if (round >= MAXROUND) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
+      return;
+    } else {
+      setRound((round) => round + 1);
+      if (!timeout) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10)
+        );
+      }
     }
   };
 
@@ -32,10 +104,18 @@ const WeekTwoGameFourPage = () => {
       weekTwoGame4Data[round - 1].correctAnswer.charAt(0) === option.charAt(0)
     ) {
       setIsCorrect(true);
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setTimeout(() => {
         handleNext();
       }, 1000);
     } else {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setIsCorrect(false);
     }
   };
@@ -92,4 +172,5 @@ const WeekTwoGameFourPage = () => {
     </div>
   );
 };
+
 export default WeekTwoGameFourPage;
