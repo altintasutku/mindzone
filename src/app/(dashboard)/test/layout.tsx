@@ -15,6 +15,7 @@ const Layout = ({ children }: Props) => {
   const pathname = usePathname();
 
   if (!user || !user.userDetails.Status) {
+    router.push("/");
     return null;
   }
 
