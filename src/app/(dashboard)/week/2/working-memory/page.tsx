@@ -12,6 +12,7 @@ import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "@/lib/api/user";
 import { clear } from "console";
+import FinishScreen from "@/components/game/FinishScreen";
 
 const MAXROUND = 52;
 
@@ -206,7 +207,11 @@ const WorkingMemory = () => {
 
   return (
     <div>
-      {round === 0 ? (
+      {isFinished ? (
+        <div className='flex justify-center items-center'>
+          <FinishScreen url='/week/2/cognitive-flexibility' />
+        </div>
+      ) : round === 0 ? (
         <div>
           <IntroductionCF />
 
