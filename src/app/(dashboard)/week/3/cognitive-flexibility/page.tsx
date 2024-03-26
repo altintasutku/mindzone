@@ -1,8 +1,94 @@
-import React from 'react';
+"use client";
+
+import React, {useState} from 'react';
+import {allData, datas, GameImage, generateAnswers, Rules} from "@/assets/mockdata/weekGames/week3game2data";
+import FinishScreen from "@/components/game/FinishScreen";
+import WeekThreeGameTwoIntroductions from "@/app/(dashboard)/week/3/cognitive-flexibility/_introductions";
+import {Button} from "@/components/ui/button";
+import Image from "next/image";
+
+const TOTAL_ROUNDS = datas.man.positive + datas.man.negative + datas.woman.positive + datas.woman.negative;
+
+const imageLoader = ({src}: { src: string }): string => {
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/cognitive_flexibility/${src}.jpg`;
+};
 
 const WeekThreeGameTwoPage = () => {
+
+    const [isFinished, setIsFinished] = useState(false);
+    const [round, setRound] = useState(0);
+    const [currentRule, setCurrentRule] = useState<Rules>(Rules.sex);
+
+    const [currentData, setCurrentData] = useState<GameImage>();
+    const [answers, setAnswers] = useState<GameImage[]>([]);
+
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+    const nextRound = () => {
+        if (round === TOTAL_ROUNDS) {
+            return;
+        }
+
+        if (round % 20 <= 10) setCurrentRule(Rules.sex);
+        else if (round % 20 <= 20) setCurrentRule(Rules.mod);
+        setRound(round + 1);
+        setCurrentData(allData[round]);
+        setAnswers(generateAnswers(currentRule, allData[round]));
+    };
+
+    const handleAnswer = (answer: GameImage) => {
+        if (!currentData) return;
+
+        if (currentRule === Rules.sex && answer.sex === currentData.sex) {
+            setIsCorrect(true);
+        } else if (currentRule === Rules.mod && answer.mod === currentData.mod) {
+            setIsCorrect(true);
+        } else {
+            setIsCorrect(false);
+        }
+
+        setTimeout(() => {
+            setIsCorrect(null);
+            nextRound();
+        }, 1000);
+    }
+
     return (
-        <div>sa</div>
+        <div>
+            {isFinished ? (
+                <FinishScreen url="/week/3/inhibition"/>
+            ) : round === 0 ? (
+                <div className="flex flex-col items-center">
+                    <WeekThreeGameTwoIntroductions/>
+
+                    <Button onClick={nextRound}>Başla</Button>
+                </div>
+            ) : isCorrect === null ? <div>
+                <div className={"text-center font-semibold my-2"}>Seçenekler</div>
+                <div className={"grid grid-cols-2 md:grid-cols-4 gap-3"}>
+                    {answers.map((answer, index) => (
+                        <div key={index}>
+                            <Image loader={imageLoader} src={`${answer.sex}/${answer.mod}/${answer.number}`}
+                                   alt={"Answer Image"}
+                                   width={240} height={240}
+                                   className={"border border-slate-200 dark:border-slate-700 rounded-md cursor-pointer opacity-95 hover:opacity-100 transition-opacity"}
+                                   onClick={() => handleAnswer(answer)}
+                            />
+                        </div>
+                    ))}
+                </div>
+                <div className={"flex justify-center mt-10"}>
+                    <Image loader={imageLoader} src={`${currentData?.sex}/${currentData?.mod}/${currentData?.number}`}
+                           alt={"Current Image"}
+                           width={240} height={240}
+                    />
+                </div>
+            </div> : isCorrect ? <div className={"flex justify-center p-10"}>
+                <span className={"text-green-500 text-lg font-semibold"}>Doğru</span>
+            </div> : <div className={"flex justify-center p-10"}>
+                <span className={"text-red-500 text-lg font-semibold"}>Yanlış</span>
+            </div>}
+        </div>
     )
 }
 
