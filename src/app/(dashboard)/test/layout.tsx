@@ -26,6 +26,10 @@ const Layout = ({ children }: Props) => {
     router.push("/test/" + user.userDetails.PerformanceTaskStep);
   }
 
+  if(pathname === "/test"){
+    router.push("/test/" + user.userDetails.PerformanceTaskStep);
+  }
+
   return <TestContainer>{children}</TestContainer>;
 };
 
