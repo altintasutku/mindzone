@@ -1,16 +1,11 @@
 "use client";
 
 import React, {useState} from 'react';
-import {allData, datas, GameImage, generateAnswers} from "@/assets/mockdata/weekGames/week3game2data";
+import {allData, datas, GameImage, generateAnswers, Rules} from "@/assets/mockdata/weekGames/week3game2data";
 import FinishScreen from "@/components/game/FinishScreen";
 import WeekThreeGameTwoIntroductions from "@/app/(dashboard)/week/3/cognitive-flexibility/_introductions";
 import {Button} from "@/components/ui/button";
 import Image from "next/image";
-
-export enum Rules {
-    sex = "sex",
-    mod = "mod",
-}
 
 const TOTAL_ROUNDS = datas.man.positive + datas.man.negative + datas.woman.positive + datas.woman.negative;
 

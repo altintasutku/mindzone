@@ -1,4 +1,7 @@
-import {Rules} from "@/app/(dashboard)/week/3/cognitive-flexibility/page";
+export enum Rules {
+    sex = "sex",
+    mod = "mod",
+}
 
 export const datas = {
     man: {
