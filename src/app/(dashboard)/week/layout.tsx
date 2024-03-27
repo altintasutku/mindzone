@@ -1,7 +1,7 @@
 "use client";
 
-import {useUserStore} from "@/hooks/useUserStore";
-import {usePathname, useRouter} from "next/navigation";
+import { useUserStore } from "@/hooks/useUserStore";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import {calculateDaysDiff} from "@/lib/utils";
 import {weekOneGames, weekThreeGames, weekTwoGames} from "@/assets/mockdata/weekGames/weekGames";

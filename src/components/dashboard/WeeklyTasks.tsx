@@ -16,6 +16,7 @@ const WeeklyTasks = async () => {
     const session = await getAuthSession();
 
     if (!session) {
+        redirect("/login");
         return null;
     }
 

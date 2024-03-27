@@ -32,6 +32,7 @@ const WeekContainer = ({ children, games }: Props) => {
   const router = useRouter();
 
   if (!user) {
+    router.push("/login");
     return null;
   }
 
