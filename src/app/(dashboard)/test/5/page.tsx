@@ -153,7 +153,7 @@ const Page = () => {
         </div>
       ) : isTutorial && round == 2 ? (
         <div className='flex flex-col items-center'>
-          <p>Tebrikler deneme bitti Şimdi devam edelim</p>
+          <p>Tebrikler deneme bitti! Şimdi devam edelim</p>
           <Button className='my-5 w-24' onClick={() => setIsTutorial(false)}>
             Devam
           </Button>
