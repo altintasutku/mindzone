@@ -55,6 +55,21 @@ const PerformanceTestPageThree = () => {
     reactionTime: 0,
   });
 
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      location.reload()
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
       setStats((prev) => ({

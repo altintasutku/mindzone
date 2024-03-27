@@ -1,17 +1,17 @@
 "use client";
 
 import FinishScreen from "@/components/game/FinishScreen";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
+import {Button} from "@/components/ui/button";
+import {Separator} from "@/components/ui/separator";
+import {useToast} from "@/components/ui/use-toast";
 import Image from "next/image";
-import React, { use, useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import IntroductionsTestOne from "./_introductions";
-import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { useUserStore } from "@/hooks/useUserStore";
+import {useMutation} from "@tanstack/react-query";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
+import {sendPerformanceTaskData} from "@/lib/api/performanceTasks";
+import {useUserStore} from "@/hooks/useUserStore";
 
 const imageColors = ["red", "green", "blue", "yellow"];
 const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
@@ -107,6 +107,21 @@ const PerformanceTestOnePage = () => {
   const [currentRule, setCurrentRule] = useState<Rules>(Rules.shape);
   const [round, setRound] = useState<number>(0);
   const [isFinished, setIsFinished] = useState<boolean>(false);
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      location.reload()
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate } = useMutation({
     mutationFn: async () => {

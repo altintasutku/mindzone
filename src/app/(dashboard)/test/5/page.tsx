@@ -50,6 +50,21 @@ const Page = () => {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
 
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      location.reload()
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (round === 1 || isTutorial) {
       setCurrentQuestion(performanceTestFiveQuestions[round - 1]);

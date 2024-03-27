@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import IntroductionTestFour from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import FinishScreen from "@/components/game/FinishScreen";
@@ -112,6 +112,20 @@ const PerformanceTestPageFour = () => {
     }
   };
 
+    const handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+            location.reload()
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
   const handleOption = (option: number) => {
     setTotalPoint((prev) => prev + option);
 
