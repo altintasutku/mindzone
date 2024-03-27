@@ -69,7 +69,7 @@ const allData: Question[] = [
 ];
 
 const imageLoader = ({ src }: { src: string }): string => {
-  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/${src}.jpg`;
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/${src}.JPG`;
 };
 
 const Week2Game5Page = () => {
