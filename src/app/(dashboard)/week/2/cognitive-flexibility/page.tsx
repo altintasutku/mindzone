@@ -322,7 +322,7 @@ const WeekTwoGameTwoPage = () => {
             />
           </div>
           <Separator />
-          <div className='flex gap-4 flex-wrap justify-center'>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-center">
             {answers.map((answer, index) => (
               <Image
                 key={index}
