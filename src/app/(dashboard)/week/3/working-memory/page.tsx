@@ -111,7 +111,7 @@ const WeekThreeGameOnePage = () => {
           <Button onClick={handleNextRound}>Başla</Button>
         </div>
       ) : level ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 min-h-56 items-center">
+        <div className="min-h-56 space-y-10">
           {isCorrect === true ? (
             <h1 className="text-2xl font-bold text-green-500 text-center col-span-4">
               Doğru
@@ -121,8 +121,7 @@ const WeekThreeGameOnePage = () => {
               Yanlış
             </h1>
           ) : isCorrect === null ? (
-            <>
-              <span className="col-span-4 text-center">Dikkatli bakın!</span>
+            <div className={"grid grid-cols-2 sm:grid-cols-4 gap-4 items-center"}>
               {level.map((item, index) => (
                 <div
                   key={index}
@@ -136,13 +135,13 @@ const WeekThreeGameOnePage = () => {
                     width={200}
                     height={200}
                     draggable={false}
-                    className={cn("transition-all duration-1000 w-full h-full", {
+                    className={cn("transition-all duration-1000", {
                       "rotate-y-180 opacity-0": !shownImages[index],
                     })}
                   />
                 </div>
               ))}
-            </>
+            </div>
           ) : null}
 
           <Progress

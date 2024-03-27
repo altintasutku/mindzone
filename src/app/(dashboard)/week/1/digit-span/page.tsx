@@ -23,7 +23,6 @@ import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { updateUser } from "@/lib/api/user";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 
 const SHOWING_TIME = 500;
@@ -63,6 +62,35 @@ const DigitspanPage = () => {
     step: 1,
     group: "W1",
   });
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+
+    if (document.visibilityState === 'hidden') {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+            setInterval(() => {
+              setReactionTime((prev) => prev + 10);
+            }, 10)
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
