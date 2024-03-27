@@ -37,7 +37,7 @@ const imageLoader = ({ src }: { src: string }) => {
 const TOTAL_ROUNDS = mods.negative + mods.positive;
 
 const MIN_REACTION_TIME = 1000;
-const MAX_REACTION_TIME = 1400;
+const MAX_REACTION_TIME = 1200;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);

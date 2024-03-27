@@ -2,8 +2,6 @@
 import { weekTwoGame4Data } from "@/assets/mockdata/weekGames/week2game4data";
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Ghost } from "lucide-react";
-import { set } from "zod";
 import FinishScreen from "@/components/game/FinishScreen";
 import WeekTwoGameFourIntroductions from "./_introductions";
 
@@ -79,6 +77,7 @@ const WeekTwoGameFourPage = () => {
                     onClick={() => {
                       handleCheck(option);
                     }}
+                    className={"text-wrap"}
                     variant={"outline"}
                   >
                     {option}
