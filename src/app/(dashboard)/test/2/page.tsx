@@ -4,14 +4,12 @@ import React, { useEffect, useState } from "react";
 import IntroductionsTestTwo from "./_introductions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { EyeIcon, User } from "lucide-react";
+import { EyeIcon} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import { Session } from "inspector";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { set } from "zod";
 import { updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 
@@ -78,6 +76,21 @@ const PerformanceTestPageTwo = () => {
   const session = useSession();
 
   const router = useRouter();
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      location.reload()
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
