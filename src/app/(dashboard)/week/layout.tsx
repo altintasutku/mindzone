@@ -30,7 +30,7 @@ const Layout = ({children}: { children: React.ReactNode }) => {
     const week = Math.ceil(parseInt(user.userDetails.WeeklyStatus) / 5);
     const remainingDay = calculateDaysDiff(new Date(user.createdOn));
 
-    const gameIndex = parseInt(user.userDetails.WeeklyStatus) % 5 - 1;
+    const gameIndex = parseInt(user.userDetails.WeeklyStatus) % 5 === 0 ? 4 : parseInt(user.userDetails.WeeklyStatus) % 5 - 1;
     const gameSlug = weekGames[week - 1][gameIndex].slug;
     const gameUrl = `/week/${week}/${gameSlug}`;
 
