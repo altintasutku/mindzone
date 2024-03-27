@@ -2,14 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { set } from "zod";
 import IntroductionCF from "./_introductions";
+import { selectImagesFunction } from "@/assets/mockdata/weekGames/week2WorkingMemory";
+import { sendWeekData, WeekData } from "@/lib/api/week";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "@/lib/api/user";
+import { clear } from "console";
+import FinishScreen from "@/components/game/FinishScreen";
 
-const emotionNamelist = ["AFS", "ANS", "DIS", "HAS", "SAS", "SUS", "NES"];
-const genderFolderName = ["Erkek", "Kadın"];
-const sexs = ["AM", "AF"];
-const personCountPerSex = 15;
 const MAXROUND = 52;
 
 type CurrentPersonType = {
@@ -33,6 +37,60 @@ const WorkingMemory = () => {
     CurrentPersonType[]
   >([]);
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
+  const [isRotated, setIsRotated] = useState(false);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 1,
+    group: "W2",
+  });
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    mutate(stats);
+
+    clearInterval(timeout!);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
 
   useEffect(() => {
     if (isFinished || round === 0) {
@@ -43,29 +101,31 @@ const WorkingMemory = () => {
     setSelectedPersons([]);
     setRotateStates([]);
     setIsCorrect(null);
+    setIsRotated(false);
 
-    for (let i = 0; i < 2; i++) {
-      selectPerson();
-    }
+    selectPersons();
+
     setTimeout(() => {
       setRotateStates(new Array(4).fill(true));
+      setIsRotated(true);
     }, 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
-  useEffect(() => {
-    if (isFinished || round === 0) {
-      return;
+  const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+  };
 
-    if (persons.length === 4) {
-      return;
-    }
-
-    selectAnswer();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [persons]);
+  const selectPersons = () => {
+    let { persons, answer } = selectImagesFunction();
+    setPersons(persons);
+    setAnswer(answer);
+    shuffleArray(persons);
+  };
 
   useEffect(() => {
     if (selectedPersons.length === 2) {
@@ -75,6 +135,10 @@ const WorkingMemory = () => {
       ) {
         setTimeout(() => {
           setIsCorrect(true);
+          setStats((prev) => ({
+            ...prev,
+            totalAccuracy: prev.totalAccuracy + 1,
+          }));
           setTimeout(() => {
             handleNext();
           }, 1000);
@@ -82,6 +146,10 @@ const WorkingMemory = () => {
       } else {
         setTimeout(() => {
           setIsCorrect(false);
+          setStats((prev) => ({
+            ...prev,
+            totalErrorCount: prev.totalErrorCount + 1,
+          }));
           setTimeout(() => {
             handleNext();
           }, 1000);
@@ -93,105 +161,57 @@ const WorkingMemory = () => {
 
   const handleNext = () => {
     if (round === MAXROUND) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
     setRound((prev) => prev + 1);
-  };
-
-  const selectPerson = () => {
-    let isUnique = false;
-
-    let newElement: CurrentPersonType;
-
-    while (!isUnique) {
-      const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
-      const sex = genderFolder === "Erkek" ? sexs[0] : sexs[1];
-      const index = Math.floor(Math.random() * personCountPerSex) + 1;
-      const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-      newElement = {
-        emotionName,
-        genderFolder,
-        index,
-        sex,
-      };
-
-      isUnique = !persons.some(
-        (item) =>
-          item.index === index &&
-          item.emotionName === emotionName &&
-          item.sex === sex &&
-          item.genderFolder === genderFolder
+    if (!timeout) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
       );
-
-      setPersons((prev) => [...prev, newElement]);
-    }
-  };
-
-  const selectAnswer = () => {
-    const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
-    const sex = genderFolder === "Erkek" ? sexs[0] : sexs[1];
-    const index = Math.floor(Math.random() * personCountPerSex) + 1;
-    const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-    const newElement = {
-      emotionName,
-      genderFolder,
-      index,
-      sex,
-    };
-
-    if (persons.some((item) => item.index === index && item === newElement)) {
-      selectAnswer();
-    } else {
-      setAnswer([newElement]);
-    }
-
-    selectSecondAnswer(newElement);
-  };
-
-  const selectSecondAnswer = (lastElement: CurrentPersonType) => {
-    const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-    const newElement = {
-      emotionName,
-      genderFolder: lastElement.genderFolder,
-      index: lastElement.index,
-      sex: lastElement.sex,
-    };
-
-    if (lastElement.emotionName === emotionName) {
-      selectSecondAnswer(lastElement);
-      return;
-    } else {
-      setAnswer((prev) => [...prev, newElement]);
-      setPersons((prev) => [...prev, lastElement, newElement]);
-      setPersons((prev) => prev.sort(() => Math.random() - 0.5));
     }
   };
 
   const handleImageClick = (index: number) => {
-    setRotateStates((prev) => {
-      const newState = [...prev];
-      newState[index] = !newState[index];
-      return newState;
-    });
+    if (rotateStates[index] === true) {
+      setRotateStates((prev) => {
+        const newState = [...prev];
+        newState[index] = !newState[index];
+        return newState;
+      });
+    } else {
+      return;
+    }
+
     //check is same or not
   };
 
-  const handleSelectPerson = (person: CurrentPersonType) => {
-    setSelectedPersons((prev) => {
-      if (prev.length === 2) {
-        return [person];
-      }
-      return [...prev, person];
-    });
+  const handleSelectPerson = (person: CurrentPersonType, index: number) => {
+    if (isRotated) {
+      setSelectedPersons((prev) => {
+        if (prev.length === 2) {
+          return [person];
+        }
+        return [...prev, person];
+      });
+    } else {
+      return;
+    }
   };
 
   return (
     <div>
-      {round === 0 ? (
+      {isFinished ? (
+        <div className='flex justify-center items-center'>
+          <FinishScreen url='/week/2/cognitive-flexibility' />
+        </div>
+      ) : round === 0 ? (
         <div>
           <IntroductionCF />
 
@@ -222,7 +242,7 @@ const WorkingMemory = () => {
                 width={150}
                 onClick={() => {
                   handleImageClick(index);
-                  handleSelectPerson(person);
+                  handleSelectPerson(person, index);
                 }}
               />
             </div>

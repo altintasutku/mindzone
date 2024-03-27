@@ -193,22 +193,28 @@ const QuestionTestTwo = () => {
   });
 
   return (
-    <div className="flex flex-col items-center">
-      {pages === 1 && (
-        <div className="font-normal w-fill p-4 bg-slate-700 rounded-md mb-3">
-          Lütfen her bir ifadeyi okuyun ve ifadeyi son bir haftadaki durumunuzu
-          göz önünde bulundurarak cevaplayın. Doğru ya da yanlış cevap yoktur.
-        </div>
-      )}
-      <ul className="flex flex-col gap-14">
+    <div className='flex flex-col items-center'>
+      <ul className='flex flex-col gap-12'>
         {stepTwoQuestions
           .slice((pages - 1) * 6, (pages - 1) * 6 + 6)
           .map((question, index) => (
-            <li key={index} className="flex flex-col gap-4">
-              <p className="text-center text-lg font-semibold">
-                {question.question}
+            <li key={index} className='flex flex-col gap-4'>
+              <p className='text-center text-lg font-semibold'>
+                {question.question.split("\n").map((item, index) => {
+                  return (
+                    <span key={index}>
+                      {index !== 0 ? (
+                        <>
+                          <br /> <br />
+                        </>
+                      ) : null}
+
+                      {item}
+                    </span>
+                  );
+                })}
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
+              <div className='flex flex-col sm:flex-row justify-center gap-4 flex-wrap'>
                 {question.type === 2 ? (
                   das.map((option, index) => (
                     <Button
@@ -228,7 +234,7 @@ const QuestionTestTwo = () => {
                         )
                       }
                     >
-                      <small className="text-sm">{option}</small>
+                      <small className='text-sm'>{option}</small>
                     </Button>
                   ))
                 ) : question.type === 3 ? (
@@ -250,7 +256,7 @@ const QuestionTestTwo = () => {
                         );
                       }}
                     >
-                      <small className="text-sm">{option}</small>
+                      <small className='text-sm'>{option}</small>
                     </Button>
                   ))
                 ) : question.type === 4 ? (
@@ -272,7 +278,7 @@ const QuestionTestTwo = () => {
                         );
                       }}
                     >
-                      <small className="text-sm">{option}</small>
+                      <small className='text-sm'>{option}</small>
                     </Button>
                   ))
                 ) : question.type === 5 ? (
@@ -294,7 +300,7 @@ const QuestionTestTwo = () => {
                         );
                       }}
                     >
-                      <small className="text-sm">{option}</small>
+                      <small className='text-sm'>{option}</small>
                     </Button>
                   ))
                 ) : (
@@ -305,29 +311,29 @@ const QuestionTestTwo = () => {
           ))}
       </ul>
       <Progress
-        className="my-5 max-w-96"
+        className='my-5 max-w-96'
         value={(Object.keys(answers).length * 100) / stepTwoQuestions.length}
       />
 
-      <nav role="navigation" className="grid grid-cols-3 gap-4">
+      <nav role='navigation' className='grid grid-cols-3 gap-4'>
         <Button
-          variant="outline"
-          className="flex-1 sm:flex-none"
+          variant='outline'
+          className='flex-1 sm:flex-none'
           disabled={pages === 1}
           onClick={() => setPages((prev) => prev - 1)}
         >
           Geri
         </Button>
         <Button
-          variant="outline"
-          className="flex-1 sm:flex-none"
+          variant='outline'
+          className='flex-1 sm:flex-none'
           disabled={pages === 11}
           onClick={() => setPages((prev) => prev + 1)}
         >
           İleri
         </Button>
         <Button
-          variant="default"
+          variant='default'
           onClick={() => {
             mutate();
           }}

@@ -88,7 +88,7 @@ const PerformanceTestOnePage = () => {
   };
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<{
     totalWrongs: number;
     resistanceWrongs: number;
@@ -146,7 +146,10 @@ const PerformanceTestOnePage = () => {
         },
       });
 
-      setUser({ ...user, userDetails: { ...user.userDetails, PerformanceTaskStep: "2" } });
+      setUser({
+        ...user,
+        userDetails: { ...user.userDetails, PerformanceTaskStep: "2" },
+      });
     },
     onSuccess: () => {
       router.push("/test/2");
@@ -158,11 +161,11 @@ const PerformanceTestOnePage = () => {
       return;
     }
 
-    // Stop the timer
-    
-    setStats((prev) => ({ ...prev, reactionTime: timer }));
-
     mutate();
+
+    // Stop the timer
+    clearInterval(timeout!);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
@@ -174,6 +177,10 @@ const PerformanceTestOnePage = () => {
         variant: "success",
         duration: 2000,
       });
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }

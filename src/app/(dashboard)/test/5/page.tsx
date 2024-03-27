@@ -1,19 +1,19 @@
 "use client";
 
-import {performanceTestFiveQuestions} from "@/assets/mockdata/performaceTests/performanceTestFive";
+import { performanceTestFiveQuestions } from "@/assets/mockdata/performaceTests/performanceTestFive";
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import IntroductionTestFive from "./_introductions";
-import {Button} from "@/components/ui/button";
-import {cn} from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import FinishScreen from "@/components/game/FinishScreen";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 
-import {useUserStore} from "@/hooks/useUserStore";
-import {useMutation} from "@tanstack/react-query";
-import {sendPerformanceTaskData} from "@/lib/api/performanceTasks";
-import {updateUser} from "@/lib/api/user";
-import {useRouter} from "next/navigation";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useMutation } from "@tanstack/react-query";
+import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { updateUser } from "@/lib/api/user";
+import { useRouter } from "next/navigation";
 
 const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
 
@@ -76,19 +76,19 @@ const Page = () => {
     if (!isFinished) {
       return;
     }
+    mutate();
 
     clearInterval(timeout);
-    setStats((prev) => ({
-      ...prev,
-      reactionTime: timer,
-    }));
-    mutate();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
   const handleNext = () => {
     if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
@@ -175,12 +175,19 @@ const Page = () => {
         </div>
       ) : currentQuestion ? (
         <div className='grid grid-cols-4'>
-
-          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={0}>
+          <AnswerButton
+            isCorrect={isCorrect}
+            handleAnswer={handleAnswer}
+            idx={0}
+          >
             {currentQuestion.answers[0]}
           </AnswerButton>
           <div className='col-span-2'></div>
-          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={1}>
+          <AnswerButton
+            isCorrect={isCorrect}
+            handleAnswer={handleAnswer}
+            idx={1}
+          >
             {currentQuestion.answers[1]}
           </AnswerButton>
 
@@ -210,11 +217,19 @@ const Page = () => {
           </div>
           <div></div>
 
-          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={2}>
+          <AnswerButton
+            isCorrect={isCorrect}
+            handleAnswer={handleAnswer}
+            idx={2}
+          >
             {currentQuestion.answers[2]}
           </AnswerButton>
           <div className='col-span-2'></div>
-          <AnswerButton isCorrect={isCorrect} handleAnswer={handleAnswer} idx={3}>
+          <AnswerButton
+            isCorrect={isCorrect}
+            handleAnswer={handleAnswer}
+            idx={3}
+          >
             {currentQuestion.answers[3]}
           </AnswerButton>
         </div>
@@ -224,25 +239,30 @@ const Page = () => {
 };
 
 type AnswerProps = {
-  isCorrect: boolean | null,
-  handleAnswer: (answer: number) => void,
-  children: React.ReactNode,
-  idx: number
-}
+  isCorrect: boolean | null;
+  handleAnswer: (answer: number) => void;
+  children: React.ReactNode;
+  idx: number;
+};
 
-const AnswerButton = ({isCorrect, handleAnswer, children, idx}: AnswerProps) => {
+const AnswerButton = ({
+  isCorrect,
+  handleAnswer,
+  children,
+  idx,
+}: AnswerProps) => {
   return (
-      <div
-          onClick={() => {
-            if (isCorrect === null) {
-              handleAnswer(idx)
-            }
-          }}
-          className='text-wrap cursor-pointer flex justify-center items-center text-center bg-slate-100 dark:bg-slate-600 rounded-md'
-      >
-        {children}
-      </div>
-  )
-}
+    <div
+      onClick={() => {
+        if (isCorrect === null) {
+          handleAnswer(idx);
+        }
+      }}
+      className='text-wrap cursor-pointer flex justify-center items-center text-center bg-slate-100 dark:bg-slate-600 rounded-md'
+    >
+      {children}
+    </div>
+  );
+};
 
 export default Page;
