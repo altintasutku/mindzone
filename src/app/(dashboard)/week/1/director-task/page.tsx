@@ -1,23 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import DirectorTaskIntroductions from "./_introductions";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import {Separator} from "@/components/ui/separator";
+import {Button} from "@/components/ui/button";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
+import {cn} from "@/lib/utils";
+import {Progress} from "@/components/ui/progress";
 import FinishScreen from "@/components/game/FinishScreen";
-import {
-  DirectorGame,
-  Level,
-  Size,
-} from "@/assets/mockdata/weekGames/week1DirectorGame";
-import { WeekData, sendWeekData } from "@/lib/api/week";
-import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
-import { updateUser } from "@/lib/api/user";
+import {DirectorGame, Level, Size,} from "@/assets/mockdata/weekGames/week1DirectorGame";
+import {sendWeekData, WeekData} from "@/lib/api/week";
+import {useMutation} from "@tanstack/react-query";
+import {useSession} from "next-auth/react";
+import {useUserStore} from "@/hooks/useUserStore";
+import {updateUser} from "@/lib/api/user";
 
 const boxImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
@@ -47,7 +43,7 @@ const WeekOneDirectorTaskPage = () => {
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
     totalAccuracy: 0,
@@ -55,6 +51,35 @@ const WeekOneDirectorTaskPage = () => {
     step: 4,
     group: "W1",
   });
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+
+    if (document.visibilityState === 'hidden') {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+            setInterval(() => {
+              setTimer((prev) => prev + 10);
+            }, 10)
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
