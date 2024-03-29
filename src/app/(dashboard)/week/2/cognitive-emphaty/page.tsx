@@ -25,8 +25,8 @@ const WeekTwoGameFourPage = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 1,
-    group: "W2",
+    step: 8,
+    group: "W1",
   });
 
   const [timer, setTimer] = useState<number>(0);
