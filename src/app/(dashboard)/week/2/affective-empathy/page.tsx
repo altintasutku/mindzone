@@ -94,8 +94,8 @@ const Week2Game5Page = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 5,
-    group: "W2",
+    step: 10,
+    group: "W1",
   });
 
   const [timer, setTimer] = useState(0);
