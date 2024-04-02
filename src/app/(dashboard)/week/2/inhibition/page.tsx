@@ -25,13 +25,13 @@ const allData: DataType[] = [
     (_, i): DataType => ({
       index: i + 1,
       type: "negative",
-    }),
+    })
   ),
   ...Array.from({ length: mods.positive }).map(
     (_, i): DataType => ({
       index: i + 1,
       type: "positive",
-    }),
+    })
   ),
 ].sort(() => Math.random() - 0.5);
 
@@ -46,6 +46,7 @@ const MAX_REACTION_TIME = 2200;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
+  console.log("🚀 ~ WeekTwoGameThreePage ~ round:", round);
   const [isFinished, setIsFinished] = useState(false);
 
   const [currentData, setCurrentData] = useState<DataType | null>(null);
@@ -66,6 +67,28 @@ const WeekTwoGameThreePage = () => {
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const handleVisibilityChange = () => {
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -93,8 +116,24 @@ const WeekTwoGameThreePage = () => {
     },
   });
 
+  useEffect(() => {
+    if (!isFinished) {
+      return;
+    }
+
+    mutate(stats);
+
+    clearInterval(timeout!);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return;
     }
@@ -103,29 +142,45 @@ const WeekTwoGameThreePage = () => {
       setRound((prev) => prev + 1);
       setCurrentData(allData[round - 1]);
     } else setCurrentData(null);
+
+    if (!timeout) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10)
+      );
+    }
   };
 
   useEffect(() => {
     if (round === 0 || isFinished) return;
 
-    const timer = setTimeout(
+    const timerTwo = setTimeout(
       () => {
         nextRound();
       },
       currentData === null
         ? 500
         : Math.random() * (MAX_REACTION_TIME - MIN_REACTION_TIME) +
-            MIN_REACTION_TIME,
+            MIN_REACTION_TIME
     );
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timerTwo);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentData]);
 
   const handleClick = () => {
     if (currentData?.type === "positive") {
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setIsCorrect(true);
     } else {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setIsCorrect(false);
     }
 
