@@ -100,6 +100,43 @@ const Week2Game5Page = () => {
 
   const [timer, setTimer] = useState(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
