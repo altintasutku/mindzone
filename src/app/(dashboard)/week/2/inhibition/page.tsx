@@ -7,6 +7,11 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { WeekData, sendWeekData } from "@/lib/api/week";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "@/lib/api/user";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
 
 const mods = { negative: 40, positive: 16 };
 
@@ -20,13 +25,13 @@ const allData: DataType[] = [
     (_, i): DataType => ({
       index: i + 1,
       type: "negative",
-    })
+    }),
   ),
   ...Array.from({ length: mods.positive }).map(
     (_, i): DataType => ({
       index: i + 1,
       type: "positive",
-    })
+    }),
   ),
 ].sort(() => Math.random() - 0.5);
 
@@ -36,8 +41,8 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const TOTAL_ROUNDS = mods.negative + mods.positive;
 
-const MIN_REACTION_TIME = 1000;
-const MAX_REACTION_TIME = 1200;
+const MIN_REACTION_TIME = 2000;
+const MAX_REACTION_TIME = 2200;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
@@ -46,6 +51,47 @@ const WeekTwoGameThreePage = () => {
   const [currentData, setCurrentData] = useState<DataType | null>(null);
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 7,
+    group: "W1",
+  });
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) return;
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
@@ -69,7 +115,7 @@ const WeekTwoGameThreePage = () => {
       currentData === null
         ? 500
         : Math.random() * (MAX_REACTION_TIME - MIN_REACTION_TIME) +
-            MIN_REACTION_TIME
+            MIN_REACTION_TIME,
     );
 
     return () => clearTimeout(timer);
