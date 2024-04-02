@@ -16,7 +16,7 @@ const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
 };
 
-const MAX_ROUND = 200;
+const MAX_ROUND = 120;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);
@@ -46,8 +46,7 @@ const AffectiveEmpathyPage = () => {
 
   const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
   const handleVisibilityChange = () => {
-
-    if (document.visibilityState === 'hidden') {
+    if (document.visibilityState === "hidden") {
       if (timeout) {
         setTemp(timeout);
         clearInterval(timeout);
@@ -56,19 +55,27 @@ const AffectiveEmpathyPage = () => {
     } else {
       if (!timeout && temp !== null) {
         setMyTimeout(
-            setInterval(() => {
-              setTimer((prev) => prev + 10);
-            }, 10)
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
         );
       }
     }
   };
 
   useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -137,7 +144,7 @@ const AffectiveEmpathyPage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
@@ -184,24 +191,24 @@ const AffectiveEmpathyPage = () => {
   return (
     <div>
       {round >= MAX_ROUND ? (
-        <FinishScreen url='/week/2/' />
+        <FinishScreen url="/week/2/" />
       ) : round === 0 ? (
-        <div className='flex flex-col items-center'>
+        <div className="flex flex-col items-center">
           <IntroductionCF />
-          <Button onClick={handleNext} className='my-5'>
+          <Button onClick={handleNext} className="my-5">
             Hadi Başlayalım
           </Button>
         </div>
       ) : (
-        <div className='flex flex-col items-center space-y-10'>
-          <div className='min-h-72 flex flex-col justify-center items-center'>
+        <div className="flex flex-col items-center space-y-10">
+          <div className="min-h-72 flex flex-col justify-center items-center">
             {isCorrect === true ? (
-              <p className=' text-green-600 text-5xl'>Doğru</p>
+              <p className=" text-green-600 text-5xl">Doğru</p>
             ) : isCorrect === false ? (
-              <p className=' text-red-600 text-5xl'>Yanlış</p>
+              <p className=" text-red-600 text-5xl">Yanlış</p>
             ) : isGameStarted === false ? (
               <Image
-                className='rounded-md'
+                className="rounded-md"
                 width={200}
                 height={270}
                 alt={`${samePerson[0]}`}
@@ -209,7 +216,7 @@ const AffectiveEmpathyPage = () => {
                 loader={imageLoader}
               />
             ) : (
-              <div className='grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center'>
+              <div className="grid grid-cols-4 gap-y-4 gap-x-9 items-center justify-center">
                 {allRound1Images.map((image, index) => (
                   <Image
                     className={`rounded-md cursor-pointer ${
