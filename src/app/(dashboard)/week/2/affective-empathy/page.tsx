@@ -10,7 +10,6 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import { all } from "axios";
 
 type ImageFolder = {
   image1: string;
@@ -136,7 +135,7 @@ const Week2Game5Page = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -189,7 +188,7 @@ const Week2Game5Page = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
@@ -228,68 +227,74 @@ const Week2Game5Page = () => {
   }, [round]);
 
   return (
-    <div>
-      {isFinished ? (
-        <p>Finished</p>
-      ) : round === 0 ? (
-        <div>
-          <WeekTwoGameFourIntroductions />
-
-          <div className='flex justify-center items-center mt-5'>
-            <Button onClick={handleNext}>Devam</Button>
-          </div>
-        </div>
-      ) : isCorrect === true ? (
-        <div className='flex justify-center text-3xl text-green-600'>Doğru</div>
-      ) : isCorrect === false ? (
-        <div className='flex justify-center text-3xl text-red-600'>Yanlış</div>
-      ) : isModeEmotion === true ? (
-        <div className=' flex flex-col items-center'>
-          <p>
-            Ekranda her soru için bir yüz fotoğrafı göreceksiniz. Sizlerden bu
-            fotoğraf aynı duygu olan kişiyle eşleştirmenizi istiyoruz.
-          </p>
-          <Button onClick={() => setIsModeEmotion(false)}>Devam</Button>
-        </div>
-      ) : (
-        <div className='flex flex-col justify-center items-center '>
-          <div>
-            <Image
-              src={`affective-emphaty/${current?.difficulty}/${current?.index}/${current?.imageFolder.image4}`}
-              loader={imageLoader}
-              alt='image3'
-              width={200}
-              height={200}
-              className='mx-2 rounded-md'
-            />
-          </div>
-          <div className='flex flex-row flex-wrap my-5'>
-            {current?.imageFolder &&
-              Object.entries(current.imageFolder)
-                .sort(() => Math.random() - 0.5)
-                .map(([key, image], index) => {
-                  if (key !== "image4") {
-                    return (
-                      <Image
-                        key={index}
-                        src={`affective-emphaty/${current?.difficulty}/${current?.index}/${image}`}
-                        loader={imageLoader}
-                        alt={`image${index + 1}`}
-                        width={150}
-                        height={150}
-                        className='rounded-md mx-1'
-                        onClick={() => handleCheck(image)}
-                      />
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
-          </div>
-        </div>
-      )}
+    <div className="text-lg font-semibold">
+      5. egzersiz çalışma altında. Beklediğiniz için teşekkürler.
     </div>
   );
+
+  // return (
+  //   <div>
+  //     {isFinished ? (
+  //       <p>Finished</p>
+  //     ) : round === 0 ? (
+  //       <div>
+  //         <WeekTwoGameFourIntroductions />
+  //
+  //         <div className="flex justify-center items-center mt-5">
+  //           <Button onClick={handleNext}>Devam</Button>
+  //         </div>
+  //       </div>
+  //     ) : isCorrect === true ? (
+  //       <div className="flex justify-center text-3xl text-green-600">Doğru</div>
+  //     ) : isCorrect === false ? (
+  //       <div className="flex justify-center text-3xl text-red-600">Yanlış</div>
+  //     ) : isModeEmotion === true ? (
+  //       <div className=" flex flex-col items-center">
+  //         <p>
+  //           Ekranda her soru için bir yüz fotoğrafı göreceksiniz. Sizlerden bu
+  //           fotoğraf aynı duygu olan kişiyle eşleştirmenizi istiyoruz.
+  //         </p>
+  //         <Button onClick={() => setIsModeEmotion(false)}>Devam</Button>
+  //       </div>
+  //     ) : (
+  //       <div className="flex flex-col justify-center items-center ">
+  //         <div>
+  //           <Image
+  //             src={`affective-emphaty/${current?.difficulty}/${current?.index}/${current?.imageFolder.image4}`}
+  //             loader={imageLoader}
+  //             alt="image3"
+  //             width={200}
+  //             height={200}
+  //             className="mx-2 rounded-md"
+  //           />
+  //         </div>
+  //         <div className="flex flex-row flex-wrap my-5">
+  //           {current?.imageFolder &&
+  //             Object.entries(current.imageFolder)
+  //               .sort(() => Math.random() - 0.5)
+  //               .map(([key, image], index) => {
+  //                 if (key !== "image4") {
+  //                   return (
+  //                     <Image
+  //                       key={index}
+  //                       src={`affective-emphaty/${current?.difficulty}/${current?.index}/${image}`}
+  //                       loader={imageLoader}
+  //                       alt={`image${index + 1}`}
+  //                       width={150}
+  //                       height={150}
+  //                       className="rounded-md mx-1"
+  //                       onClick={() => handleCheck(image)}
+  //                     />
+  //                   );
+  //                 } else {
+  //                   return null;
+  //                 }
+  //               })}
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 };
 
 export default Week2Game5Page;
