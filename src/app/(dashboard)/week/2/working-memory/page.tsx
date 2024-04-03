@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { set } from "zod";
 import IntroductionCF from "./_introductions";
 import { selectImagesFunction } from "@/assets/mockdata/weekGames/week2WorkingMemory";
 import { sendWeekData, WeekData } from "@/lib/api/week";
@@ -11,7 +10,6 @@ import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "@/lib/api/user";
-import { clear } from "console";
 import FinishScreen from "@/components/game/FinishScreen";
 
 const MAXROUND = 52;
@@ -210,7 +208,7 @@ const WorkingMemory = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
@@ -245,29 +243,29 @@ const WorkingMemory = () => {
   return (
     <div>
       {isFinished ? (
-        <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/2/cognitive-flexibility' />
+        <div className="flex justify-center items-center">
+          <FinishScreen url="/week/2/cognitive-flexibility" />
         </div>
       ) : round === 0 ? (
         <div>
           <IntroductionCF />
 
-          <div className='flex justify-center items-center mt-5'>
+          <div className="flex justify-center items-center mt-5">
             <Button onClick={handleNext}>Devam</Button>
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className=' flex justify-center items-center'>
-          <p className=' text-green-600 text-3xl'>Doğru</p>
+        <div className=" flex justify-center items-center">
+          <p className=" text-green-600 text-3xl">Doğru</p>
         </div>
       ) : isCorrect === false ? (
-        <div className=' flex justify-center items-center'>
-          <p className=' text-red-600 text-3xl'>Yanlış</p>
+        <div className=" flex justify-center items-center">
+          <p className=" text-red-600 text-3xl">Yanlış</p>
         </div>
       ) : (
-        <div className='flex gap-4 justify-center'>
+        <div className="flex gap-4 justify-center">
           {persons.map((person, index) => (
-            <div key={index} className=' bg-slate-700 rounded-md'>
+            <div key={index} className=" bg-slate-700 rounded-md">
               <Image
                 className={cn("rounded-md duration-500 ease-in-out", {
                   " rotate-y-180 opacity-0": rotateStates[index],

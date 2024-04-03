@@ -1,91 +1,65 @@
 "use client";
-
 import FinishScreen from "@/components/game/FinishScreen";
-import {Button} from "@/components/ui/button";
-import {Separator} from "@/components/ui/separator";
-import {useToast} from "@/components/ui/use-toast";
-import Image from "next/image";
-import React, {useEffect, useState} from "react";
-import IntroductionsTestOne from "./_introductions";
-import {useMutation} from "@tanstack/react-query";
-import {useSession} from "next-auth/react";
-import {useRouter} from "next/navigation";
-import {sendPerformanceTaskData} from "@/lib/api/performanceTasks";
-import {useUserStore} from "@/hooks/useUserStore";
+import React, { useEffect, useState } from "react";
+import IntroductionsTestTwo from "./_introductions";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { EyeIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/hooks/useUserStore";
+import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { updateUser } from "@/lib/api/user";
+import { useRouter } from "next/navigation";
 
-const imageColors = ["red", "green", "blue", "yellow"];
-const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
-
-enum Rules {
-  shape = "shape",
-  color = "color",
-  count = "count",
-}
-
-const imageLoader = ({ src }: { src: string }) => {
-  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/test_one_images/${src}.jpg`;
-};
-
-const answers = [
-  {
-    number: "1",
-    color: "red",
-    shape: "Dots",
-  },
-  {
-    number: "2",
-    color: "green",
-    shape: "Triangles",
-  },
-  {
-    number: "3",
-    color: "blue",
-    shape: "Crosses",
-  },
-  {
-    number: "4",
-    color: "yellow",
-    shape: "Stars",
-  },
+const LETTERS = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "O",
+  "P",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "Y",
+  "Z",
 ];
 
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 400;
 
-const CORRECT_DURATION = 1000;
+const DURATION = 1300;
 
-const PerformanceTestOnePage = () => {
-  const { toast } = useToast();
+const CHANCE_OF_LETTER = 0.4;
 
-  const router = useRouter();
-  const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-  const updateUser = useUserStore((state) => state.updateUser);
+const PerformanceTestPageTwo = () => {
+  const [round, setRound] = React.useState<number>(0);
+  const [isFinished, setIsFinished] = useState(false);
+
+  const [correct, setCorrect] = useState<number>(0);
+
+  const [isBreakActive, setIsBreakActive] = useState<boolean>(true);
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const correctToats = () => {
-    setIsCorrect(true);
-    setTimeout(() => {
-      setIsCorrect(null);
-      nextRound();
-    }, CORRECT_DURATION);
-  };
+  const [current, setCurrent] = useState<string | null>(null);
 
-  const wrongToats = () => {
-    setIsCorrect(false);
-    setTimeout(() => {
-      setIsCorrect(null);
-      nextRound();
-    }, CORRECT_DURATION);
+  const [history, setHistory] = useState<string[]>([]);
 
-    setStats((prev) => ({
-      ...prev,
-      totalWrongs: prev.totalWrongs + 1,
-      resistanceWrongs:
-        round % 10 === 2 ? prev.resistanceWrongs + 1 : prev.resistanceWrongs,
-    }));
-  };
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -99,26 +73,29 @@ const PerformanceTestOnePage = () => {
     reactionTime: 0,
   });
 
-  const [currentShape, setCurrentShape] = useState<{
-    number: string;
-    color: string;
-    shape: string;
-  }>();
-  const [currentRule, setCurrentRule] = useState<Rules>(Rules.shape);
-  const [round, setRound] = useState<number>(0);
-  const [isFinished, setIsFinished] = useState<boolean>(false);
+  const session = useSession();
+
+  const router = useRouter();
 
   const handleVisibilityChange = () => {
-    if (document.visibilityState === 'hidden') {
-      location.reload()
+    if (document.visibilityState === "hidden") {
+      location.reload();
     }
   };
 
   useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -132,7 +109,7 @@ const PerformanceTestOnePage = () => {
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
         stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
-        stepInfo: { step: 1, group: user.userDetails.Status },
+        stepInfo: { step: 2, group: user.userDetails.Status },
       });
 
       await updateUser({
@@ -141,20 +118,38 @@ const PerformanceTestOnePage = () => {
           ...user,
           userDetails: {
             ...user.userDetails,
-            PerformanceTaskStep: "2",
+            PerformanceTaskStep: "3",
           },
         },
       });
 
       setUser({
         ...user,
-        userDetails: { ...user.userDetails, PerformanceTaskStep: "2" },
+        userDetails: { ...user.userDetails, PerformanceTaskStep: "3" },
       });
     },
     onSuccess: () => {
-      router.push("/test/2");
+      router.push("/test/3");
     },
   });
+
+  useEffect(() => {
+    if (round === 0 || isFinished || (correct === 1 && isBreakActive)) {
+      return;
+    }
+
+    const timeout = setTimeout(
+      () => {
+        nextRound();
+      },
+      current ? DURATION : 500,
+    );
+
+    return () => {
+      clearTimeout(timeout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round]);
 
   useEffect(() => {
     if (!isFinished) {
@@ -162,21 +157,11 @@ const PerformanceTestOnePage = () => {
     }
 
     mutate();
-
-    // Stop the timer
-    clearInterval(timeout!);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
   const nextRound = () => {
     if (round >= TOTAL_ROUNDS) {
-      toast({
-        title: "Test Finished",
-        description: "You have finished the test.",
-        variant: "success",
-        duration: 2000,
-      });
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -185,98 +170,135 @@ const PerformanceTestOnePage = () => {
       return;
     }
 
-    if (round % 40 <= 10) setCurrentRule(Rules.shape);
-    else if (round % 40 <= 20) setCurrentRule(Rules.color);
-    else if (round % 40 <= 30) setCurrentRule(Rules.count);
-    else setCurrentRule(Rules.shape);
+    if (correct === 1 && isBreakActive) {
+      return;
+    }
+
     setRound((prev) => prev + 1);
-    setCurrentShape(generateRandomImage());
+
+    if (current) {
+      setCurrent(null);
+      return;
+    }
+
+    const percentage = (round * 100) / TOTAL_ROUNDS;
+
+    // 10% of the time, select from the first third of the letters
+    const letter =
+      Math.random() > CHANCE_OF_LETTER
+        ? LETTERS[
+            Math.floor(
+              Math.random() *
+                (percentage < 33
+                  ? LETTERS.length / 3
+                  : percentage < 66
+                    ? (LETTERS.length / 3) * 2
+                    : LETTERS.length),
+            )
+          ]
+        : history[history.length - 2] || "A";
+    setCurrent(letter);
+
+    if (history.length < 4) setHistory((prev) => [...prev, letter]);
+    else {
+      setHistory((prev) => [...prev.slice(1, 5), letter]);
+    }
     if (!timeout) {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
 
-  const handleAnswer = (answerIndex: number) => {
-    if (currentRule === Rules.shape) {
-      if (answers[answerIndex].shape === currentShape?.shape) correctToats();
-      else wrongToats();
-    } else if (currentRule === Rules.color) {
-      if (answers[answerIndex].color === currentShape?.color) correctToats();
-      else wrongToats();
-    } else if (currentRule === Rules.count) {
-      if (answers[answerIndex].number === currentShape?.number) correctToats();
-      else wrongToats();
+  const handleAnswer = () => {
+    if (!current || history.length < 3) return;
+
+    if (history[history.length - 3] === current) {
+      setIsCorrect(true);
+      setCorrect((prev) => prev + 1);
+    } else {
+      setIsCorrect(false);
+      setStats((prev) => ({ ...prev, totalWrongs: prev.totalWrongs + 1 }));
     }
+
+    setTimeout(() => {
+      setIsCorrect(null);
+    }, 1000);
+  };
+
+  const finishBreak = () => {
+    setCorrect(0);
+    setStats({
+      totalWrongs: 0,
+      resistanceWrongs: 0,
+      reactionTime: 0,
+    });
+    setRound(1);
+    setHistory([]);
+    setIsBreakActive(false);
   };
 
   return (
-    <div className='flex flex-col items-center py-10'>
+    <div className="flex flex-col items-center py-10">
       {isFinished ? (
-        <FinishScreen url='/test/2' />
+        <FinishScreen url="/test/2" />
       ) : round === 0 ? (
-        <div className='flex flex-col'>
-          <IntroductionsTestOne />
-          <Separator className='my-5' />
+        <div className="flex flex-col">
+          <IntroductionsTestTwo />
+          <Separator className="my-5" />
 
-          <div className='flex justify-center my-5'>
+          <div className="flex justify-center my-5">
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
-      ) : (
-        <>
-          {isCorrect === null && currentShape ? (
-            <Image
-              className='border border-stone-200 rounded-md'
-              loader={imageLoader}
-              src={`${currentShape.number}${currentShape.color}${currentShape.shape}`}
-              alt='random'
-              width={100}
-              height={100}
-            />
-          ) : isCorrect === true ? (
-            <div className='text-green-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center'>
-              Doğru
-            </div>
-          ) : isCorrect === false ? (
-            <div className='text-red-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center'>
-              Yanlış
-            </div>
-          ) : null}
-          <Separator className='my-5 opacity-50' />
-          <small className='test-sm opacity-65 mb-2'>Seçenekler</small>
-          <div className='grid grid-cols-2 sm:flex gap-4'>
-            {answers.map((answer, index) => (
-              <Image
-                key={index}
-                loader={imageLoader}
-                className='border border-slate-400 rounded-md cursor-pointer hover:shadow-md hover:border-slate-700 transition duration-300 ease-in-out'
-                src={`${answer.number}${answer.color}${answer.shape}`}
-                alt={`${answer.number}${answer.color}${answer.shape}`}
-                width={100}
-                height={100}
-                onClick={() => handleAnswer(index)}
-              />
-            ))}
+      ) : correct === 1 && isBreakActive ? (
+        <div className="flex flex-col items-center gap-4">
+          <div>
+            <span className="text-green-500">Tebrikler! Doğru bildin.</span>{" "}
+            Deneme bitti hadi oyuna geçelim
           </div>
-        </>
+          <Button onClick={finishBreak}>Devam Et</Button>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-7 justify-center items-center w-full">
+          {correct < 1 && isBreakActive ? (
+            <div className="flex gap-2">
+              {history.map((letter, index) => (
+                <span
+                  key={letter + index}
+                  className={cn(
+                    "text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center",
+                    {
+                      "opacity-60": index !== 3,
+                    },
+                  )}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center">
+              {current}
+            </span>
+          )}
+
+          <Button
+            onClick={handleAnswer}
+            variant="outline"
+            className={cn("flex justify-center px-16 py-4", {
+              "bg-green-500 text-white hover:bg-green-500": isCorrect === true,
+              "bg-red-500 text-white hover:bg-red-500": isCorrect === false,
+            })}
+          >
+            <EyeIcon size={36} />
+          </Button>
+        </div>
       )}
     </div>
   );
 };
 
-const generateRandomImage = () => {
-  const randomNumber = (Math.floor(Math.random() * 4) + 1).toString();
-  const randomShape = imageShapes[Math.floor(Math.random() * 4)];
-  const randomColor = imageColors[Math.floor(Math.random() * 4)];
-  return {
-    number: randomNumber,
-    color: randomColor,
-    shape: randomShape,
-  };
-};
-
-export default PerformanceTestOnePage;
+export default PerformanceTestPageTwo;
