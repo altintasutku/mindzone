@@ -25,13 +25,13 @@ const allData: DataType[] = [
     (_, i): DataType => ({
       index: i + 1,
       type: "negative",
-    })
+    }),
   ),
   ...Array.from({ length: mods.positive }).map(
     (_, i): DataType => ({
       index: i + 1,
       type: "positive",
-    })
+    }),
   ),
 ].sort(() => Math.random() - 0.5);
 
@@ -41,12 +41,11 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const TOTAL_ROUNDS = mods.negative + mods.positive;
 
-const MIN_REACTION_TIME = 2000;
-const MAX_REACTION_TIME = 2200;
+const MIN_REACTION_TIME = 1400;
+const MAX_REACTION_TIME = 1600;
 
 const WeekTwoGameThreePage = () => {
   const [round, setRound] = useState(0);
-  console.log("🚀 ~ WeekTwoGameThreePage ~ round:", round);
   const [isFinished, setIsFinished] = useState(false);
 
   const [currentData, setCurrentData] = useState<DataType | null>(null);
@@ -76,14 +75,14 @@ const WeekTwoGameThreePage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false
+      false,
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false
+        false,
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -147,7 +146,7 @@ const WeekTwoGameThreePage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
@@ -162,7 +161,7 @@ const WeekTwoGameThreePage = () => {
       currentData === null
         ? 500
         : Math.random() * (MAX_REACTION_TIME - MIN_REACTION_TIME) +
-            MIN_REACTION_TIME
+            MIN_REACTION_TIME,
     );
 
     return () => clearTimeout(timerTwo);
