@@ -44,8 +44,7 @@ const WeekThreeGameFivePage = () => {
 
   const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
   const handleVisibilityChange = () => {
-
-    if (document.visibilityState === 'hidden') {
+    if (document.visibilityState === "hidden") {
       if (timeout) {
         setTemp(timeout);
         clearInterval(timeout);
@@ -54,19 +53,27 @@ const WeekThreeGameFivePage = () => {
     } else {
       if (!timeout && temp !== null) {
         setMyTimeout(
-            setInterval(() => {
-              setTimer((prev) => prev + 10);
-            }, 10)
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
         );
       }
     }
   };
 
   useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -122,6 +129,14 @@ const WeekThreeGameFivePage = () => {
 
     setRound(round + 1);
     setCurrentData(questions[round]);
+
+    if (!timeout) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10),
+      );
+    }
   };
 
   const handleAnswer = (index: number) => {
@@ -130,8 +145,16 @@ const WeekThreeGameFivePage = () => {
     }
 
     if (currentData?.answer === ANSWERS[index]) {
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
       setIsCorrect(true);
     } else {
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
       setIsCorrect(false);
     }
 
@@ -143,9 +166,11 @@ const WeekThreeGameFivePage = () => {
 
   return (
     <div>
-      {isFinished ? <div>
-        <FinishScreen url="/week/4/"/>
-      </div> : round === 0 ? (
+      {isFinished ? (
+        <div>
+          <FinishScreen url="/week/4/" />
+        </div>
+      ) : round === 0 ? (
         <div className="flex flex-col items-center">
           <WeekThreeGameThreeIntroductions />
           <Button onClick={handleNext}>Başla</Button>
