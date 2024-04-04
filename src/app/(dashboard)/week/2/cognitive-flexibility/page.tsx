@@ -113,7 +113,7 @@ const imageLoader = ({ src }: { src: string }) => {
 };
 
 const DURATION = 800;
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 120;
 
 const WeekTwoGameTwoPage = () => {
   const [round, setRound] = useState(0);
@@ -138,6 +138,7 @@ const WeekTwoGameTwoPage = () => {
     step: 7,
     group: "W1",
   });
+  console.log("🚀 ~ WeekTwoGameTwoPage ~ stats:", stats)
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
