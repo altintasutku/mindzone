@@ -46,7 +46,7 @@ const WeekThreeGameOnePage = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 15,
+    step: 11,
     group: "W1",
   });
 

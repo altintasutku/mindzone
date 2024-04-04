@@ -48,7 +48,7 @@ const WeekThreeGameTwoPage = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 15,
+    step: 12,
     group: "W1",
   });
 
