@@ -1,8 +1,8 @@
 import WelcomeToWeek from "@/components/game/WelcomeToWeek";
 import React from "react";
 
-const WeekTwoPage = () => {
+const WeekThreePage = () => {
   return <WelcomeToWeek week="3. Hafta'ya" />;
 };
 
-export default WeekTwoPage;
+export default WeekThreePage;
