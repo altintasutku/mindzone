@@ -29,6 +29,7 @@ const WorkingMemory = () => {
   const [round, setRound] = React.useState(0);
   const [isFinished, setIsFinished] = React.useState(false);
   const [persons, setPersons] = React.useState<CurrentPersonType[]>([]);
+  console.log("🚀 ~ WorkingMemory ~ persons:", persons)
   const [answer, setAnswer] = React.useState<CurrentPersonType[]>([]);
   const [rotateStates, setRotateStates] = React.useState<boolean[]>([]);
   const [selectedPersons, setSelectedPersons] = React.useState<
@@ -147,12 +148,8 @@ const WorkingMemory = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
-  const shuffleArray = (array: any[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+  const shuffleArray = (array: CurrentPersonType[]) => {
+    setPersons(array.sort(() => Math.random() - 0.5));
   };
 
   const selectPersons = () => {
