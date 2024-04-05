@@ -146,8 +146,6 @@ const Week2Game5Page = () => {
     }
     setRound((prev) => prev + 1);
 
-    setCurrent(allData[round]);
-
     if (!timeout) {
       setMyTimeout(
         setInterval(() => {
@@ -187,8 +185,29 @@ const Week2Game5Page = () => {
       setIsModeEmotion(true);
     }
     setIsCorrect(null);
-    setCurrent(allData[round]);
+
+    const imageArray = Object.values(allData[round].imageFolder);
+    let shuffledCurrent = shuffleArray(imageArray);
+
+    setCurrent((prev) => ({
+      ...allData[round],
+      imageFolder: {
+        image1: shuffledCurrent[0],
+        image2: shuffledCurrent[1],
+        image3: shuffledCurrent[2],
+        image4: shuffledCurrent[3],
+        image5: shuffledCurrent[4],
+      },
+    }));
   }, [round]);
+
+  const shuffleArray = (array: string[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
 
   return (
     <div>
@@ -228,26 +247,24 @@ const Week2Game5Page = () => {
           </div>
           <div className='flex flex-row flex-wrap my-5'>
             {current?.imageFolder &&
-              Object.entries(current.imageFolder)
-                .sort(() => Math.random() - 0.5)
-                .map(([key, image], index) => {
-                  if (key !== "image4") {
-                    return (
-                      <Image
-                        key={index}
-                        src={`affective-emphaty/${current?.difficulty}/${current?.index}/${image}`}
-                        loader={imageLoader}
-                        alt={`image${index + 1}`}
-                        width={150}
-                        height={150}
-                        className='rounded-md mx-1'
-                        onClick={() => handleCheck(image)}
-                      />
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
+              Object.entries(current.imageFolder).map(([key, image], index) => {
+                if (key !== "image4") {
+                  return (
+                    <Image
+                      key={index}
+                      src={`affective-emphaty/${current?.difficulty}/${current?.index}/${image}`}
+                      loader={imageLoader}
+                      alt={`image${index + 1}`}
+                      width={150}
+                      height={150}
+                      className='rounded-md mx-1'
+                      onClick={() => handleCheck(image)}
+                    />
+                  );
+                } else {
+                  return null;
+                }
+              })}
           </div>
         </div>
       )}

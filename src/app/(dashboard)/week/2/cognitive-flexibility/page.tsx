@@ -114,8 +114,9 @@ const imageLoader = ({ src }: { src: string }) => {
 };
 
 const DURATION = 800;
-// const TOTAL_ROUNDS = 200;
-const TOTAL_ROUNDS = 6;
+const TOTAL_ROUNDS = 200;
+
+// const TOTAL_ROUNDS = 6;
 
 const WeekTwoGameTwoPage = () => {
   const [round, setRound] = useState(0);
