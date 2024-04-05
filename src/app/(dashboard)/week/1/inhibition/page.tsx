@@ -3,7 +3,6 @@
 import FinishScreen from "@/components/game/FinishScreen";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
 import { CheckIcon, XCircleIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import IntroductionInh from "./_introductions";
@@ -56,7 +55,7 @@ const InhibitionPage = () => {
   const [answers, setAnswers] = useState<Color[]>([]);
 
   const [timer, setTimer] = useState<number>(0);
- const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
     totalAccuracy: 0,
@@ -64,6 +63,35 @@ const InhibitionPage = () => {
     step: 3,
     group: "W1",
   });
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+
+    if (document.visibilityState === 'hidden') {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+            setInterval(() => {
+              setTimer((prev) => prev + 10);
+            }, 10)
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {

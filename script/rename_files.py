@@ -1,34 +1,25 @@
 import os
+import shutil
 
-
-def rename_files_in_directory(directory):
+def move_images_to_questions(directory):
     if not os.path.isdir(directory):
         print("Belirtilen dizin bulunamadı.")
         return
 
-    sexs = ["Erkek", "Kadın"]
+    for root, dirs, files in os.walk(directory):
+        for dir_name in dirs:
+            dir_path = os.path.join(root, dir_name)
+            question_path = os.path.join(root, root.split("/")[-1])
+            if os.path.isdir(dir_path):
+                image_files = [f for f in os.listdir(dir_path) if f.endswith('.jpg') or f.endswith('.JPG')]
+                image_files.sort()
+                for i, image_file in enumerate(image_files):
+                    image_path = os.path.join(dir_path, image_file)
+                    new_image_name = f"{i + 1}.jpg"
+                    new_image_path = os.path.join(question_path, new_image_name)
+                    shutil.move(image_path, new_image_path)
+                    print(f"{image_file} -> {new_image_name}")
+                os.rmdir(dir_path)
 
-    mods = ["Olumlu", "Olumsuz"]
-
-    for sex in sexs:
-        for mod in mods:
-            file_list = os.listdir(directory + sex + "/" + mod + "/")
-            file_list.sort()
-            count = 1
-            for old_name in file_list:
-                file_path = os.path.join(
-                    directory + sex + "/" + mod + "/", old_name)
-                if os.path.isfile(file_path):
-                    file_extension = ".jpg"
-                    new_name = str(count) + file_extension
-                    new_path = os.path.join(directory + sex + "/" + mod + "/", new_name)
-                    os.rename(file_path, new_path)
-                    print(f"{old_name} -> {new_name}")
-                    count += 1
-                else:
-                    print(f"{file_path} bulunamadı.")
-
-
-directory_path = "../public/images/weekGames/week_three/cognitive_flexibility/"
-
-rename_files_in_directory(directory_path)
+directory_path = "/Users/altintas/Developer/NextJS/mindzone/public/images/weekGames/week_three/affective_empathy"
+move_images_to_questions(directory_path)

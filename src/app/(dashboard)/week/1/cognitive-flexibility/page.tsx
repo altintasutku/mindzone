@@ -4,7 +4,7 @@ import FinishScreen from "@/components/game/FinishScreen";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import IntroductionCF from "./_intorductions";
 import { Progress } from "@/components/ui/progress";
 import { WeekData, sendWeekData } from "@/lib/api/week";
@@ -62,6 +62,53 @@ const CognitiveFlexibilityPage = () => {
   const setUser = useUserStore((state) => state.setUser);
   const session = useSession();
 
+  const [currentItem, setCurrentItem] = useState<{
+    item: string;
+    box: number;
+  } | null>(null);
+
+  const [round, setRound] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 2,
+    group: "W1",
+  });
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+
+    if (document.visibilityState === 'hidden') {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+            setInterval(() => {
+              setTimer((prev) => prev + 10);
+            }, 10)
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -85,24 +132,6 @@ const CognitiveFlexibilityPage = () => {
         },
       });
     },
-  });
-
-  const [currentItem, setCurrentItem] = useState<{
-    item: string;
-    box: number;
-  } | null>(null);
-
-  const [round, setRound] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-
-  const [timer, setTimer] = useState<number>(0);
-  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [stats, setStats] = useState<WeekData>({
-    totalErrorCount: 0,
-    totalAccuracy: 0,
-    reactionTime: 0,
-    step: 2,
-    group: "W1",
   });
 
   useEffect(() => {

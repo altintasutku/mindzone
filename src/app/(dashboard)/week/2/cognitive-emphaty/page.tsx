@@ -2,8 +2,6 @@
 import { weekTwoGame4Data } from "@/assets/mockdata/weekGames/week2game4data";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Ghost } from "lucide-react";
-import { set } from "zod";
 import FinishScreen from "@/components/game/FinishScreen";
 import WeekTwoGameFourIntroductions from "./_introductions";
 import { useSession } from "next-auth/react";
@@ -27,12 +25,49 @@ const WeekTwoGameFourPage = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 1,
-    group: "W2",
+    step: 8,
+    group: "W1",
   });
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -159,6 +194,7 @@ const WeekTwoGameFourPage = () => {
                     onClick={() => {
                       handleCheck(option);
                     }}
+                    className={"text-wrap"}
                     variant={"outline"}
                   >
                     {option}

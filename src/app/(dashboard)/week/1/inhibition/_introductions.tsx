@@ -23,7 +23,7 @@ const IntroductionInh = () => {
           YEŞİL - (sarı)’ya tıklamanız gerekmektedir.
         </li>
         <li className="text-green-400">
-          MAVİ – (yeşil)’e tıkmalamanız gerekmektedir.
+          MAVİ – (yeşil)’e tıklamanız gerekmektedir.
         </li>
       </ul>
     </>

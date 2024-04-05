@@ -10,7 +10,6 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import { all } from "axios";
 
 type ImageFolder = {
   image1: string;
@@ -94,12 +93,49 @@ const Week2Game5Page = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 5,
-    group: "W2",
+    step: 10,
+    group: "W1",
   });
 
   const [timer, setTimer] = useState(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -150,7 +186,7 @@ const Week2Game5Page = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
@@ -210,6 +246,7 @@ const Week2Game5Page = () => {
   };
 
   return (
+
     <div>
       {isFinished ? (
         <p>Finished</p>
@@ -268,8 +305,11 @@ const Week2Game5Page = () => {
           </div>
         </div>
       )}
+
     </div>
   );
+
+ 
 };
 
 export default Week2Game5Page;

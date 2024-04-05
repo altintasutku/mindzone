@@ -127,7 +127,7 @@ const Navbar = () => {
           </SheetTrigger>
           <SheetContent
             side={"right"}
-            className="w-[200px] sm:w-[500px] flex flex-col dark:bg-zinc-900"
+            className="w-3/4 sm:w-[500px] flex flex-col dark:bg-zinc-900 p-4"
           >
             <h1 className="text-2xl font-semibold text-center mt-5">
               MindZone

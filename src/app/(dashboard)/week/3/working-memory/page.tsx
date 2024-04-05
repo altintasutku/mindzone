@@ -11,6 +11,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import FinishScreen from "@/components/game/FinishScreen";
+import { useUserStore } from "@/hooks/useUserStore";
+import { useSession } from "next-auth/react";
+import { WeekData, sendWeekData } from "@/lib/api/week";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "@/lib/api/user";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/working_memory/${src}.jpg`;
@@ -31,8 +36,99 @@ const WeekThreeGameOnePage = () => {
 
   const [isFinished, setIsFinished] = useState(false);
 
+  const session = useSession();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [timer, setTimer] = useState<number>(0);
+  const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [stats, setStats] = useState<WeekData>({
+    totalErrorCount: 0,
+    totalAccuracy: 0,
+    reactionTime: 0,
+    step: 11,
+    group: "W1",
+  });
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { mutate } = useMutation({
+    mutationFn: async (data: WeekData) => {
+      if (!session.data || !user) {
+        return;
+      }
+
+      await sendWeekData(data, session.data.user.accessToken);
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+          },
+        },
+      });
+
+      setUser({
+        ...user,
+        userDetails: {
+          ...user.userDetails,
+          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isFinished) return;
+
+    mutate(stats);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
   useEffect(() => {
     if (round === levels.length) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+
       setIsFinished(true);
       return;
     }
@@ -47,10 +143,24 @@ const WeekThreeGameOnePage = () => {
 
   const handleNextRound = () => {
     if (round === levels.length) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+
+      setIsFinished(true);
       return;
     }
     setRound((prev) => prev + 1);
     setShownImages((prev) => prev.map(() => true));
+
+    if (!timeout) {
+      setMyTimeout(
+        setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10),
+      );
+    }
   };
 
   useEffect(() => {
@@ -72,10 +182,18 @@ const WeekThreeGameOnePage = () => {
     let timeout: NodeJS.Timeout;
     if (level[showns[0]].mod === level[showns[1]].mod) {
       timeout = setTimeout(() => {
+        setStats((prev) => ({
+          ...prev,
+          totalAccuracy: prev.totalAccuracy + 1,
+        }));
         setIsCorrect(true);
       }, 1000);
     } else {
       timeout = setTimeout(() => {
+        setStats((prev) => ({
+          ...prev,
+          totalErrorCount: prev.totalErrorCount + 1,
+        }));
         setIsCorrect(false);
       }, 1000);
     }
@@ -94,7 +212,7 @@ const WeekThreeGameOnePage = () => {
 
   const handleClick = (index: number) => {
     setShownImages((prev) =>
-      prev.map((item, i) => (i === index ? !prev[i] : item))
+      prev.map((item, i) => (i === index ? !prev[i] : item)),
     );
   };
 
@@ -111,7 +229,7 @@ const WeekThreeGameOnePage = () => {
           <Button onClick={handleNextRound}>Başla</Button>
         </div>
       ) : level ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 min-h-56 items-center">
+        <div className="min-h-56 space-y-10">
           {isCorrect === true ? (
             <h1 className="text-2xl font-bold text-green-500 text-center col-span-4">
               Doğru
@@ -121,8 +239,9 @@ const WeekThreeGameOnePage = () => {
               Yanlış
             </h1>
           ) : isCorrect === null ? (
-            <>
-              <span className="col-span-4 text-center">Dikkatli bakın!</span>
+            <div
+              className={"grid grid-cols-2 sm:grid-cols-4 gap-4 items-center"}
+            >
               {level.map((item, index) => (
                 <div
                   key={index}
@@ -136,13 +255,13 @@ const WeekThreeGameOnePage = () => {
                     width={200}
                     height={200}
                     draggable={false}
-                    className={cn("transition-all duration-1000 w-full h-full", {
+                    className={cn("transition-all duration-1000", {
                       "rotate-y-180 opacity-0": !shownImages[index],
                     })}
                   />
                 </div>
               ))}
-            </>
+            </div>
           ) : null}
 
           <Progress

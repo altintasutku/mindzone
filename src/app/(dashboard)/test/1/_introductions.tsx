@@ -1,34 +1,23 @@
 import React from "react";
 
-const IntroductionsTestOne = () => {
+const IntroductionsTestTwo = () => {
   return (
     <>
       <h2 className="text-xl font-semibold text-center">
         1. performans testi açıklaması
       </h2>
-      <ul className="list-disc">
+      <ul className="list-disc mx-2">
         <li>
-          Bu egzersizde, ekranın alt kısmında size gösterilen bir kartı ekranın
-          üst kısmında sunulan dört karttan biriyle eşleştirmeniz gerekir.
-          Eşleştirme için kuralın ne olduğunu bulmanız gerekmektedir
-        </li>
-        <li>
-          Aşağıdaki kartla eşleşen dört karttan birine tıklayın. Seçiminizi
-          takip edin, geri bildirim alacaksınız. Eşleştirmeniz doğru değilse,
-          farklı bir kural denemeniz gerekir.
-        </li>
-        <li>
-          Örneğin: renge göre eşleştirirsebilirsiniz, şekle göre
-          eşleştirebilirsiniz ya da sayıya göre eşleştirebilirsiniz.
-        </li>
-        <li>
-          Ancak, hepsi bu kadar değil. Eşleştirme kuralı ara sıra değişir! Geri
-          bildirimleri dikkatle izlemeniz gerekir. Eğer hata mesajları
-          veriyorsa, kuralınızı değiştirmeniz gerekir!
+          Bu görevde, art arda harfler göreceksiniz. Her harf birkaç saniye
+          boyunca gösterilir. Aynı harfi 2 harf önce görüp görmediğinize karar
+          vermeniz gerekir. Buna n-2-geri görevi denir. Aynı harfi 2 harf önce
+          gördüyseniz, X butonuna basarsınız. Eğer doğru yaptıysanız, harfin
+          etrafında yeşil renk yandığını görürsünüz. Eğer tuşa basmamanız
+          gerekirken basarsanız, harfin etrafında kırmızı renk görürsünüz.
         </li>
       </ul>
     </>
   );
 };
 
-export default IntroductionsTestOne;
+export default IntroductionsTestTwo;

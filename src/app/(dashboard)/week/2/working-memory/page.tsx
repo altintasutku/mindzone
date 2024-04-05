@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { set } from "zod";
 import IntroductionCF from "./_introductions";
 import { selectImagesFunction } from "@/assets/mockdata/weekGames/week2WorkingMemory";
 import { sendWeekData, WeekData } from "@/lib/api/week";
@@ -11,7 +10,6 @@ import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "@/lib/api/user";
-import { clear } from "console";
 import FinishScreen from "@/components/game/FinishScreen";
 
 const MAXROUND = 52;
@@ -47,12 +45,49 @@ const WorkingMemory = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 1,
-    group: "W2",
+    step: 6,
+    group: "W1",
   });
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const [temp, setTemp] = useState<NodeJS.Timeout | null>(null);
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      if (timeout) {
+        setTemp(timeout);
+        clearInterval(timeout);
+        setMyTimeout(null);
+      }
+    } else {
+      if (!timeout && temp !== null) {
+        setMyTimeout(
+          setInterval(() => {
+            setTimer((prev) => prev + 10);
+          }, 10),
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false,
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -173,7 +208,7 @@ const WorkingMemory = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
   };
@@ -208,29 +243,29 @@ const WorkingMemory = () => {
   return (
     <div>
       {isFinished ? (
-        <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/2/cognitive-flexibility' />
+        <div className="flex justify-center items-center">
+          <FinishScreen url="/week/2/cognitive-flexibility" />
         </div>
       ) : round === 0 ? (
         <div>
           <IntroductionCF />
 
-          <div className='flex justify-center items-center mt-5'>
+          <div className="flex justify-center items-center mt-5">
             <Button onClick={handleNext}>Devam</Button>
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className=' flex justify-center items-center'>
-          <p className=' text-green-600 text-3xl'>Doğru</p>
+        <div className=" flex justify-center items-center">
+          <p className=" text-green-600 text-3xl">Doğru</p>
         </div>
       ) : isCorrect === false ? (
-        <div className=' flex justify-center items-center'>
-          <p className=' text-red-600 text-3xl'>Yanlış</p>
+        <div className=" flex justify-center items-center">
+          <p className=" text-red-600 text-3xl">Yanlış</p>
         </div>
       ) : (
-        <div className='flex gap-4 justify-center'>
+        <div className="flex gap-4 justify-center">
           {persons.map((person, index) => (
-            <div key={index} className=' bg-slate-700 rounded-md'>
+            <div key={index} className=" bg-slate-700 rounded-md">
               <Image
                 className={cn("rounded-md duration-500 ease-in-out", {
                   " rotate-y-180 opacity-0": rotateStates[index],

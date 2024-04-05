@@ -1,23 +1,26 @@
 import React from "react";
 
-const IntroductionsTestTwo = () => {
+const IntroductionTestThree = () => {
   return (
     <>
       <h2 className="text-xl font-semibold text-center">
         2. performans testi açıklaması
       </h2>
-      <ul className="list-disc mx-2">
+      <ul>
         <li>
-          Bu görevde, art arda harfler göreceksiniz. Her harf birkaç saniye
-          boyunca gösterilir. Aynı harfi 2 harf önce görüp görmediğinize karar
-          vermeniz gerekir. Buna n-2-geri görevi denir. Aynı harfi 2 harf önce
-          gördüyseniz, X butonuna basarsınız. Eğer doğru yaptıysanız, harfin
-          etrafında yeşil renk yandığını görürsünüz. Eğer tuşa basmamanız
-          gerekirken basarsanız, harfin etrafında kırmızı renk görürsünüz.
+          Takip eden denemelerde, sadece yeşil git mesajını gördüğünüzde butona
+          basın.
+        </li>
+        <li>
+          Aşağıdaki kırmızı mesajı görürseniz hiçbir şey yapmayın (gitmeyin).
         </li>
       </ul>
+      <p>
+        Önce birkaç alıştırma yapacağız. Alıştırma bittiğinde, asıl test
+        başlayacak.
+      </p>
     </>
   );
 };
 
-export default IntroductionsTestTwo;
+export default IntroductionTestThree;
