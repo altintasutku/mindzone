@@ -29,7 +29,6 @@ const WorkingMemory = () => {
   const [round, setRound] = React.useState(0);
   const [isFinished, setIsFinished] = React.useState(false);
   const [persons, setPersons] = React.useState<CurrentPersonType[]>([]);
-  console.log("🚀 ~ WorkingMemory ~ persons:", persons)
   const [answer, setAnswer] = React.useState<CurrentPersonType[]>([]);
   const [rotateStates, setRotateStates] = React.useState<boolean[]>([]);
   const [selectedPersons, setSelectedPersons] = React.useState<
