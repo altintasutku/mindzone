@@ -141,7 +141,6 @@ const WeekTwoGameTwoPage = () => {
     step: 7,
     group: "W1",
   });
-  console.log("🚀 ~ WeekTwoGameTwoPage ~ stats:", stats)
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);

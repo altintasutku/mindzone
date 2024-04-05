@@ -12,95 +12,74 @@ type CurrentPersonType = {
   genderFolder: string;
   sex: string;
   index: number;
+  entryPoint?: string;
 };
 
 export function selectImagesFunction() {
   persons = [];
   answer = [];
 
-  let loopCount = 0;
-
-  while (loopCount < 2) {
-    let isSamePerson = false;
-
-    while (!isSamePerson) {
-      const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
-      const sex = genderFolder === "Erkek" ? sexs[0] : sexs[1];
-      const index = Math.floor(Math.random() * personCountPerSex) + 1;
-      const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
-
-      const newElement = {
-        emotionName,
-        genderFolder,
-        index,
-        sex,
-      };
-
-      if (
-        !persons.some(
-          (item) =>
-            item.index === index ||
-            item.emotionName === emotionName ||
-            item.genderFolder === genderFolder ||
-            item.sex === sex
-        )
-      ) {
-        isSamePerson = true;
-      }
-
-      if (isSamePerson) {
-        persons = [...persons, newElement];
-      }
-    }
-
-    loopCount++;
-  }
-
-  let isDifferent = false;
-
-  while (!isDifferent) {
+  while (persons.length < 2) {
     const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
-    const sex = genderFolder === "Erkek" ? sexs[0] : sexs[1];
     const index = Math.floor(Math.random() * personCountPerSex) + 1;
     const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
 
-    const newElement = {
-      emotionName,
-      genderFolder,
-      index,
-      sex,
-    };
+    if (
+      !persons.some(
+        (item) =>
+          item.index === index ||
+          item.emotionName === emotionName ||
+          item.genderFolder === genderFolder
+      )
+    ) {
+      persons.push({
+        emotionName,
+        genderFolder,
+        index,
+        sex: genderFolder === "Erkek" ? sexs[0] : sexs[1],
+        entryPoint: "first"
+      })
+    }
+  }
+
+
+  while (persons.length < 3) {
+    const genderFolder = genderFolderName[Math.floor(Math.random() * 2)];
+    const index = Math.floor(Math.random() * personCountPerSex) + 1;
+    const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
 
     if (
       !persons.some(
         (item) =>
           item.index === index &&
-          item.emotionName === emotionName &&
-          item.genderFolder === genderFolder &&
-          item.sex === sex
+          item.genderFolder === genderFolder
       )
     ) {
-      answer = [newElement];
-      persons = [...persons, newElement];
-      isDifferent = true;
+      const newElement = {
+        emotionName,
+        genderFolder,
+        index,
+        sex: genderFolder === "Erkek" ? sexs[0] : sexs[1],
+        entryPoint: "second"
+      }
+      answer.push(newElement);
+      persons.push(newElement);
     }
   }
 
-  let isSame = false;
-
-  while (!isSame) {
+  while (persons.length < 4) {
     const emotionName = emotionNamelist[Math.floor(Math.random() * 7)];
     const secondElement = {
       emotionName: emotionName,
       genderFolder: answer[0].genderFolder,
       index: answer[0].index,
       sex: answer[0].sex,
+      entryPoint: "third"
     };
 
     if (answer[0].emotionName !== emotionName) {
-      answer = [...answer, secondElement];
-      persons = [...persons, secondElement];
-      isSame = true;
+      answer.push(secondElement);
+      persons.push(secondElement);
     }
   }
 

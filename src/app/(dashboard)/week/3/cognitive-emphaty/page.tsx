@@ -120,7 +120,6 @@ const WeekThreeGameFourPage = () => {
         setIsGreen(true);
         setIsYellow(false);
         setTrialNumber((prev) => prev + 1);
-        console.log("yeşil");
         handleNext();
       } else if (
         WeekThreeGameFourQuestions[round - 1].yellows.sort().toString() ===
@@ -132,7 +131,6 @@ const WeekThreeGameFourPage = () => {
         }));
         setIsGreen(false);
         setIsYellow(true);
-        console.log("sarı");
       } else {
         setStats((prev) => ({
           ...prev,
@@ -141,7 +139,6 @@ const WeekThreeGameFourPage = () => {
         setIsGreen(false);
         setIsYellow(false);
         setTrialNumber((prev) => prev + 1);
-        console.log("hiçbiri doğru değil");
       }
     }
   };
