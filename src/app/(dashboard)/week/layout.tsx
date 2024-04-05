@@ -4,9 +4,9 @@ import { useUserStore } from "@/hooks/useUserStore";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import {calculateDaysDiff} from "@/lib/utils";
-import {weekOneGames, weekThreeGames, weekTwoGames} from "@/assets/mockdata/weekGames/weekGames";
+import {weekFourGames, weekOneGames, weekThreeGames, weekTwoGames} from "@/assets/mockdata/weekGames/weekGames";
 
-const weekGames = [weekOneGames,weekTwoGames,weekThreeGames];
+const weekGames = [weekOneGames,weekTwoGames,weekThreeGames,weekFourGames];
 
 const Layout = ({children}: { children: React.ReactNode }) => {
     const user = useUserStore((state) => state.user);
