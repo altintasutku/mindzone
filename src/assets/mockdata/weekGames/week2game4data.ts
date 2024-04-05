@@ -144,7 +144,7 @@ export const weekTwoGame4Data: Week2Game4[] = [
   {
     question:
       "Merve film izlemek için bir arkadaşıyla buluşuyor. Arkadaşı çok geç kalıyor ve filme yetişemiyorlar. Merve’nin hangisini hissetmesi en muhtemeldir?",
-    correctAnswer: "b) Hayal kırıklığı",
+    correctAnswer: "c) Kızgın",
     ifWrong:
       "Hay aksi! Cevap kızgın olacaktı. Bu gibi durumlarda birçok duyguyu aynı anda tecrübe edebiliriz. Sıkıntı duygusu da burada hissedilmesi muhtemel olan bir duygudur. Kızgınlık ise “ birey hakkını alamadığında, önem verdiği kişiler beklentilerine uygun davranmadığında, engellendiğinde,” hissedebileceği bir duygydur. Yine de yaşanılan duygular kişiden kişiye değişebilir.",
     options: [
@@ -217,7 +217,7 @@ export const weekTwoGame4Data: Week2Game4[] = [
   {
     question:
       "Her şey yolunda giderse Şeyma’nın evinin satış fiyatının artması muhtemeldir. Şeyma’nın hissetme olasılığı en yüksek olan şey nedir?",
-    correctAnswer: "d) Umut",
+    correctAnswer: "e) Umut",
     ifWrong:
       "Hay aksi! Cevap umut olacaktı. Bu gibi durumlarda birçok duyguyu aynı anda tecrübe edebiliriz. Sevinç duygusu da burada hissedilmesi muhtemel olan bir duygudur. Umut ise “bir kimsenin kişisel yaşamındaki olay ve durumlarla ilgili olumlu sonuçlar çıkabileceği ihtimaline dair duygusal inancı” anlamına gelen bir duygydur. Yine de yaşanılan duygular kişiden kişiye değişebilir.",
     options: ["a) Sıkıntı", "b) Korku", "c) Şaşkınlık", "d) Sevinç", "e) Umut"],
@@ -470,7 +470,7 @@ export const weekTwoGame4Data: Week2Game4[] = [
   {
     question:
       "Sare'nin işinin doğası öngörülemeyen faktörler nedeniyle değişir ve artık işinin en çok keyif aldığı bölümlerini yapamaz. Sara büyük olasılıkla ne hissedecektir?",
-    correctAnswer: "e",
+    correctAnswer: "b",
     ifWrong:
       "Hay aksi! Cevap üzüntü olacaktı. Bu gibi durumlarda birçok duyguyu aynı anda tecrübe edebiliriz. hayal kırıklığı da burada hissedilmesi muhtemel olan bir duygudur. Üzüntü, kayıp, hayal kırıklığı, veya stresli olaylara tepki olarak ortaya çıkan bir duygudur. Üzüntü, kişisel bir kaybın, bir zorluğun veya olumsuz bir deneyimin neden olduğu bir duygusal tepki olarak ortaya çıkabilir. Yine de yaşanılan duygular kişiden kişiye değişebilir.",
     options: [
