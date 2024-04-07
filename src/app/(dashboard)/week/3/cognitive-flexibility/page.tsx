@@ -65,7 +65,7 @@ const WeekThreeGameTwoPage = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -75,14 +75,14 @@ const WeekThreeGameTwoPage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,6 +126,11 @@ const WeekThreeGameTwoPage = () => {
 
   const nextRound = () => {
     if (round === TOTAL_ROUNDS) {
+      setStats({
+        ...stats,
+        reactionTime: timer,
+      });
+      setIsFinished(true);
       return;
     }
 
@@ -139,7 +144,7 @@ const WeekThreeGameTwoPage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -215,4 +220,3 @@ const WeekThreeGameTwoPage = () => {
 };
 
 export default WeekThreeGameTwoPage;
-
