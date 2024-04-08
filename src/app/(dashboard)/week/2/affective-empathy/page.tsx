@@ -10,6 +10,7 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
+import { string } from "zod";
 
 type ImageFolder = {
   image1: string;
@@ -113,7 +114,7 @@ const Week2Game5Page = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -123,14 +124,14 @@ const Week2Game5Page = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +187,7 @@ const Week2Game5Page = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -222,31 +223,32 @@ const Week2Game5Page = () => {
     }
     setIsCorrect(null);
 
-    const imageArray = Object.values(allData[round].imageFolder);
-    let shuffledCurrent = shuffleArray(imageArray);
-
-    setCurrent((prev) => ({
+    setCurrent((prev: Question | undefined) => ({
       ...allData[round],
-      imageFolder: {
-        image1: shuffledCurrent[0],
-        image2: shuffledCurrent[1],
-        image3: shuffledCurrent[2],
-        image4: shuffledCurrent[3],
-        image5: shuffledCurrent[4],
-      },
+      imageFolder: shuffleObjectProperties(allData[round].imageFolder),
     }));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
-  const shuffleArray = (array: string[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+  const shuffleObjectProperties = (obj: ImageFolder): ImageFolder => {
+    const keys = Object.keys(obj);
+    const shuffledKeys = keys.sort(() => Math.random() - 0.5);
+    const shuffledObject: ImageFolder = {
+      image1: "",
+      image2: "",
+      image3: "",
+      image4: "",
+      image5: "",
+    };
+    shuffledKeys.forEach((key, index) => {
+      shuffledObject[key as keyof ImageFolder] =
+        obj[keys[index] as keyof ImageFolder];
+    });
+    return shuffledObject;
   };
 
   return (
-
     <div>
       {isFinished ? (
         <p>Finished</p>
@@ -276,7 +278,7 @@ const Week2Game5Page = () => {
             <Image
               src={`affective-emphaty/${current?.difficulty}/${current?.index}/${current?.imageFolder.image4}`}
               loader={imageLoader}
-              alt='image3'
+              alt='image4'
               width={200}
               height={200}
               className='mx-2 rounded-md'
@@ -305,11 +307,8 @@ const Week2Game5Page = () => {
           </div>
         </div>
       )}
-
     </div>
   );
-
- 
 };
 
 export default Week2Game5Page;

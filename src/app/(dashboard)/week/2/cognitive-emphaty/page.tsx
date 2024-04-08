@@ -45,7 +45,7 @@ const WeekTwoGameFourPage = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -55,19 +55,19 @@ const WeekTwoGameFourPage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -158,7 +158,7 @@ const WeekTwoGameFourPage = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/week/2/cognitive-emphaty/1' />
+        <FinishScreen url='/week/2/affective-empathy' />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
