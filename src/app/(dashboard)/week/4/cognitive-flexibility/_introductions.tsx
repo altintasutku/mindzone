@@ -1,7 +1,13 @@
 import React from "react";
 
 const WeekFourGameTwoIntroductions = () => {
-  return <div>WeekFourGameTwoIntroductions</div>;
+  return (
+    <p>
+      Karşınıza çıkan fotoğrafı alttaki 4 fotoğraftan biri ile eşleştirmeniz
+      beklenmektedir. Eşleştirme kuralını kendiniz bulmanız gerekiyor ve kural
+      belli aralıklarla değişiyor. Hadi başlayalım!
+    </p>
+  );
 };
 
 export default WeekFourGameTwoIntroductions;
