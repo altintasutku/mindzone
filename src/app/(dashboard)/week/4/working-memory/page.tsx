@@ -10,7 +10,6 @@ import { EyeIcon } from "lucide-react";
 import { data, GameImage } from "@/assets/mockdata/weekGames/week4game1data";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
