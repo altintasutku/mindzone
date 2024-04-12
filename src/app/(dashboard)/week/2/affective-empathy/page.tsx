@@ -11,19 +11,20 @@ import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { string } from "zod";
+import { all } from "axios";
 
-type ImageFolder = {
-  image1: string;
-  image2: string;
-  image3: string;
-  image4: string;
-  image5: string;
-};
+// type ImageFolder = {
+//   image1: string;
+//   image2: string;
+//   image3: string;
+//   image4: string;
+//   image5: string;
+// };
 
 type Question = {
   difficulty: string;
   index: number;
-  imageFolder: ImageFolder;
+  imageFolder: Array<string>;
 };
 
 const diffiulties = {
@@ -37,39 +38,21 @@ const allData: Question[] = [
     return {
       difficulty: "difficulty1",
       index: index + 1,
-      imageFolder: {
-        image1: "1",
-        image2: "2",
-        image3: "3",
-        image4: "main",
-        image5: "true",
-      },
+      imageFolder: ["1", "2", "3", "main", "true"],
     };
   }),
   ...Array.from({ length: diffiulties.medium }).map((_, index) => {
     return {
       difficulty: "difficulty2",
       index: index + 1,
-      imageFolder: {
-        image1: "1",
-        image2: "2",
-        image3: "3",
-        image4: "main",
-        image5: "true",
-      },
+      imageFolder: ["1", "2", "3", "main", "true"],
     };
   }),
   ...Array.from({ length: diffiulties.hard }).map((_, index) => {
     return {
       difficulty: "difficulty3",
       index: index + 1,
-      imageFolder: {
-        image1: "1",
-        image2: "2",
-        image3: "3",
-        image4: "main",
-        image5: "true",
-      },
+      imageFolder: ["1", "2", "3", "main", "true"],
     };
   }),
 ];
@@ -225,28 +208,11 @@ const Week2Game5Page = () => {
 
     setCurrent((prev: Question | undefined) => ({
       ...allData[round],
-      imageFolder: shuffleObjectProperties(allData[round].imageFolder),
+      imageFolder: allData[round].imageFolder.sort(() => Math.random() - 0.5),
     }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
-
-  const shuffleObjectProperties = (obj: ImageFolder): ImageFolder => {
-    const keys = Object.keys(obj);
-    const shuffledKeys = keys.sort(() => Math.random() - 0.5);
-    const shuffledObject: ImageFolder = {
-      image1: "",
-      image2: "",
-      image3: "",
-      image4: "",
-      image5: "",
-    };
-    shuffledKeys.forEach((key, index) => {
-      shuffledObject[key as keyof ImageFolder] =
-        obj[keys[index] as keyof ImageFolder];
-    });
-    return shuffledObject;
-  };
 
   return (
     <div>
@@ -276,7 +242,9 @@ const Week2Game5Page = () => {
         <div className='flex flex-col justify-center items-center '>
           <div>
             <Image
-              src={`affective-emphaty/${current?.difficulty}/${current?.index}/${current?.imageFolder.image4}`}
+              src={`affective-emphaty/${current?.difficulty}/${
+                current?.index
+              }/${current?.imageFolder.filter((item) => item === "main")}`}
               loader={imageLoader}
               alt='image4'
               width={200}
@@ -287,7 +255,7 @@ const Week2Game5Page = () => {
           <div className='flex flex-row flex-wrap my-5'>
             {current?.imageFolder &&
               Object.entries(current.imageFolder).map(([key, image], index) => {
-                if (key !== "image4") {
+                if (image !== "main") {
                   return (
                     <Image
                       key={index}
