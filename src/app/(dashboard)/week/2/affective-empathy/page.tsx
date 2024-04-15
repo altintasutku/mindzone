@@ -12,6 +12,7 @@ import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { string } from "zod";
 import { all } from "axios";
+import FinishScreen from "@/components/game/FinishScreen";
 
 // type ImageFolder = {
 //   image1: string;
@@ -217,7 +218,7 @@ const Week2Game5Page = () => {
   return (
     <div>
       {isFinished ? (
-        <p>Finished</p>
+        <FinishScreen url="/week/4"/>
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
@@ -252,7 +253,7 @@ const Week2Game5Page = () => {
               className='mx-2 rounded-md'
             />
           </div>
-          <div className='flex flex-row flex-wrap my-5'>
+          <div className='my-5 grid grid-cols-2 md:grid-cols-3 gap-3'>
             {current?.imageFolder &&
               Object.entries(current.imageFolder).map(([key, image], index) => {
                 if (image !== "main") {
