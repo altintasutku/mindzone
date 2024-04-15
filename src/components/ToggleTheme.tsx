@@ -15,6 +15,11 @@ import {
 export default function ToggleTheme({ className }: { className?: string }) {
   const { setTheme } = useTheme();
 
+  const changeTheme = (string: "light" | "dark" | "system") => {
+    setTheme(string);
+    window.location.reload();
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className={className}>
@@ -29,13 +34,13 @@ export default function ToggleTheme({ className }: { className?: string }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white text-black">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => changeTheme("light")}>
           Aydınlık
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => changeTheme("dark")}>
           Karanlık
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => changeTheme("system")}>
           Otomatik / Cihaz
         </DropdownMenuItem>
       </DropdownMenuContent>
