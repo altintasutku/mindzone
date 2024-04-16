@@ -25,7 +25,7 @@ const WeekTwoGameFourPage = () => {
     totalErrorCount: 0,
     totalAccuracy: 0,
     reactionTime: 0,
-    step: 8,
+    step: 9,
     group: "W1",
   });
 
@@ -72,9 +72,9 @@ const WeekTwoGameFourPage = () => {
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
 
-      await sendWeekData(data, session.data.user.accessToken);
+      sendWeekData(data, session.data.user.accessToken);
 
-      await updateUser({
+      updateUser({
         accessToken: session.data.user.accessToken,
         user: {
           ...user,
