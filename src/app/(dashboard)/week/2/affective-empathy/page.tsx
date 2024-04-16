@@ -113,7 +113,7 @@ const Week2Game5Page = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -123,14 +123,14 @@ const Week2Game5Page = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,9 +140,9 @@ const Week2Game5Page = () => {
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
 
-      await sendWeekData(data, session.data.user.accessToken);
+      sendWeekData(data, session.data.user.accessToken);
 
-      await updateUser({
+      updateUser({
         accessToken: session.data.user.accessToken,
         user: {
           ...user,
@@ -186,7 +186,7 @@ const Week2Game5Page = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -246,7 +246,6 @@ const Week2Game5Page = () => {
   };
 
   return (
-
     <div>
       {isFinished ? (
         <p>Finished</p>
@@ -254,16 +253,16 @@ const Week2Game5Page = () => {
         <div>
           <WeekTwoGameFourIntroductions />
 
-          <div className='flex justify-center items-center mt-5'>
+          <div className="flex justify-center items-center mt-5">
             <Button onClick={handleNext}>Devam</Button>
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className='flex justify-center text-3xl text-green-600'>Doğru</div>
+        <div className="flex justify-center text-3xl text-green-600">Doğru</div>
       ) : isCorrect === false ? (
-        <div className='flex justify-center text-3xl text-red-600'>Yanlış</div>
+        <div className="flex justify-center text-3xl text-red-600">Yanlış</div>
       ) : isModeEmotion === true ? (
-        <div className=' flex flex-col items-center'>
+        <div className=" flex flex-col items-center">
           <p>
             Ekranda her soru için bir yüz fotoğrafı göreceksiniz. Sizlerden bu
             fotoğraf aynı duygu olan kişiyle eşleştirmenizi istiyoruz.
@@ -271,18 +270,18 @@ const Week2Game5Page = () => {
           <Button onClick={() => setIsModeEmotion(false)}>Devam</Button>
         </div>
       ) : (
-        <div className='flex flex-col justify-center items-center '>
+        <div className="flex flex-col justify-center items-center ">
           <div>
             <Image
               src={`affective-emphaty/${current?.difficulty}/${current?.index}/${current?.imageFolder.image4}`}
               loader={imageLoader}
-              alt='image3'
+              alt="image3"
               width={200}
               height={200}
-              className='mx-2 rounded-md'
+              className="mx-2 rounded-md"
             />
           </div>
-          <div className='flex flex-row flex-wrap my-5'>
+          <div className="flex flex-row flex-wrap my-5">
             {current?.imageFolder &&
               Object.entries(current.imageFolder).map(([key, image], index) => {
                 if (key !== "image4") {
@@ -294,7 +293,7 @@ const Week2Game5Page = () => {
                       alt={`image${index + 1}`}
                       width={150}
                       height={150}
-                      className='rounded-md mx-1'
+                      className="rounded-md mx-1"
                       onClick={() => handleCheck(image)}
                     />
                   );
@@ -305,11 +304,8 @@ const Week2Game5Page = () => {
           </div>
         </div>
       )}
-
     </div>
   );
-
- 
 };
 
 export default Week2Game5Page;

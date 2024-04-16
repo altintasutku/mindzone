@@ -92,9 +92,9 @@ const WorkingMemory = () => {
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
 
-      await sendWeekData(data, session.data.user.accessToken);
+      sendWeekData(data, session.data.user.accessToken);
 
-      await updateUser({
+      updateUser({
         accessToken: session.data.user.accessToken,
         user: {
           ...user,
