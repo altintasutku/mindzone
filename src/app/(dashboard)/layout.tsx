@@ -26,6 +26,7 @@ export default function DashboardLayout({ children }: Props) {
         });
       }catch(e){
         await signOut();
+        router.push("/");
         return null;
       }
     },
