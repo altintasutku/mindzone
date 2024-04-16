@@ -45,7 +45,7 @@ const WeekTwoGameFourPage = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -55,19 +55,19 @@ const WeekTwoGameFourPage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
       if (!session.data || !user) return;
@@ -158,24 +158,24 @@ const WeekTwoGameFourPage = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/week/2/affective-emphaty' />
+        <FinishScreen url="/week/2/affective-empathy" />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
 
-          <div className='flex justify-center items-center mt-5'>
+          <div className="flex justify-center items-center mt-5">
             <Button onClick={handleNext}>Devam</Button>
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className='flex justify-center items-center text-3xl text-green-600'>
+        <div className="flex justify-center items-center text-3xl text-green-600">
           Tebrikler Doğru Cevap
         </div>
       ) : isCorrect === false ? (
-        <div className='flex flex-col h-48 justify-center items-center'>
-          <p className='text-lg'>{weekTwoGame4Data[round - 1].ifWrong}</p>
+        <div className="flex flex-col justify-center items-center">
+          <p className="text-lg">{weekTwoGame4Data[round - 1].ifWrong}</p>
           <Button
-            className='my-5 bg-red-400 hover:bg-red-950'
+            className="my-5 bg-red-400 hover:bg-red-950"
             onClick={handleNext}
           >
             Devam
@@ -184,21 +184,22 @@ const WeekTwoGameFourPage = () => {
       ) : (
         <div>
           <div>
-            <p className='lg:mx-10 sm:mx-0 font-bold'>
+            <p className="lg:mx-10 sm:mx-0 font-bold">
               {weekTwoGame4Data[round - 1].question}
             </p>
-            <div className=' flex flex-col md:flex-row flex-wrap my-10 justify-center'>
+            <div className=" flex flex-col md:flex-row flex-wrap my-10 justify-center">
               {weekTwoGame4Data[round - 1].options.map((option, index) => (
-                <div className='xlg:mx-10 lg:mx-4 sm:mx-0 my-2 ' key={index}>
-                  <Button
+                <div className="xlg:mx-10 lg:mx-4 sm:mx-0 my-2 " key={index}>
+                  <div
                     onClick={() => {
                       handleCheck(option);
                     }}
-                    className={"text-wrap"}
-                    variant={"outline"}
+                    className={
+                      "text-wrap border-[0.5px] border-slate-200 rounded cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-800 transition-colors min-h-10 flex items-center font-semibold p-0 sm:p-4"
+                    }
                   >
                     {option}
-                  </Button>
+                  </div>
                 </div>
               ))}
             </div>

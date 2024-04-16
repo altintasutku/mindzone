@@ -10,19 +10,22 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
+import { string } from "zod";
+import { all } from "axios";
+import FinishScreen from "@/components/game/FinishScreen";
 
-type ImageFolder = {
-  image1: string;
-  image2: string;
-  image3: string;
-  image4: string;
-  image5: string;
-};
+// type ImageFolder = {
+//   image1: string;
+//   image2: string;
+//   image3: string;
+//   image4: string;
+//   image5: string;
+// };
 
 type Question = {
   difficulty: string;
   index: number;
-  imageFolder: ImageFolder;
+  imageFolder: Array<string>;
 };
 
 const diffiulties = {
@@ -36,39 +39,21 @@ const allData: Question[] = [
     return {
       difficulty: "difficulty1",
       index: index + 1,
-      imageFolder: {
-        image1: "1",
-        image2: "2",
-        image3: "3",
-        image4: "main",
-        image5: "true",
-      },
+      imageFolder: ["1", "2", "3", "main", "true"],
     };
   }),
   ...Array.from({ length: diffiulties.medium }).map((_, index) => {
     return {
       difficulty: "difficulty2",
       index: index + 1,
-      imageFolder: {
-        image1: "1",
-        image2: "2",
-        image3: "3",
-        image4: "main",
-        image5: "true",
-      },
+      imageFolder: ["1", "2", "3", "main", "true"],
     };
   }),
   ...Array.from({ length: diffiulties.hard }).map((_, index) => {
     return {
       difficulty: "difficulty3",
       index: index + 1,
-      imageFolder: {
-        image1: "1",
-        image2: "2",
-        image3: "3",
-        image4: "main",
-        image5: "true",
-      },
+      imageFolder: ["1", "2", "3", "main", "true"],
     };
   }),
 ];
@@ -222,33 +207,18 @@ const Week2Game5Page = () => {
     }
     setIsCorrect(null);
 
-    const imageArray = Object.values(allData[round].imageFolder);
-    let shuffledCurrent = shuffleArray(imageArray);
-
-    setCurrent((prev) => ({
+    setCurrent((prev: Question | undefined) => ({
       ...allData[round],
-      imageFolder: {
-        image1: shuffledCurrent[0],
-        image2: shuffledCurrent[1],
-        image3: shuffledCurrent[2],
-        image4: shuffledCurrent[3],
-        image5: shuffledCurrent[4],
-      },
+      imageFolder: allData[round].imageFolder.sort(() => Math.random() - 0.5),
     }));
-  }, [round]);
 
-  const shuffleArray = (array: string[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round]);
 
   return (
     <div>
       {isFinished ? (
-        <p>Finished</p>
+        <FinishScreen url="/week/4"/>
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
@@ -284,7 +254,7 @@ const Week2Game5Page = () => {
           <div className="flex flex-row flex-wrap my-5">
             {current?.imageFolder &&
               Object.entries(current.imageFolder).map(([key, image], index) => {
-                if (key !== "image4") {
+                if (image !== "main") {
                   return (
                     <Image
                       key={index}
