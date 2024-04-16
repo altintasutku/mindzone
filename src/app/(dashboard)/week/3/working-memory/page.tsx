@@ -211,6 +211,7 @@ const WeekThreeGameOnePage = () => {
   }, [shownImages]);
 
   const handleClick = (index: number) => {
+    if(shownImages.findIndex((item) => item === false) === -1) return;
     setShownImages((prev) =>
       prev.map((item, i) => (i === index ? !prev[i] : item)),
     );

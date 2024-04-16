@@ -253,7 +253,7 @@ const Week2Game5Page = () => {
               className='mx-2 rounded-md'
             />
           </div>
-          <div className='my-5 grid grid-cols-2 md:grid-cols-3 gap-3'>
+          <div className='my-5 grid grid-cols-2 md:grid-cols-4 gap-3'>
             {current?.imageFolder &&
               Object.entries(current.imageFolder).map(([key, image], index) => {
                 if (image !== "main") {
