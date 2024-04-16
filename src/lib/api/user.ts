@@ -55,7 +55,11 @@ export const getUser = async ({
     throw new Error("User not found");
   }
 
-  const user = userValidator.parse(data);
+  const {success} = userValidator.safeParse(data);
 
-  return user;
+  if (!success) {
+    throw new Error("User not found");
+  }
+
+  return userValidator.parse(data);
 };
