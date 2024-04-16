@@ -52,8 +52,12 @@ export const useUserStore = create<UserState>()((set) => ({
       userId: user.id,
     });
 
-    const userSchema = userValidator.parse(data);
+    const {success} = userValidator.safeParse(data);
 
-    set(() => ({ user: userSchema }));
+    if (!success) {
+      throw new Error("Error updating user");
+    }
+
+    set(() => ({ user: data }));
   },
 }));

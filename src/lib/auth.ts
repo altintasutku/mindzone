@@ -22,6 +22,12 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         try {
+          const {success} = loginValidator.safeParse(credentials);
+
+          if (!success) {
+            return null;
+          }
+
           const { email, password } = loginValidator.parse(credentials);
 
           const { data } = await axios.post(
