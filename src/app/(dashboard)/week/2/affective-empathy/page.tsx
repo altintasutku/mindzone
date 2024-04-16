@@ -218,7 +218,7 @@ const Week2Game5Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/week/4"/>
+        <FinishScreen url='/week/4' />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
