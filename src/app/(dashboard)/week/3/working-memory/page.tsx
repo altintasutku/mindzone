@@ -200,10 +200,10 @@ const WeekThreeGameOnePage = () => {
       }, 1000);
     }
 
-    const secTimeout = (timeout = setTimeout(() => {
+    const secTimeout = setTimeout(() => {
       setIsCorrect(null);
       handleNextRound();
-    }, 1500));
+    }, 1500);
 
     return () => {
       clearTimeout(timeout);
