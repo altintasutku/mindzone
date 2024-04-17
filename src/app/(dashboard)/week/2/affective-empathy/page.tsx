@@ -51,6 +51,8 @@ const imageLoader = ({ src }: { src: string }): string => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/${src}.JPG`;
 };
 
+const TOTAL_ROUND = allData.length;
+
 const Week2Game5Page = () => {
   const [round, setRound] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
@@ -136,14 +138,6 @@ const Week2Game5Page = () => {
   }, [isFinished]);
 
   const handleNext = () => {
-    if (round >= allData.length) {
-      setStats((prev) => ({
-        ...prev,
-        reactionTime: timer,
-      }));
-      setIsFinished(true);
-      return;
-    }
 
     setRound((prev) => prev + 1);
 
@@ -179,11 +173,20 @@ const Week2Game5Page = () => {
     if (round === 21) {
       setIsModeEmotion(true);
     }
+    if (round >= TOTAL_ROUND) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+      setIsFinished(true);
+      return;
+    }
+
     setIsCorrect(null);
 
     setCurrent((prev: Question | undefined) => ({
       ...allData[round],
-      imageFolder: allData[round].imageFolder.sort(() => Math.random() - 0.5),
+      imageFolder: (allData[round].imageFolder || []).sort(() => Math.random() - 0.5),
     }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
