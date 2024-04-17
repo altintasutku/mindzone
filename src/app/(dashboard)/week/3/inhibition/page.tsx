@@ -19,6 +19,10 @@ const imageLoader = ({ src }: { src: string }): string => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/inhibition/${src}.jpg`;
 };
 
+const REACTION_TIME = 1000;
+
+const TOTAL_ROUNDS = (15 * 60) / (REACTION_TIME / 1000 + 0.5);
+
 const positiveWords = [
   "SEVİNÇ",
   "HUZUR",
@@ -142,7 +146,7 @@ const WeekThreeGameThree = () => {
   });
 
   const handleNext = () => {
-    if (round >= 10) {
+    if (round >= TOTAL_ROUNDS) {
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import IntroductionCF from "../working-memory/_introductions";
 import { Button } from "@/components/ui/button";
 import WeekTwoGameFourIntroductions from "./_introductions";
 import { useMutation } from "@tanstack/react-query";
@@ -10,22 +9,12 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { updateUser } from "@/lib/api/user";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import { string } from "zod";
-import { all } from "axios";
 import FinishScreen from "@/components/game/FinishScreen";
-
-// type ImageFolder = {
-//   image1: string;
-//   image2: string;
-//   image3: string;
-//   image4: string;
-//   image5: string;
-// };
 
 type Question = {
   difficulty: string;
   index: number;
-  imageFolder: Array<string>;
+  imageFolder: string[];
 };
 
 const diffiulties = {
@@ -62,10 +51,11 @@ const imageLoader = ({ src }: { src: string }): string => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/${src}.JPG`;
 };
 
+const TOTAL_ROUND = allData.length;
+
 const Week2Game5Page = () => {
   const [round, setRound] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
-  const [gameMode, setGameMode] = useState("");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [current, setCurrent] = useState<Question>();
   const [isModeEmotion, setIsModeEmotion] = useState<boolean | null>(null);
@@ -105,18 +95,10 @@ const Week2Game5Page = () => {
   };
 
   useEffect(() => {
-    document.addEventListener(
-      "visibilitychange",
-      handleVisibilityChange,
-      false
-    );
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibilityChange,
-        false
-      );
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -151,20 +133,12 @@ const Week2Game5Page = () => {
   useEffect(() => {
     if (isFinished) {
       mutate(stats);
-      clearInterval(timeout!);
-      return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [round, isFinished]);
+  }, [isFinished]);
 
   const handleNext = () => {
-    if (round >= allData.length) {
-      setStats((prev) => ({
-        ...prev,
-        reactionTime: timer,
-      }));
-      setIsFinished(true);
-    }
+
     setRound((prev) => prev + 1);
 
     if (!timeout) {
@@ -183,33 +157,36 @@ const Week2Game5Page = () => {
         ...prev,
         totalAccuracy: prev.totalAccuracy + 1,
       }));
-      setTimeout(() => {
-        handleNext();
-      }, 1000);
     } else {
       setIsCorrect(false);
       setStats((prev) => ({
         ...prev,
         totalErrorCount: prev.totalErrorCount + 1,
       }));
-      setTimeout(() => {
-        handleNext();
-      }, 1000);
     }
+    setTimeout(() => {
+      handleNext();
+    }, 1000);
   };
 
   useEffect(() => {
-    if (round === allData.length) {
-      setIsFinished(true);
-    }
     if (round === 21) {
       setIsModeEmotion(true);
     }
+    if (round >= TOTAL_ROUND) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+      setIsFinished(true);
+      return;
+    }
+
     setIsCorrect(null);
 
     setCurrent((prev: Question | undefined) => ({
       ...allData[round],
-      imageFolder: allData[round].imageFolder.sort(() => Math.random() - 0.5),
+      imageFolder: (allData[round].imageFolder || []).sort(() => Math.random() - 0.5),
     }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -218,21 +195,21 @@ const Week2Game5Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/week/4"/>
+        <FinishScreen url="/week/4" />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
 
-          <div className='flex justify-center items-center mt-5'>
+          <div className="flex justify-center items-center mt-5">
             <Button onClick={handleNext}>Devam</Button>
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className='flex justify-center text-3xl text-green-600'>Doğru</div>
+        <div className="flex justify-center text-3xl text-green-600">Doğru</div>
       ) : isCorrect === false ? (
-        <div className='flex justify-center text-3xl text-red-600'>Yanlış</div>
+        <div className="flex justify-center text-3xl text-red-600">Yanlış</div>
       ) : isModeEmotion === true ? (
-        <div className=' flex flex-col items-center'>
+        <div className=" flex flex-col items-center">
           <p>
             Ekranda her soru için bir yüz fotoğrafı göreceksiniz. Sizlerden bu
             fotoğraf aynı duygu olan kişiyle eşleştirmenizi istiyoruz.
@@ -240,22 +217,23 @@ const Week2Game5Page = () => {
           <Button onClick={() => setIsModeEmotion(false)}>Devam</Button>
         </div>
       ) : (
-        <div className='flex flex-col justify-center items-center '>
+        <div className="flex flex-col justify-center items-center ">
           <div>
             <Image
               src={`affective-emphaty/${current?.difficulty}/${
                 current?.index
               }/${current?.imageFolder.filter((item) => item === "main")}`}
               loader={imageLoader}
-              alt='image4'
+              alt="image4"
               width={200}
               height={200}
-              className='mx-2 rounded-md'
+              className="mx-2 rounded-md"
             />
           </div>
-          <div className='my-5 grid grid-cols-2 md:grid-cols-4 gap-3'>
-            {current?.imageFolder &&
-              Object.entries(current.imageFolder).map(([key, image], index) => {
+          <div className="my-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+            {current &&
+              current.imageFolder &&
+              current.imageFolder.map((image, index) => {
                 if (image !== "main") {
                   return (
                     <Image
@@ -265,7 +243,7 @@ const Week2Game5Page = () => {
                       alt={`image${index + 1}`}
                       width={150}
                       height={150}
-                      className='rounded-md mx-1'
+                      className="rounded-md mx-1"
                       onClick={() => handleCheck(image)}
                     />
                   );
