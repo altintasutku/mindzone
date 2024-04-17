@@ -138,7 +138,6 @@ const Week2Game5Page = () => {
   }, [isFinished]);
 
   const handleNext = () => {
-
     setRound((prev) => prev + 1);
 
     if (!timeout) {
@@ -170,7 +169,7 @@ const Week2Game5Page = () => {
   };
 
   useEffect(() => {
-    if (round === 21) {
+    if (round === 20) {
       setIsModeEmotion(true);
     }
     if (round >= TOTAL_ROUND) {
@@ -186,7 +185,9 @@ const Week2Game5Page = () => {
 
     setCurrent((prev: Question | undefined) => ({
       ...allData[round],
-      imageFolder: (allData[round].imageFolder || []).sort(() => Math.random() - 0.5),
+      imageFolder: (allData[round].imageFolder || []).sort(
+        () => Math.random() - 0.5
+      ),
     }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,21 +196,21 @@ const Week2Game5Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/week/4" />
+        <FinishScreen url='/week/4' />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />
 
-          <div className="flex justify-center items-center mt-5">
+          <div className='flex justify-center items-center mt-5'>
             <Button onClick={handleNext}>Devam</Button>
           </div>
         </div>
       ) : isCorrect === true ? (
-        <div className="flex justify-center text-3xl text-green-600">Doğru</div>
+        <div className='flex justify-center text-3xl text-green-600'>Doğru</div>
       ) : isCorrect === false ? (
-        <div className="flex justify-center text-3xl text-red-600">Yanlış</div>
+        <div className='flex justify-center text-3xl text-red-600'>Yanlış</div>
       ) : isModeEmotion === true ? (
-        <div className=" flex flex-col items-center">
+        <div className=' flex flex-col items-center'>
           <p>
             Ekranda her soru için bir yüz fotoğrafı göreceksiniz. Sizlerden bu
             fotoğraf aynı duygu olan kişiyle eşleştirmenizi istiyoruz.
@@ -217,20 +218,20 @@ const Week2Game5Page = () => {
           <Button onClick={() => setIsModeEmotion(false)}>Devam</Button>
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center ">
+        <div className='flex flex-col justify-center items-center '>
           <div>
             <Image
               src={`affective-emphaty/${current?.difficulty}/${
                 current?.index
               }/${current?.imageFolder.filter((item) => item === "main")}`}
               loader={imageLoader}
-              alt="image4"
+              alt='image4'
               width={200}
               height={200}
-              className="mx-2 rounded-md"
+              className='mx-2 rounded-md'
             />
           </div>
-          <div className="my-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className='my-5 grid grid-cols-2 md:grid-cols-4 gap-3'>
             {current &&
               current.imageFolder &&
               current.imageFolder.map((image, index) => {
@@ -243,7 +244,7 @@ const Week2Game5Page = () => {
                       alt={`image${index + 1}`}
                       width={150}
                       height={150}
-                      className="rounded-md mx-1"
+                      className='rounded-md mx-1'
                       onClick={() => handleCheck(image)}
                     />
                   );
