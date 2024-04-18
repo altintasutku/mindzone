@@ -26,12 +26,11 @@ const DURATION = 600;
 const Page = () => {
   const [round, setRound] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState<TestFiveQuestion>();
-
   const [isFinished, setIsFinished] = useState(false);
-
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-
   const [isTutorial, setIsTutorial] = useState(true);
+
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [stats, setStats] = useState<{
     totalWrongs: number;
@@ -83,6 +82,10 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
+  useEffect(() => {
+    setCurrentQuestion(performanceTestFiveQuestions[round - 1]);
+  }, [round])
+  
   const handleNext = () => {
     if (round >= TOTAL_ROUNDS) {
       setStats((prev) => ({
@@ -92,6 +95,7 @@ const Page = () => {
       setIsFinished(true);
       return;
     }
+    setIsLoaded(false);
     setRound((prev) => prev + 1);
     if (!timeout) {
       timeout = setInterval(() => {
@@ -116,7 +120,6 @@ const Page = () => {
         totalWrongs: prev.totalWrongs + 1,
       }));
     }
-    setCurrentQuestion(performanceTestFiveQuestions[round - 1]);
 
     setTimeout(() => {
       handleNext();
@@ -174,7 +177,9 @@ const Page = () => {
           </Button>
         </div>
       ) : currentQuestion ? (
-        <div className='grid grid-cols-4'>
+        <div className={cn('grid grid-cols-4',{
+          'opacity-0': !isLoaded
+        })}>
           <AnswerButton
             isCorrect={isCorrect}
             handleAnswer={handleAnswer}
@@ -208,6 +213,7 @@ const Page = () => {
               loader={loader}
               src={currentQuestion.path}
               alt='testFiveImage'
+              onLoad={() => setIsLoaded(true)}
               className={cn("w-full rounded-md", {
                 "opacity-0": isCorrect !== null,
               })}
