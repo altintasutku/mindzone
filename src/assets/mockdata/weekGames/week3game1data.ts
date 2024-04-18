@@ -17,7 +17,7 @@ const lengthOfData: {
   };
 } = {
   discusting: {
-    man: 127,
+    man: 125,
     woman: 123,
   },
   angry: {
