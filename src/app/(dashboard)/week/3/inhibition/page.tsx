@@ -16,10 +16,10 @@ import { cn } from "@/lib/utils";
 const mods = { angry: 10, fear: 10, sad: 10, happy: 30 };
 
 const imageLoader = ({ src }: { src: string }): string => {
-  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/inhibition/${src}.jpg`;
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/inhibition/${src}.JPG`;
 };
 
-const REACTION_TIME = 1000;
+const REACTION_TIME = 2000;
 
 const TOTAL_ROUNDS = (15 * 60) / (REACTION_TIME / 1000 + 0.5);
 
@@ -103,6 +103,7 @@ const WeekThreeGameThree = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [isImage, setIsImage] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const session = useSession();
   const user = useUserStore((state) => state.user);
@@ -115,6 +116,29 @@ const WeekThreeGameThree = () => {
     step: 13,
     group: "W1",
   });
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      location.reload();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -166,6 +190,10 @@ const WeekThreeGameThree = () => {
   };
 
   const handleCheck = (data: DataType) => {
+    if (!isImage) {
+      return;
+    }
+
     if (data.type === "happy") {
       setIsCorrect(true);
       setStats((prev) => ({
@@ -193,36 +221,51 @@ const WeekThreeGameThree = () => {
     if (round === 0) {
       return;
     }
-    setIsCorrect(null);
-    setTimeout(
-      () => {
-        handleNext();
-      },
-      isImage ? 1000 : 2000
-    );
+    
+    setImageLoaded(false);
+    if (isImage) {
+      setIsCorrect(null);
+    }
+
+    if (!isImage) {
+      setMyTimeout(setTimeout(handleNext, 1400));
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+    setTimeout(handleNext, REACTION_TIME);
+  };
 
   return (
     <div>
       {isFinished ? (
-        <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/3/inhibition' />
+        <div className="flex justify-center items-center">
+          <FinishScreen url="/week/3/inhibition" />
         </div>
       ) : round === 0 ? (
-        <div className='flex flex-col'>
+        <div className="flex flex-col">
           <IntroductionWeekThreeGamethree />
-          <Separator className='my-5' />
+          <Separator className="my-5" />
 
-          <div className='flex justify-center my-5'>
+          <div className="flex justify-center my-5">
             <Button onClick={handleNext}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className='flex flex-col items-center h-96 justify-center'>
+        <div className="flex flex-col items-center h-96 justify-center">
           {isImage ? (
-            <div className='flex justify-center items-center h-[250px]'>
-              <div className='mt-6 absolute text-black text-xl font-bold'>
+            <div className="flex justify-center items-center h-[250px]">
+              <div
+                className={cn(
+                  "mt-6 absolute text-black dark:text-white text-xl font-bold opacity-0",
+                  {
+                    "opacity-100": imageLoaded,
+                  }
+                )}
+              >
                 {allData[round - 1].word}
               </div>
               <Image
@@ -230,32 +273,29 @@ const WeekThreeGameThree = () => {
                 height={200}
                 loader={imageLoader}
                 src={`${allData[round - 1].type}/${allData[round - 1].index}`}
-                alt='emotion image'
+                alt="emotion image"
+                onLoad={handleImageLoad}
+                className={imageLoaded ? "opacity-100" : "opacity-0"}
               />
             </div>
           ) : (
-            <div className='h-[250px]'></div>
+            <div className="h-[250px]"></div>
           )}
-          <div className='flex justify-center items-center my-6 w-20'>
+          <div className="flex justify-center items-center my-6 w-20">
             <Button
               className={cn(
-                "",
+                "px-10",
                 isCorrect
                   ? "bg-green-500 hover:bg-green-500"
                   : isCorrect === false
                   ? "bg-red-500 hover:bg-red-500"
-                  : ""
+                  : null
               )}
-              variant={"outline"}
               onClick={() => {
                 handleCheck(allData[round - 1]);
               }}
             >
-              {isCorrect === null
-                ? "Mutlu mu?"
-                : isCorrect
-                ? "Doğru"
-                : "Yanlış"}
+              {isCorrect === null ? "X" : isCorrect ? "Doğru" : "Yanlış"}
             </Button>
           </div>
         </div>
