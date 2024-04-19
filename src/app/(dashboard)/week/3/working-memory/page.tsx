@@ -21,6 +21,8 @@ const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/working_memory/${src}.jpg`;
 };
 
+const TOTAL_ROUNDS = 100;
+
 const WeekThreeGameOnePage = () => {
   const [level, setLevel] = useState<GameImage[]>();
   const [round, setRound] = useState(0);
@@ -123,7 +125,7 @@ const WeekThreeGameOnePage = () => {
   }, [isFinished]);
 
   useEffect(() => {
-    if (round === levels.length) {
+    if (round === TOTAL_ROUNDS) {
       setStats((prev) => ({
         ...prev,
         reactionTime: timer,
@@ -136,7 +138,7 @@ const WeekThreeGameOnePage = () => {
 
     const timeout = setTimeout(() => {
       setShownImages((prev) => prev.map(() => false));
-    }, 5000);
+    }, 3000);
 
     return () => clearTimeout(timeout);
   }, [round]);
@@ -198,10 +200,10 @@ const WeekThreeGameOnePage = () => {
       }, 1000);
     }
 
-    const secTimeout = (timeout = setTimeout(() => {
+    const secTimeout = setTimeout(() => {
       setIsCorrect(null);
       handleNextRound();
-    }, 2000));
+    }, 1500);
 
     return () => {
       clearTimeout(timeout);
@@ -218,7 +220,7 @@ const WeekThreeGameOnePage = () => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       {isFinished ? (
         <div className="flex justify-center items-center">
           <FinishScreen url="/week/3/cognitive-flexibility" />
@@ -230,7 +232,7 @@ const WeekThreeGameOnePage = () => {
           <Button onClick={handleNextRound}>Başla</Button>
         </div>
       ) : level ? (
-        <div className="min-h-56 space-y-10">
+        <div className="min-h-56 space-y-10 w-full">
           {isCorrect === true ? (
             <h1 className="text-2xl font-bold text-green-500 text-center col-span-4">
               Doğru
@@ -266,7 +268,7 @@ const WeekThreeGameOnePage = () => {
           ) : null}
 
           <Progress
-            value={(round * 100) / levels.length}
+            value={(round * 100) / TOTAL_ROUNDS}
             className="col-span-4"
           />
         </div>
