@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
+import { ZodUser } from "@/lib/validators/user";
 
 enum GO_NOGO {
   GO = "GO",
@@ -39,8 +39,6 @@ const PerformanceTestPageThree = () => {
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
 
   const [isTraining, setIsTraining] = useState(true);
@@ -149,13 +147,24 @@ const PerformanceTestPageThree = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      if (!session.data || !user) {
-        throw new Error("Session not found");
+      if (!session.data) {
+        return;
       }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
+
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
         stats: { ...stats, totalAccuracy: corrects },
-        stepInfo: { step: 3, group: user.userDetails.Status },
+        stepInfo: { step: 2, group: user.userDetails.Status },
       });
 
       await updateUser({
@@ -164,18 +173,13 @@ const PerformanceTestPageThree = () => {
           ...user,
           userDetails: {
             ...user.userDetails,
-            PerformanceTaskStep: "4",
+            PerformanceTaskStep: "3",
           },
         },
       });
-
-      setUser({
-        ...user,
-        userDetails: { ...user.userDetails, PerformanceTaskStep: "4" },
-      });
     },
     onSuccess: () => {
-      router.push("/test/4");
+      router.push("/test/3");
     },
   });
 

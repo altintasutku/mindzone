@@ -17,8 +17,10 @@ import { Progress } from "@/components/ui/progress";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/hooks/useUserStore";
 import { sendQuestionData } from "@/lib/api/questions";
+import { getUser, updateUser } from "@/lib/api/user";
+import { userValidator, ZodUser } from "@/lib/validators/user";
+import { z } from "zod";
 
 const options = [
   "Kesinlikle Katılıyorum",
@@ -29,9 +31,6 @@ const options = [
 
 const QuestionTestOne = () => {
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-  const updateUser = useUserStore((state) => state.updateUser);
   const router = useRouter();
 
   if (!session) {
@@ -42,7 +41,6 @@ const QuestionTestOne = () => {
   const [scoreBoard, setScoreBoard] = React.useState<Record<string, number>>(
     {}
   );
-  const [totalScore, setTotalScore] = React.useState(0);
 
   const handleAnswer = (questionId: string, scoreIndex: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: scoreIndex }));
@@ -71,7 +69,17 @@ const QuestionTestOne = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["user", "update"],
     mutationFn: async () => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -101,14 +109,6 @@ const QuestionTestOne = () => {
             ...user.userDetails,
             Status: user.userDetails.Status === "S1" ? "PT1" : "PT2",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          Status: user.userDetails.Status === "S1" ? "PT1" : "PT2",
         },
       });
     },

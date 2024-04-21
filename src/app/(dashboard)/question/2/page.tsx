@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { sendQuestionData } from "@/lib/api/questions";
-import { updateUser } from "@/lib/api/user";
-import { useUserStore } from "@/hooks/useUserStore";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ZodUser } from "@/lib/validators/user";
 const das = ["Hiçbir Zaman", "Bazen ve ara sıra", "Oldukça sık", "Her zaman"];
 
 const iri = [
@@ -47,8 +47,6 @@ const QuestionTestTwo = () => {
     }[]
   >([]);
 
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
   const session = useSession();
 
@@ -117,7 +115,17 @@ const QuestionTestTwo = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["user", "update"],
     mutationFn: async () => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -184,8 +192,6 @@ const QuestionTestTwo = () => {
           },
         },
       });
-
-      setUser({ ...user, userDetails: { ...user.userDetails, Status: "W1" } });
     },
     onSuccess() {
       router.push("/week/1");

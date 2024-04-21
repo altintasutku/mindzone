@@ -12,8 +12,9 @@ import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
+import { ZodUser } from "@/lib/validators/user";
 
 const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
 
@@ -129,9 +130,20 @@ const Page = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      if (!session.data || !user) {
-        throw new Error("Session not found");
+      if (!session.data) {
+        return;
       }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
+
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
         stats: {

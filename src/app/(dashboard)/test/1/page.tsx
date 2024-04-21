@@ -10,8 +10,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
+import { ZodUser } from "@/lib/validators/user";
 
 const LETTERS = [
   "A",
@@ -58,9 +59,6 @@ const PerformanceTestPageTwo = () => {
 
   const [history, setHistory] = useState<string[]>([]);
 
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<{
@@ -102,14 +100,24 @@ const PerformanceTestPageTwo = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      if (!session.data || !user) {
-        throw new Error("Session not found");
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
       }
 
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
         stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
-        stepInfo: { step: 2, group: user.userDetails.Status },
+        stepInfo: { step: 1, group: user.userDetails.Status },
       });
 
       await updateUser({
@@ -118,18 +126,13 @@ const PerformanceTestPageTwo = () => {
           ...user,
           userDetails: {
             ...user.userDetails,
-            PerformanceTaskStep: "3",
+            PerformanceTaskStep: "2",
           },
         },
       });
-
-      setUser({
-        ...user,
-        userDetails: { ...user.userDetails, PerformanceTaskStep: "3" },
-      });
     },
     onSuccess: () => {
-      router.push("/test/3");
+      router.push("/test/2");
     },
   });
 

@@ -12,6 +12,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { useUserStore } from "@/hooks/useUserStore";
+import { ZodUser } from "@/lib/validators/user";
+import { getUser, updateUser } from "@/lib/api/user";
 
 const imageColors = ["red", "green", "blue", "yellow"];
 const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
@@ -58,9 +60,6 @@ const PerformanceTestOnePage = () => {
 
   const router = useRouter();
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-  const updateUser = useUserStore((state) => state.updateUser);
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
@@ -133,14 +132,24 @@ const PerformanceTestOnePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      if (!session.data || !user) {
-        throw new Error("Session not found");
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
       }
 
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
         stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
-        stepInfo: { step: 1, group: user.userDetails.Status },
+        stepInfo: { step: 3, group: user.userDetails.Status },
       });
 
       await updateUser({
@@ -149,18 +158,13 @@ const PerformanceTestOnePage = () => {
           ...user,
           userDetails: {
             ...user.userDetails,
-            PerformanceTaskStep: "2",
+            PerformanceTaskStep: "4",
           },
         },
       });
-
-      setUser({
-        ...user,
-        userDetails: { ...user.userDetails, PerformanceTaskStep: "2" },
-      });
     },
     onSuccess: () => {
-      router.push("/test/2");
+      router.push("/test/4");
     },
   });
 

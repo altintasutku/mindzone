@@ -15,6 +15,8 @@ type Props = Readonly<{
     };
 }>;
 
+export const dynamic = "force-dynamic"
+
 const DashboardPage = async ({searchParams}: Props) => {
     const session = await getAuthSession();
 
