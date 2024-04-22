@@ -11,7 +11,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { useUserStore } from "@/hooks/useUserStore";
 import { ZodUser } from "@/lib/validators/user";
 import { getUser, updateUser } from "@/lib/api/user";
 

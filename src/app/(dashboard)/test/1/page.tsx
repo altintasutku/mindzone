@@ -8,7 +8,6 @@ import { EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";

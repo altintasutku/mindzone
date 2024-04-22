@@ -15,11 +15,11 @@ const Layout = async ({children}: { children: React.ReactNode }) => {
     const pathname = header.get("next-url");
 
     if (!pathname) {
-        redirect("/dashboard");
+      redirect("/dashboard?error=system-error");
     }
   
     if (!session) {
-      redirect("/login");
+      redirect("/login?error=unauthorized");
     }
   
     let user: ZodUser;
@@ -29,7 +29,7 @@ const Layout = async ({children}: { children: React.ReactNode }) => {
         userId: session.user.id!,
       });
     } catch (e) {
-      redirect("/login");
+      redirect("/login?error=user-not-found");
     }
 
     if (!user || !user.userDetails.WeeklyStatus) {

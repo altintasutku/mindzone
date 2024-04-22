@@ -16,8 +16,8 @@ import {
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 const boxImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
@@ -41,8 +41,6 @@ const WeekOneDirectorTaskPage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [currentLevel, setCurrentLevel] = useState<Level>(game.getLevel(level));
 
@@ -94,7 +92,17 @@ const WeekOneDirectorTaskPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -108,14 +116,6 @@ const WeekOneDirectorTaskPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

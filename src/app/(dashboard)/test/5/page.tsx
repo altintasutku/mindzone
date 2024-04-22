@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 import FinishScreen from "@/components/game/FinishScreen";
 import { useSession } from "next-auth/react";
 
-import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { getUser, updateUser } from "@/lib/api/user";
@@ -48,7 +47,6 @@ const Page = () => {
 
   const session = useSession();
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {

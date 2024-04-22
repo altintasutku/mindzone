@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import WeekTwoGameFourIntroductions from "./_introductions";
 import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
-import { updateUser } from "@/lib/api/user";
-import { useUserStore } from "@/hooks/useUserStore";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
 import FinishScreen from "@/components/game/FinishScreen";
+import { ZodUser } from "@/lib/validators/user";
 
 type Question = {
   difficulty: string;
@@ -61,8 +61,6 @@ const Week2Game5Page = () => {
   const [isModeEmotion, setIsModeEmotion] = useState<boolean | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -105,7 +103,19 @@ const Week2Game5Page = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       sendWeekData(data, session.data.user.accessToken);
 
@@ -117,14 +127,6 @@ const Week2Game5Page = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -196,7 +198,7 @@ const Week2Game5Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/week/4' />
+        <FinishScreen url='/week/3' />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />

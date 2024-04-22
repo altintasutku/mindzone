@@ -9,9 +9,9 @@ import IntroductionCF from "./_intorductions";
 import { Progress } from "@/components/ui/progress";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 const ALPABET = [
   "A",
@@ -58,8 +58,6 @@ const CognitiveFlexibilityPage = () => {
     CorrectState.None
   );
 
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
   const session = useSession();
 
   const [currentItem, setCurrentItem] = useState<{
@@ -111,7 +109,20 @@ const CognitiveFlexibilityPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
+
       await sendWeekData(data, session.data.user.accessToken);
 
       await updateUser({
@@ -122,13 +133,6 @@ const CognitiveFlexibilityPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

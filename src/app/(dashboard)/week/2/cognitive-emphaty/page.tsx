@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import FinishScreen from "@/components/game/FinishScreen";
 import WeekTwoGameFourIntroductions from "./_introductions";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 const MAXROUND = weekTwoGame4Data.length - 1;
 
@@ -18,8 +18,6 @@ const WeekTwoGameFourPage = () => {
   const [isCorrect, setIsCorrect] = React.useState<boolean | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -70,7 +68,19 @@ const WeekTwoGameFourPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       sendWeekData(data, session.data.user.accessToken);
 
@@ -82,14 +92,6 @@ const WeekTwoGameFourPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

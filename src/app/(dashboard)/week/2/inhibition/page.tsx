@@ -9,9 +9,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
+import { ZodUser } from "@/lib/validators/user";
 
 const mods = { negative: 40, positive: 16 };
 
@@ -53,8 +53,6 @@ const WeekTwoGameThreePage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -90,7 +88,19 @@ const WeekTwoGameThreePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       sendWeekData(data, session.data.user.accessToken);
 
@@ -102,14 +112,6 @@ const WeekTwoGameThreePage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
