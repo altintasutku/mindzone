@@ -59,3 +59,5 @@ export const userValidator = z.object({
   updatedOn: z.string(),
   updatedBy: z.number(),
 });
+
+export type ZodUser = z.infer<typeof userValidator>;

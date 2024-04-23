@@ -7,10 +7,10 @@ import IntroductionCF from "./_introductions";
 import { selectImagesFunction } from "@/assets/mockdata/weekGames/week2WorkingMemory";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import FinishScreen from "@/components/game/FinishScreen";
+import { ZodUser } from "@/lib/validators/user";
 
 const MAXROUND = 52;
 
@@ -38,8 +38,6 @@ const WorkingMemory = () => {
   const [isRotated, setIsRotated] = useState(false);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -90,7 +88,19 @@ const WorkingMemory = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       sendWeekData(data, session.data.user.accessToken);
 
@@ -102,14 +112,6 @@ const WorkingMemory = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

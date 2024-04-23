@@ -8,9 +8,9 @@ import { Progress } from "@/components/ui/progress";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { generateImages } from "@/assets/mockdata/weekGames/week1AffectiveEmpathy";
+import { ZodUser } from "@/lib/validators/user";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
@@ -30,8 +30,6 @@ const AffectiveEmpathyPage = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -82,7 +80,19 @@ const AffectiveEmpathyPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       await sendWeekData(data, session.data.user.accessToken);
 
@@ -94,14 +104,6 @@ const AffectiveEmpathyPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

@@ -11,8 +11,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { updateUser } from "@/lib/api/user";
-import { useUserStore } from "@/hooks/useUserStore";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 type CurrentModType = {
   mod: "negative" | "notr" | "positive";
@@ -83,8 +83,6 @@ const PerformanceTestPageFour = () => {
 
   const session = useSession();
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const handleNext = () => {
     if (round === TOTAL_ROUNDS) {
@@ -145,9 +143,20 @@ const PerformanceTestPageFour = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      if (!session.data || !user) {
-        throw new Error("Session not found");
+      if (!session.data) {
+        return;
       }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
+
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
         stats: { ...stats, totalAccuracy: totalPoint },
@@ -163,11 +172,6 @@ const PerformanceTestPageFour = () => {
             PerformanceTaskStep: "5",
           },
         },
-      });
-
-      setUser({
-        ...user,
-        userDetails: { ...user.userDetails, PerformanceTaskStep: "5" },
       });
     },
     onSuccess: () => {

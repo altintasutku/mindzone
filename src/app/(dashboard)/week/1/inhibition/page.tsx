@@ -10,8 +10,8 @@ import { Progress } from "@/components/ui/progress";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 type Color = {
   name: string;
@@ -43,8 +43,6 @@ const InhibitionPage = () => {
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [currentColor, setCurrentColor] = useState<Color | null>(null);
 
@@ -95,7 +93,19 @@ const InhibitionPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       await sendWeekData(data, session.data.user.accessToken);
 
@@ -107,14 +117,6 @@ const InhibitionPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

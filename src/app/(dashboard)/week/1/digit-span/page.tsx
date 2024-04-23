@@ -20,10 +20,10 @@ import {
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { WeekData, sendWeekData } from "@/lib/api/week";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useMutation } from "@tanstack/react-query";
+import { ZodUser } from "@/lib/validators/user";
 
 const SHOWING_TIME = 500;
 
@@ -38,8 +38,6 @@ const DigitspanPage = () => {
   const [activeShowingIndex, setActiveShowingIndex] = useState<number>(0);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [reactionTime, setReactionTime] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -94,7 +92,19 @@ const DigitspanPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       await sendWeekData(data, session.data.user.accessToken);
 
@@ -106,13 +116,6 @@ const DigitspanPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

@@ -1,34 +1,44 @@
-"use client";
-
 import TestContainer from "@/components/game/TestContainer";
-import { useUserStore } from "@/hooks/useUserStore";
-import { usePathname, useRouter } from "next/navigation";
+import { getUser } from "@/lib/api/user";
+import { getAuthSession } from "@/lib/auth";
+import { ZodUser } from "@/lib/validators/user";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
-const Layout = ({ children }: Props) => {
-  const user = useUserStore((state) => state.user);
-  const router = useRouter();
-  const pathname = usePathname();
+const Layout = async ({ children }: Props) => {
+  const session = await getAuthSession();
+  const header = headers();
+  const pathname = header.get("next-url");
 
-  if (!user || !user.userDetails.Status) {
-    router.push("/");
-    return null;
+  if (!session) {
+    redirect("/login");
+  }
+
+  let user: ZodUser;
+  try {
+    user = await getUser({
+      accessToken: session.user.accessToken!,
+      userId: session.user.id!,
+    });
+  } catch (e) {
+    redirect("/login");
   }
 
   if (!user.userDetails.Status.includes("PT")) {
-    router.push("/dashboard");    
+    redirect("/dashboard");
   }
 
   if(pathname !== "/test/" + user.userDetails.PerformanceTaskStep) {
-    router.push("/test/" + user.userDetails.PerformanceTaskStep);
+    redirect("/test/" + user.userDetails.PerformanceTaskStep);
   }
 
   if(pathname === "/test"){
-    router.push("/test/" + user.userDetails.PerformanceTaskStep);
+    redirect("/test/" + user.userDetails.PerformanceTaskStep);
   }
 
   return <TestContainer>{children}</TestContainer>;
