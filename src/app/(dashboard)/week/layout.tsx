@@ -11,7 +11,6 @@ import {
 import { getAuthSession } from "@/lib/auth";
 import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
-import { log } from "console";
 
 const weekGames = [weekOneGames,weekTwoGames,weekThreeGames,weekFourGames];
 
@@ -66,10 +65,6 @@ const Layout = async ({children}: { children: React.ReactNode }) => {
 
     if (pathnameSplit[2] !== week.toString()) {
         redirect(`/week/${week}`);
-    }
-
-    if (pathnameSplit[3] && pathnameSplit[3] !== gameSlug){
-        redirect(gameUrl);
     }
 
     return <>{children}</>;

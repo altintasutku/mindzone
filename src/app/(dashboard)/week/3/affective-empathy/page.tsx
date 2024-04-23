@@ -13,7 +13,6 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { ZodUser } from "@/lib/validators/user";
 
 const TOTAL_ROUNDS = 31;

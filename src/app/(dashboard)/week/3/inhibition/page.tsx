@@ -5,9 +5,7 @@ import IntroductionWeekThreeGamethree from "./_introductions";
 import { Separator } from "@radix-ui/react-separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { set } from "zod";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
@@ -22,7 +20,7 @@ const imageLoader = ({ src }: { src: string }): string => {
 
 const REACTION_TIME = 2000;
 
-const TOTAL_ROUNDS = (15 * 60) / (REACTION_TIME / 1000 + 0.5);
+const TOTAL_ROUNDS = mods.angry + mods.fear + mods.sad + mods.happy;
 
 const positiveWords = [
   "SEVİNÇ",
@@ -231,7 +229,7 @@ const WeekThreeGameThree = () => {
     }
 
     if (!isImage) {
-      setMyTimeout(setTimeout(handleNext, 1400));
+      setTimeout(handleNext, 1000);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

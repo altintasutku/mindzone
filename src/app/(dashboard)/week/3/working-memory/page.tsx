@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import FinishScreen from "@/components/game/FinishScreen";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";

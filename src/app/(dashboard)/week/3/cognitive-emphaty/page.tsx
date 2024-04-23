@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import WeekThreeGameFourIntroductions from "./_introductions";
 import { WeekThreeGameFourQuestions } from "@/assets/mockdata/weekGames/week3game4data";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";

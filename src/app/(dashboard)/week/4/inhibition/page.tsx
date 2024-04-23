@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 import { sendWeekData, WeekData } from "@/lib/api/week";
