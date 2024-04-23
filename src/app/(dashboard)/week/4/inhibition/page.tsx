@@ -9,10 +9,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import Image from "next/image";
+import { ZodUser } from "@/lib/validators/user";
 
 enum GO_NOGO {
   GO = "GO",
@@ -46,8 +47,6 @@ const WeekFourGameThreePage = () => {
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
 
   const [isTraining, setIsTraining] = useState(true);
@@ -62,7 +61,17 @@ const WeekFourGameThreePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -76,14 +85,6 @@ const WeekFourGameThreePage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },

@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
+import { ZodUser } from "@/lib/validators/user";
 
 const TOTAL_ROUNDS = 150;
 
@@ -32,11 +33,9 @@ const WeekFourGameTwoPage = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
-  console.log("🚀 ~ WeekFourGameTwoPage ~ timer:", timer)
+  console.log("🚀 ~ WeekFourGameTwoPage ~ timer:", timer);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -84,7 +83,17 @@ const WeekFourGameTwoPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -98,14 +107,6 @@ const WeekFourGameTwoPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -159,7 +160,7 @@ const WeekFourGameTwoPage = () => {
     else if (round % 30 <= 20) setRule(Rule.Sex);
     else setRule(Rule.Mod);
     setRound(round + 1);
-    
+
     if (!timeout) {
       setMyTimeout(
         setInterval(() => {
@@ -172,35 +173,35 @@ const WeekFourGameTwoPage = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/week/4/inhibition" />
+        <FinishScreen url='/week/4/inhibition' />
       ) : round === 0 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <WeekFourGameTwoIntroductions />
 
           <Button onClick={handleNextRound}>Başla</Button>
         </div>
       ) : isCorrect === null ? (
-        <div className="flex flex-col items-center gap-5">
+        <div className='flex flex-col items-center gap-5'>
           {roundImage && (
             <Image
               loader={imageLoader}
               src={`${roundImage.mounthType}/${roundImage.sex}/${roundImage.mod}/${roundImage.index}`}
               width={300}
               height={300}
-              alt="gameImage"
-              className="rounded-md"
+              alt='gameImage'
+              className='rounded-md'
             />
           )}
-          <div className="flex flex-wrap gap-5">
+          <div className='flex flex-wrap gap-5'>
             {currentGame.map((gameImage, index) => (
               <div key={index} onClick={() => handleAnswer(index)}>
                 <Image
-                  className="cursor-pointer border border-slate-200 dark:border-slate-700 transition-all rounded-md overflow-hidden"
+                  className='cursor-pointer border border-slate-200 dark:border-slate-700 transition-all rounded-md overflow-hidden'
                   loader={imageLoader}
                   src={`${gameImage.mounthType}/${gameImage.sex}/${gameImage.mod}/${gameImage.index}`}
                   width={150}
                   height={150}
-                  alt="gameImage"
+                  alt='gameImage'
                 />
               </div>
             ))}
@@ -208,13 +209,15 @@ const WeekFourGameTwoPage = () => {
         </div>
       ) : isCorrect ? (
         <div>
-          <h1 className="font-semibold text-3xl text-green-500 text-center">
+          <h1 className='font-semibold text-3xl text-green-500 text-center'>
             Doğru
           </h1>
         </div>
       ) : (
         <div>
-          <h1 className="font-semibold text-3xl text-red-500 text-center">Yanlış</h1>
+          <h1 className='font-semibold text-3xl text-red-500 text-center'>
+            Yanlış
+          </h1>
         </div>
       )}
     </div>

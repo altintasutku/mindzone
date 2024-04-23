@@ -11,9 +11,10 @@ import Image from "next/image";
 import FinishScreen from "@/components/game/FinishScreen";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
+import { ZodUser } from "@/lib/validators/user";
 
 const TOTAL_ROUNDS = 31;
 
@@ -29,8 +30,6 @@ const WeekThreeGameFivePage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -55,7 +54,7 @@ const WeekThreeGameFivePage = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -65,14 +64,14 @@ const WeekThreeGameFivePage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,10 +79,19 @@ const WeekThreeGameFivePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
         return;
       }
 
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
       await sendWeekData(data, session.data.user.accessToken);
 
       await updateUser({
@@ -94,14 +102,6 @@ const WeekThreeGameFivePage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -134,7 +134,7 @@ const WeekThreeGameFivePage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -168,10 +168,10 @@ const WeekThreeGameFivePage = () => {
     <div>
       {isFinished ? (
         <div>
-          <FinishScreen url="/week/4/" />
+          <FinishScreen url='/week/4/' />
         </div>
       ) : round === 0 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <WeekThreeGameThreeIntroductions />
           <Button onClick={handleNext}>Başla</Button>
         </div>
@@ -180,16 +180,16 @@ const WeekThreeGameFivePage = () => {
           {currentData && (
             <div>
               <p>{currentData.question}</p>
-              <div className="grid grid-cols-3 md:grid-cols-5 justify-items-center gap-4 mt-5">
+              <div className='grid grid-cols-3 md:grid-cols-5 justify-items-center gap-4 mt-5'>
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Image
                     key={index}
                     loader={imageLoader}
                     src={`SORU ${round}/${index + 1}`}
-                    className="rounded-md cursor-pointer"
+                    className='rounded-md cursor-pointer'
                     width={200}
                     height={200}
-                    alt="image"
+                    alt='image'
                     onClick={() => handleAnswer(index)}
                   />
                 ))}
@@ -198,12 +198,12 @@ const WeekThreeGameFivePage = () => {
           )}
         </div>
       ) : isCorrect ? (
-        <div className="text-center">
-          <p className="text-green-500 font-bold text-2xl">Doğru</p>
+        <div className='text-center'>
+          <p className='text-green-500 font-bold text-2xl'>Doğru</p>
         </div>
       ) : (
-        <div className="text-center">
-          <p className="text-red-500 font-bold text-2xl">Yanlış</p>
+        <div className='text-center'>
+          <p className='text-red-500 font-bold text-2xl'>Yanlış</p>
         </div>
       )}
     </div>
