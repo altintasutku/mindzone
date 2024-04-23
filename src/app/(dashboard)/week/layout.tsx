@@ -1,11 +1,17 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
-import {calculateDaysDiff} from "@/lib/utils";
-import {weekFourGames, weekOneGames, weekThreeGames, weekTwoGames} from "@/assets/mockdata/weekGames/weekGames";
+import { calculateDaysDiff } from "@/lib/utils";
+import {
+  weekFourGames,
+  weekOneGames,
+  weekThreeGames,
+  weekTwoGames,
+} from "@/assets/mockdata/weekGames/weekGames";
 import { getAuthSession } from "@/lib/auth";
 import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { log } from "console";
 
 const weekGames = [weekOneGames,weekTwoGames,weekThreeGames,weekFourGames];
 

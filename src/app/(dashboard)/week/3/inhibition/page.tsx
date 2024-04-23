@@ -10,8 +10,9 @@ import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import { cn } from "@/lib/utils";
+import { ZodUser } from "@/lib/validators/user";
 
 const mods = { angry: 10, fear: 10, sad: 10, happy: 30 };
 
@@ -106,8 +107,6 @@ const WeekThreeGameThree = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,
@@ -144,7 +143,19 @@ const WeekThreeGameThree = () => {
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) return;
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
 
       await sendWeekData(data, session.data.user.accessToken);
 
@@ -156,14 +167,6 @@ const WeekThreeGameThree = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -221,7 +224,7 @@ const WeekThreeGameThree = () => {
     if (round === 0) {
       return;
     }
-    
+
     setImageLoaded(false);
     if (isImage) {
       setIsCorrect(null);
@@ -242,22 +245,22 @@ const WeekThreeGameThree = () => {
   return (
     <div>
       {isFinished ? (
-        <div className="flex justify-center items-center">
-          <FinishScreen url="/week/3/inhibition" />
+        <div className='flex justify-center items-center'>
+          <FinishScreen url='/week/3/inhibition' />
         </div>
       ) : round === 0 ? (
-        <div className="flex flex-col">
+        <div className='flex flex-col'>
           <IntroductionWeekThreeGamethree />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={handleNext}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center h-96 justify-center">
+        <div className='flex flex-col items-center h-96 justify-center'>
           {isImage ? (
-            <div className="flex justify-center items-center h-[250px]">
+            <div className='flex justify-center items-center h-[250px]'>
               <div
                 className={cn(
                   "mt-6 absolute text-black dark:text-white text-xl font-bold opacity-0",
@@ -273,15 +276,15 @@ const WeekThreeGameThree = () => {
                 height={200}
                 loader={imageLoader}
                 src={`${allData[round - 1].type}/${allData[round - 1].index}`}
-                alt="emotion image"
+                alt='emotion image'
                 onLoad={handleImageLoad}
                 className={imageLoaded ? "opacity-100" : "opacity-0"}
               />
             </div>
           ) : (
-            <div className="h-[250px]"></div>
+            <div className='h-[250px]'></div>
           )}
-          <div className="flex justify-center items-center my-6 w-20">
+          <div className='flex justify-center items-center my-6 w-20'>
             <Button
               className={cn(
                 "px-10",

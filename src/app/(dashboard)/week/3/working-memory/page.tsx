@@ -15,7 +15,8 @@ import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/working_memory/${src}.jpg`;
@@ -39,8 +40,6 @@ const WeekThreeGameOnePage = () => {
   const [isFinished, setIsFinished] = useState(false);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -65,7 +64,7 @@ const WeekThreeGameOnePage = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10),
+          }, 10)
         );
       }
     }
@@ -75,14 +74,14 @@ const WeekThreeGameOnePage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,7 +89,17 @@ const WeekThreeGameOnePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -104,14 +113,6 @@ const WeekThreeGameOnePage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -160,7 +161,7 @@ const WeekThreeGameOnePage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -213,32 +214,32 @@ const WeekThreeGameOnePage = () => {
   }, [shownImages]);
 
   const handleClick = (index: number) => {
-    if(shownImages.findIndex((item) => item === false) === -1) return;
+    if (shownImages.findIndex((item) => item === false) === -1) return;
     setShownImages((prev) =>
-      prev.map((item, i) => (i === index ? !prev[i] : item)),
+      prev.map((item, i) => (i === index ? !prev[i] : item))
     );
   };
 
   return (
-    <div className="w-full">
+    <div className='w-full'>
       {isFinished ? (
-        <div className="flex justify-center items-center">
-          <FinishScreen url="/week/3/cognitive-flexibility" />
+        <div className='flex justify-center items-center'>
+          <FinishScreen url='/week/3/cognitive-flexibility' />
         </div>
       ) : round === 0 ? (
-        <div className="flex flex-col items-center gap-10">
+        <div className='flex flex-col items-center gap-10'>
           <IntroductionWeekThreeGameOne />
 
           <Button onClick={handleNextRound}>Başla</Button>
         </div>
       ) : level ? (
-        <div className="min-h-56 space-y-10 w-full">
+        <div className='min-h-56 space-y-10 w-full'>
           {isCorrect === true ? (
-            <h1 className="text-2xl font-bold text-green-500 text-center col-span-4">
+            <h1 className='text-2xl font-bold text-green-500 text-center col-span-4'>
               Doğru
             </h1>
           ) : isCorrect === false ? (
-            <h1 className="text-2xl font-bold text-red-500 text-center col-span-4">
+            <h1 className='text-2xl font-bold text-red-500 text-center col-span-4'>
               Yanlış
             </h1>
           ) : isCorrect === null ? (
@@ -248,7 +249,7 @@ const WeekThreeGameOnePage = () => {
               {level.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-primary rounded-md overflow-hidden cursor-pointer"
+                  className='bg-primary rounded-md overflow-hidden cursor-pointer'
                   onClick={() => handleClick(index)}
                 >
                   <Image
@@ -269,7 +270,7 @@ const WeekThreeGameOnePage = () => {
 
           <Progress
             value={(round * 100) / TOTAL_ROUNDS}
-            className="col-span-4"
+            className='col-span-4'
           />
         </div>
       ) : null}

@@ -16,7 +16,8 @@ import { useSession } from "next-auth/react";
 import { useUserStore } from "@/hooks/useUserStore";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 
 const TOTAL_ROUNDS =
   datas.man.positive +
@@ -39,8 +40,6 @@ const WeekThreeGameTwoPage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const session = useSession();
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -90,10 +89,19 @@ const WeekThreeGameTwoPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
         return;
       }
 
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
+        return;
+      }
       await sendWeekData(data, session.data.user.accessToken);
 
       await updateUser({
@@ -104,14 +112,6 @@ const WeekThreeGameTwoPage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -169,9 +169,9 @@ const WeekThreeGameTwoPage = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/week/3/inhibition" />
+        <FinishScreen url='/week/3/inhibition' />
       ) : round === 0 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <WeekThreeGameTwoIntroductions />
 
           <Button onClick={nextRound}>Başla</Button>

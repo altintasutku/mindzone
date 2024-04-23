@@ -12,8 +12,9 @@ import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
-import { updateUser } from "@/lib/api/user";
+import { getUser, updateUser } from "@/lib/api/user";
 import Image from "next/image";
+import { ZodUser } from "@/lib/validators/user";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_four/working_memory/${src}.JPG`;
@@ -36,9 +37,6 @@ const WeekFourGameOnePage = () => {
   const [current, setCurrent] = useState<GameImage | null>(null);
 
   const [history, setHistory] = useState<GameImage[]>([]);
-
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -77,7 +75,17 @@ const WeekFourGameOnePage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: WeekData) => {
-      if (!session.data || !user) {
+      if (!session.data) {
+        return;
+      }
+
+      let user: ZodUser;
+      try {
+        user = await getUser({
+          accessToken: session.data.user.accessToken,
+          userId: session.data.user.id,
+        });
+      } catch (e) {
         return;
       }
 
@@ -91,14 +99,6 @@ const WeekFourGameOnePage = () => {
             ...user.userDetails,
             WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
           },
-        },
-      });
-
-      setUser({
-        ...user,
-        userDetails: {
-          ...user.userDetails,
-          WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
         },
       });
     },
@@ -199,7 +199,10 @@ const WeekFourGameOnePage = () => {
       setStats((prev) => ({ ...prev, totalAccuracy: prev.totalAccuracy + 1 }));
     } else {
       setIsCorrect(false);
-      setStats((prev) => ({ ...prev, totalErrorCount: prev.totalErrorCount + 1 }));
+      setStats((prev) => ({
+        ...prev,
+        totalErrorCount: prev.totalErrorCount + 1,
+      }));
     }
 
     setTimeout(() => {
@@ -222,30 +225,30 @@ const WeekFourGameOnePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
+    <div className='flex flex-col items-center py-10'>
       {isFinished ? (
-        <FinishScreen url="/week/5" />
+        <FinishScreen url='/week/5' />
       ) : round === 0 ? (
-        <div className="flex flex-col">
+        <div className='flex flex-col'>
           <WeekFourGameOneIntroductions />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : correct === 1 && isBreakActive ? (
-        <div className="flex flex-col items-center gap-4">
+        <div className='flex flex-col items-center gap-4'>
           <div>
-            <span className="text-green-500">Tebrikler! Doğru bildin.</span>{" "}
+            <span className='text-green-500'>Tebrikler! Doğru bildin.</span>{" "}
             Deneme bitti hadi oyuna geçelim
           </div>
           <Button onClick={finishBreak}>Devam Et</Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-7 justify-center items-center w-full">
+        <div className='flex flex-col gap-7 justify-center items-center w-full'>
           {correct < 1 && isBreakActive ? (
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               {history.map((image, index) => (
                 <span
                   key={image.emotion + index}
@@ -267,7 +270,7 @@ const WeekFourGameOnePage = () => {
               ))}
             </div>
           ) : (
-            <span className="text-3xl font-bold bg-yellow-600 rounded-sm p-1 min-h-32 sm:min-h-56 flex justify-center items-center">
+            <span className='text-3xl font-bold bg-yellow-600 rounded-sm p-1 min-h-32 sm:min-h-56 flex justify-center items-center'>
               {current && (
                 <Image
                   loader={imageLoader}
@@ -282,7 +285,7 @@ const WeekFourGameOnePage = () => {
 
           <Button
             onClick={handleAnswer}
-            variant="outline"
+            variant='outline'
             className={cn("flex justify-center px-16 py-4", {
               "bg-green-500 text-white hover:bg-green-500": isCorrect === true,
               "bg-red-500 text-white hover:bg-red-500": isCorrect === false,
