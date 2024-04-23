@@ -13,69 +13,66 @@ import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
 import { log } from "console";
 
-const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames];
+const weekGames = [weekOneGames,weekTwoGames,weekThreeGames,weekFourGames];
 
-const Layout = async ({ children }: { children: React.ReactNode }) => {
-  const session = await getAuthSession();
-  const header = headers();
-  const pathname = header.get("next-url");
+const Layout = async ({children}: { children: React.ReactNode }) => {
+    const session = await getAuthSession();
+    const header = headers();
+    const pathname = header.get("next-url");
 
-  if (!pathname) {
-    redirect("/dashboard");
-  }
+    if (!pathname) {
+      redirect("/dashboard?error=system-error");
+    }
+  
+    if (!session) {
+      redirect("/login?error=unauthorized");
+    }
+  
+    let user: ZodUser;
+    try {
+      user = await getUser({
+        accessToken: session.user.accessToken!,
+        userId: session.user.id!,
+      });
+    } catch (e) {
+      redirect("/login?error=user-not-found");
+    }
 
-  if (!session) {
-    redirect("/login");
-  }
+    if (!user || !user.userDetails.WeeklyStatus) {
+        return null;
+    }
 
-  let user: ZodUser;
-  try {
-    user = await getUser({
-      accessToken: session.user.accessToken!,
-      userId: session.user.id!,
-    });
-  } catch (e) {
-    redirect("/login");
-  }
+    if (parseInt(user.userDetails.UserType) === 0) {
+        redirect("/dashboard");
+    }
+  
+    if (!user.userDetails.Status.includes("W")) {
+      redirect("/dashboard");
+    }
 
-  if (!user || !user.userDetails.WeeklyStatus) {
-    return null;
-  }
+    const week = Math.ceil(parseInt(user.userDetails.WeeklyStatus) / 5);
+    const remainingDay = calculateDaysDiff(new Date(user.createdOn));
 
-  if (parseInt(user.userDetails.UserType) === 0) {
-    redirect("/dashboard");
-  }
+    const gameIndex = parseInt(user.userDetails.WeeklyStatus) % 5 === 0 ? 4 : parseInt(user.userDetails.WeeklyStatus) % 5 - 1;
+    const gameSlug = weekGames[week - 1][gameIndex].slug;
+    const gameUrl = `/week/${week}/${gameSlug}`;
 
-  if (!user.userDetails.Status.includes("W")) {
-    redirect("/dashboard");
-  }
+    // If user tries to access the game before the week starts, redirect to dashboard
+    if (remainingDay < (week - 1) * 7) {
+        redirect("/dashboard?error=week-not-started");
+    }
 
-  const week = Math.ceil(parseInt(user.userDetails.WeeklyStatus) / 5);
-  const remainingDay = calculateDaysDiff(new Date(user.createdOn));
+    const pathnameSplit = pathname.split("/");
 
-  const gameIndex =
-    parseInt(user.userDetails.WeeklyStatus) % 5 === 0
-      ? 4
-      : (parseInt(user.userDetails.WeeklyStatus) % 5) - 1;
-  const gameSlug = weekGames[week - 1][gameIndex].slug;
-  const gameUrl = `/week/${week}/${gameSlug}`;
+    if (pathnameSplit[2] !== week.toString()) {
+        redirect(`/week/${week}`);
+    }
 
-  // If user tries to access the game before the week starts, redirect to dashboard
-  if (remainingDay < (week - 1) * 7) {
-    redirect("/dashboard?error=week-not-started");
-  }
+    if (pathnameSplit[3] && pathnameSplit[3] !== gameSlug){
+        redirect(gameUrl);
+    }
 
-  const pathnameSplit = pathname.split("/");
-
-  if (pathnameSplit[2] !== week.toString()) {
-    redirect(`/week/${week}`);
-  }
-
-  if (pathnameSplit[3] && pathnameSplit[3] !== gameSlug) {
-    redirect(gameUrl);
-  }
-
-  return <>{children}</>;
+    return <>{children}</>;
 };
 
 export default Layout;

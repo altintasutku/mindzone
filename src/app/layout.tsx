@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "MindZone",
   description:
     "Sizler için ruh sağlığına yönelik hazırladığımız online ve ücretsiz egzersiz programımız.",
+  icons: {
+    icon: "/images/brain-logo.png",
+  },
 };
 
 type Props = Readonly<{

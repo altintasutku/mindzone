@@ -12,7 +12,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { getUser, updateUser } from "@/lib/api/user";
-import { useUserStore } from "@/hooks/useUserStore";
 import { ZodUser } from "@/lib/validators/user";
 
 type CurrentModType = {
