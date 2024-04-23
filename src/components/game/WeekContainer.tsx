@@ -5,7 +5,6 @@ import { Separator } from "../ui/separator";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { Loader2Icon } from "lucide-react";
 import { ZodUser } from "@/lib/validators/user";

@@ -14,7 +14,6 @@ import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { ZodUser } from "@/lib/validators/user";
 
 const TOTAL_ROUNDS = 150;
@@ -35,7 +34,6 @@ const WeekFourGameTwoPage = () => {
   const session = useSession();
 
   const [timer, setTimer] = useState<number>(0);
-  console.log("🚀 ~ WeekFourGameTwoPage ~ timer:", timer);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
   const [stats, setStats] = useState<WeekData>({
     totalErrorCount: 0,

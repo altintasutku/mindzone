@@ -13,7 +13,6 @@ import WeekThreeGameTwoIntroductions from "@/app/(dashboard)/week/3/cognitive-fl
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useUserStore } from "@/hooks/useUserStore";
 import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";

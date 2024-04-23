@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { EyeIcon } from "lucide-react";
 import { data, GameImage } from "@/assets/mockdata/weekGames/week4game1data";
-import { useUserStore } from "@/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
