@@ -19,8 +19,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { sendQuestionData } from "@/lib/api/questions";
 import { getUser, updateUser } from "@/lib/api/user";
-import { userValidator, ZodUser } from "@/lib/validators/user";
-import { z } from "zod";
+import { ZodUser } from "@/lib/validators/user";
 
 const options = [
   "Kesinlikle Katılıyorum",
@@ -33,10 +32,9 @@ const QuestionTestOne = () => {
   const session = useSession();
   const router = useRouter();
 
-  if (!session) {
-    router.push("/login");
-  }
-
+  // if (!session) {
+  //   router.push("/login");
+  // }
   const [answers, setAnswers] = React.useState<Record<string, number>>({});
   const [scoreBoard, setScoreBoard] = React.useState<Record<string, number>>(
     {}
@@ -113,9 +111,19 @@ const QuestionTestOne = () => {
       });
     },
     onSuccess() {
-      router.push("/test");
+      router.push("/test/1");
     },
   });
+
+
+  if(session.status === "loading") {
+    return <div><Loader2Icon className="animate-spin"/></div>
+  }
+
+  if(session.status === "unauthenticated") {
+    router.push("/login");
+    return <div></div>
+  }
 
   return (
     <div className="flex flex-col items-center">

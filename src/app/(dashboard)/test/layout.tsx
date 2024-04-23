@@ -22,8 +22,8 @@ const Layout = async ({ children }: Props) => {
   let user: ZodUser;
   try {
     user = await getUser({
-      accessToken: session.user.accessToken!,
-      userId: session.user.id!,
+      accessToken: session.user.accessToken,
+      userId: session.user.id,
     });
   } catch (e) {
     redirect("/login");
@@ -31,14 +31,6 @@ const Layout = async ({ children }: Props) => {
 
   if (!user.userDetails.Status.includes("PT")) {
     redirect("/dashboard");
-  }
-
-  if(pathname !== "/test/" + user.userDetails.PerformanceTaskStep) {
-    redirect("/test/" + user.userDetails.PerformanceTaskStep);
-  }
-
-  if(pathname === "/test"){
-    redirect("/test/" + user.userDetails.PerformanceTaskStep);
   }
 
   return <TestContainer>{children}</TestContainer>;
