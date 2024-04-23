@@ -111,7 +111,7 @@ const QuestionTestOne = () => {
       });
     },
     onSuccess() {
-      router.push("/test");
+      router.push("/test/1");
     },
   });
 
