@@ -37,6 +37,7 @@ const Layout = ({ children }: Props) => {
 
   if (!session) {
     router.push("/login");
+    return null;
   }
 
   if (session.status === "loading") {

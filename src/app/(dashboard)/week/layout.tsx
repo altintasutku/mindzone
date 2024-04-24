@@ -69,12 +69,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   // If user tries to access the game before the week starts, router.push to dashboard
   if (remainingDay < (week - 1) * 7) {
     router.push("/dashboard?error=week-not-started");
+    return null;
   }
 
   const pathnameSplit = pathname.split("/");
 
   if (pathnameSplit[2] !== week.toString()) {
     router.push(`/week/${week}`);
+    return null;
   }
 
   const gameName = weekGames[week - 1].at(
@@ -85,6 +87,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   if (pathname !== url) {
     router.push(url);
+    return null;
   }
 
   return <>{children}</>;

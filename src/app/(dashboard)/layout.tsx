@@ -34,6 +34,7 @@ export default function DashboardLayout({ children }: Props) {
 
   if (!session) {
     router.push("/login");
+    return null;
   }
 
   if (session.status === "loading") {
@@ -49,13 +50,16 @@ export default function DashboardLayout({ children }: Props) {
     (user.userDetails.Status.includes("S3") && pathname !== "/question/1")
   ) {
     router.push("/question/1");
+    return null
   } else if (
     user.userDetails.Status.includes("S2") ||
     (user.userDetails.Status.includes("S3") && pathname !== "/question/2")
   ) {
     router.push("/question/2");
+    return null
   } else if (user.userDetails.Status.includes("PT") && !pathname.includes("/test")) {
     router.push(`/test/${user.userDetails.PerformanceTaskStep}`);
+    return null
   }
 
   return <>{children}</>;

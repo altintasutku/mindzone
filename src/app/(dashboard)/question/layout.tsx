@@ -37,6 +37,7 @@ const QuestionLayout = ({ children }: Props) => {
 
   if (!session) {
     router.push("/login");
+    return null;
   }
 
   if (session.status === "loading") {
@@ -56,6 +57,7 @@ const QuestionLayout = ({ children }: Props) => {
 
   if (pathname !== url) {
     router.push(url);
+    return null;
   }
 
   return (

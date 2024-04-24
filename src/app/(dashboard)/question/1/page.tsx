@@ -31,10 +31,7 @@ const options = [
 const QuestionTestOne = () => {
   const session = useSession();
   const router = useRouter();
-
-  // if (!session) {
-  //   router.push("/login");
-  // }
+  
   const [answers, setAnswers] = React.useState<Record<string, number>>({});
   const [scoreBoard, setScoreBoard] = React.useState<Record<string, number>>(
     {}
@@ -93,7 +90,7 @@ const QuestionTestOne = () => {
             score: data.reduce((acc, item) => acc + item.score, 0),
             subType: i,
             type: 1,
-            group: "S1",
+            group: user.userDetails.Status,
           },
           session.data.user.accessToken
         );
