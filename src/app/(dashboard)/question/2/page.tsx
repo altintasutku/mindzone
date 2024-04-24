@@ -194,7 +194,7 @@ const QuestionTestTwo = () => {
       });
     },
     onSuccess() {
-      router.push("/week/1");
+      router.push("/dashboard");
     },
   });
 

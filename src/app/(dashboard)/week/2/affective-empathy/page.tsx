@@ -51,7 +51,7 @@ const imageLoader = ({ src }: { src: string }): string => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/${src}.JPG`;
 };
 
-const TOTAL_ROUND = allData.length;
+const TOTAL_ROUND = allData.length - 1;
 
 const Week2Game5Page = () => {
   const [round, setRound] = useState(0);
@@ -184,6 +184,12 @@ const Week2Game5Page = () => {
     }
 
     setIsCorrect(null);
+
+    if(!allData[round] || Object.hasOwnProperty.call(allData[round], "imageFolder") === false){
+      setRound((prev) => prev - 1);
+      setRound((prev) => prev + 1);
+      return;
+    }
 
     setCurrent((prev: Question | undefined) => ({
       ...allData[round],

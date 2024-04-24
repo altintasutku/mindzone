@@ -1,6 +1,7 @@
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import React from "react";
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { calculateDaysDiff } from "@/lib/utils";
 import {
   weekFourGames,
@@ -8,66 +9,85 @@ import {
   weekThreeGames,
   weekTwoGames,
 } from "@/assets/mockdata/weekGames/weekGames";
-import { getAuthSession } from "@/lib/auth";
 import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { useSession } from "next-auth/react";
+import { Loader2Icon } from "lucide-react";
 
-const weekGames = [weekOneGames,weekTwoGames,weekThreeGames,weekFourGames];
+const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames];
 
-const Layout = async ({children}: { children: React.ReactNode }) => {
-    const session = await getAuthSession();
-    const header = headers();
-    const pathname = header.get("next-url");
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  const session = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = React.useState<ZodUser>();
 
-    if (!pathname) {
-      redirect("/dashboard?error=system-error");
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      getUser({
+        accessToken: session.data.user.accessToken,
+        userId: session.data.user.id,
+      })
+        .then((res) => {
+          setUser(res);
+        })
+        .catch((e) => {
+          router.push("/login?error=user-not-found");
+        });
     }
-  
-    if (!session) {
-      redirect("/login?error=unauthorized");
-    }
-  
-    let user: ZodUser;
-    try {
-      user = await getUser({
-        accessToken: session.user.accessToken!,
-        userId: session.user.id!,
-      });
-    } catch (e) {
-      redirect("/login?error=user-not-found");
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
-    if (!user || !user.userDetails.WeeklyStatus) {
-        return null;
-    }
+  if(session.status === "loading") {
+    return <Loader2Icon size={64} className="animate-spin mx-auto" />;
+  }
 
-    if (parseInt(user.userDetails.UserType) === 0) {
-        redirect("/dashboard");
-    }
-  
-    if (!user.userDetails.Status.includes("W")) {
-      redirect("/dashboard");
-    }
+  if (!user || !user.userDetails.WeeklyStatus) {
+    return null;
+  }
 
-    const week = Math.ceil(parseInt(user.userDetails.WeeklyStatus) / 5);
-    const remainingDay = calculateDaysDiff(new Date(user.createdOn));
+  if (parseInt(user.userDetails.UserType) === 0) {
+    router.push("/dashboard");
+    return null;
+  }
 
-    const gameIndex = parseInt(user.userDetails.WeeklyStatus) % 5 === 0 ? 4 : parseInt(user.userDetails.WeeklyStatus) % 5 - 1;
-    const gameSlug = weekGames[week - 1][gameIndex].slug;
-    const gameUrl = `/week/${week}/${gameSlug}`;
+  if (!user.userDetails.Status.includes("W")) {
+    router.push("/dashboard");
+    return null;
+  }
 
-    // If user tries to access the game before the week starts, redirect to dashboard
-    if (remainingDay < (week - 1) * 7) {
-        redirect("/dashboard?error=week-not-started");
-    }
+  const week = Math.ceil(parseInt(user.userDetails.WeeklyStatus) / 5);
+  const remainingDay = calculateDaysDiff(new Date(user.createdOn));
 
-    const pathnameSplit = pathname.split("/");
+  const gameIndex =
+    parseInt(user.userDetails.WeeklyStatus) % 5 === 0
+      ? 4
+      : (parseInt(user.userDetails.WeeklyStatus) % 5) - 1;
+  const gameSlug = weekGames[week - 1][gameIndex].slug;
+  const gameUrl = `/week/${week}/${gameSlug}`;
 
-    if (pathnameSplit[2] !== week.toString()) {
-        redirect(`/week/${week}`);
-    }
+  // If user tries to access the game before the week starts, router.push to dashboard
+  if (remainingDay < (week - 1) * 7) {
+    router.push("/dashboard?error=week-not-started");
+  }
 
-    return <>{children}</>;
+  const pathnameSplit = pathname.split("/");
+
+  if (pathnameSplit[2] !== week.toString()) {
+    router.push(`/week/${week}`);
+  }
+
+  const gameName = weekGames[week - 1].at(
+    (parseInt(user.userDetails.WeeklyStatus) % 5) - 1
+  );
+
+  const url = `/week/${week}/${gameName?.slug}`;
+
+  if (pathname !== url) {
+    router.push(url);
+  }
+
+  return <>{children}</>;
 };
 
 export default Layout;

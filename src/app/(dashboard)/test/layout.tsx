@@ -1,36 +1,61 @@
+"use client";
+
 import TestContainer from "@/components/game/TestContainer";
 import { getUser } from "@/lib/api/user";
-import { getAuthSession } from "@/lib/auth";
 import { ZodUser } from "@/lib/validators/user";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import React from "react";
+import { Loader2Icon } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
-const Layout = async ({ children }: Props) => {
-  const session = await getAuthSession();
-  const header = headers();
-  const pathname = header.get("next-url");
+const Layout = ({ children }: Props) => {
+  const session = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = React.useState<ZodUser>();
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      getUser({
+        accessToken: session.data.user.accessToken,
+        userId: session.data.user.id,
+      })
+        .then((res) => {
+          setUser(res);
+        })
+        .catch((e) => {
+          router.push("/login?error=user-not-found");
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
   if (!session) {
-    redirect("/login");
+    router.push("/login");
   }
 
-  let user: ZodUser;
-  try {
-    user = await getUser({
-      accessToken: session.user.accessToken,
-      userId: session.user.id,
-    });
-  } catch (e) {
-    redirect("/login");
+  if (session.status === "loading") {
+    return <Loader2Icon size={64} className="animate-spin mx-auto" />;
+  }
+
+  if (!user || !user.userDetails.Status) {
+    return null;
   }
 
   if (!user.userDetails.Status.includes("PT")) {
-    redirect("/dashboard");
+    router.push("/dashboard");
+    return null;
+  }
+
+  const url = `/test/${user.userDetails.PerformanceTaskStep}`;
+
+  if (pathname !== url) {
+    router.push(url);
   }
 
   return <TestContainer>{children}</TestContainer>;
