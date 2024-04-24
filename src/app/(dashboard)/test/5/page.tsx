@@ -10,10 +10,11 @@ import FinishScreen from "@/components/game/FinishScreen";
 import { useSession } from "next-auth/react";
 
 import { useMutation } from "@tanstack/react-query";
-import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 const TOTAL_ROUNDS = performanceTestFiveQuestions.length;
 
@@ -32,14 +33,11 @@ const Page = () => {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const [stats, setStats] = useState<{
-    totalWrongs: number;
-    resistanceWrongs: number;
-    reactionTime: number;
-  }>({
+  const [stats, setStats] = useState<PerformanceData>({
     totalWrongs: 0,
     resistanceWrongs: 0,
     reactionTime: 0,
+    totalAccuracy: 0,
   });
 
   const [timer, setTimer] = useState<number>(0);
@@ -70,11 +68,16 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
+  const { send, isSending } = useSendPerformanceTaskData();
+
   useEffect(() => {
     if (!isFinished) {
       return;
     }
-    mutate();
+    send({
+      step: 5,
+      stats,
+    });
 
     clearInterval(timeout);
 
@@ -89,6 +92,7 @@ const Page = () => {
     if (round >= TOTAL_ROUNDS) {
       setStats((prev) => ({
         ...prev,
+        totalAccuracy: TOTAL_ROUNDS - 1 - prev.totalWrongs,
         reactionTime: timer,
       }));
       setIsFinished(true);
@@ -126,52 +130,10 @@ const Page = () => {
     }, DURATION);
   };
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendPerformanceTaskData({
-        accessToken: session.data.user.accessToken,
-        stats: {
-          ...stats,
-          totalAccuracy: TOTAL_ROUNDS - 1 - stats.totalWrongs,
-        },
-        stepInfo: { step: 5, group: user.userDetails.Status },
-      });
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            PerformanceTaskStep: "1",
-            Status: "S2",
-          },
-        },
-      });
-    },
-    onSuccess: () => {
-      router.push("/question/2");
-    },
-  });
-
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/question/2' />
+        <FinishScreen isSending={isSending} url='/question/2' />
       ) : round === 0 ? (
         <div className='flex flex-col items-center'>
           <IntroductionTestFive />

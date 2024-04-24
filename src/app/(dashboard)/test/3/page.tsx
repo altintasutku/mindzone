@@ -10,9 +10,10 @@ import IntroductionsTestOne from "./_introductions";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { ZodUser } from "@/lib/validators/user";
 import { getUser, updateUser } from "@/lib/api/user";
+import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 const imageColors = ["red", "green", "blue", "yellow"];
 const imageShapes = ["Dots", "Triangles", "Crosses", "Stars"];
@@ -87,14 +88,11 @@ const PerformanceTestOnePage = () => {
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [stats, setStats] = useState<{
-    totalWrongs: number;
-    resistanceWrongs: number;
-    reactionTime: number;
-  }>({
+  const [stats, setStats] = useState<PerformanceData>({
     totalWrongs: 0,
     resistanceWrongs: 0,
     reactionTime: 0,
+    totalAccuracy: 0,
   });
 
   const [currentShape, setCurrentShape] = useState<{
@@ -129,50 +127,17 @@ const PerformanceTestOnePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendPerformanceTaskData({
-        accessToken: session.data.user.accessToken,
-        stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
-        stepInfo: { step: 3, group: user.userDetails.Status },
-      });
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            PerformanceTaskStep: "4",
-          },
-        },
-      });
-    },
-    onSuccess: () => {
-      router.push("/test/4");
-    },
-  });
+  const { send, isSending } = useSendPerformanceTaskData();
 
   useEffect(() => {
     if (!isFinished) {
       return;
     }
 
-    mutate();
+    send({
+      stats,
+      step: 3,
+    });
 
     // Stop the timer
     clearInterval(timeout!);
@@ -190,6 +155,7 @@ const PerformanceTestOnePage = () => {
       });
       setStats((prev) => ({
         ...prev,
+        totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs,
         reactionTime: timer,
       }));
       setIsFinished(true);
@@ -227,7 +193,7 @@ const PerformanceTestOnePage = () => {
   return (
     <div className="flex flex-col items-center py-10">
       {isFinished ? (
-        <FinishScreen url="/test/4" />
+        <FinishScreen isSending={isSending} url="/test/4" />
       ) : round === 0 ? (
         <div className="flex flex-col">
           <IntroductionsTestOne />

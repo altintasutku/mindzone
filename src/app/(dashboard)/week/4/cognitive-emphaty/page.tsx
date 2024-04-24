@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const WeekFourGameFourPage = () => {
   const [isFinished, setIsFinished] = useState(false);
@@ -69,35 +70,7 @@ const WeekFourGameFourPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-      await sendWeekData(data, session.data.user.accessToken);
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   const handleCheck = (answer: string) => {
     if (answer === questions2[round - questions.length].correct) {
@@ -125,12 +98,23 @@ const WeekFourGameFourPage = () => {
     }
   }, [round, gameMode]);
 
+  useEffect(() => {
+    if (!isFinished) return;
+
+    send(stats);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished]);
+
   const handleNext = () => {
     if (
       round ===
       questions.length + questions2.length + questions3.length - 1
     ) {
-      mutate({ ...stats, reactionTime: timer });
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
+
       setIsFinished(true);
       return;
     }
@@ -149,7 +133,7 @@ const WeekFourGameFourPage = () => {
     <div>
       {isFinished ? (
         <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/4/affective-empathy' />
+          <FinishScreen isSending={isSending} url='/week/4/affective-empathy' />
         </div>
       ) : round === 0 ? (
         <div>

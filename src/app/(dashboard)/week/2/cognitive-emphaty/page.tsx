@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import { getUser, updateUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const MAXROUND = weekTwoGame4Data.length - 1;
 
@@ -66,43 +67,14 @@ const WeekTwoGameFourPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      sendWeekData(data, session.data.user.accessToken);
-
-      updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (!isFinished) {
       return;
     }
 
-    mutate(stats);
+    send(stats);
 
     clearInterval(timeout!);
 
@@ -160,7 +132,7 @@ const WeekTwoGameFourPage = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/week/2/affective-empathy" />
+        <FinishScreen isSending={isSending} url="/week/2/affective-empathy" />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />

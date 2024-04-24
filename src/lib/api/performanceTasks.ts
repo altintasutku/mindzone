@@ -1,5 +1,12 @@
 import axios from "axios";
 
+export type PerformanceData = {
+  totalWrongs: number;
+  resistanceWrongs: number;
+  reactionTime: number;
+  totalAccuracy: number;
+}
+
 export const sendPerformanceTaskData = async ({
   stats,
   accessToken,

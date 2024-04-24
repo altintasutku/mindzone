@@ -10,6 +10,7 @@ import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
 import FinishScreen from "@/components/game/FinishScreen";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 type Question = {
   difficulty: string;
@@ -51,7 +52,7 @@ const imageLoader = ({ src }: { src: string }): string => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/${src}.JPG`;
 };
 
-const TOTAL_ROUND = allData.length;
+const TOTAL_ROUND = allData.length - 1;
 
 const Week2Game5Page = () => {
   const [round, setRound] = useState(0);
@@ -101,40 +102,11 @@ const Week2Game5Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      sendWeekData(data, session.data.user.accessToken);
-
-      updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (isFinished) {
-      mutate(stats);
+      send(stats);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
@@ -185,6 +157,12 @@ const Week2Game5Page = () => {
 
     setIsCorrect(null);
 
+    if(!allData[round] || Object.hasOwnProperty.call(allData[round], "imageFolder") === false){
+      setRound((prev) => prev - 1);
+      setRound((prev) => prev + 1);
+      return;
+    }
+
     setCurrent((prev: Question | undefined) => ({
       ...allData[round],
       imageFolder: (allData[round].imageFolder || []).sort(
@@ -198,7 +176,7 @@ const Week2Game5Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/week/3' />
+        <FinishScreen isSending={isSending} url='/week/3' />
       ) : round === 0 ? (
         <div>
           <WeekTwoGameFourIntroductions />

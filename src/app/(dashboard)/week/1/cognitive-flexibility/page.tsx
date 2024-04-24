@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { getUser, updateUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const ALPABET = [
   "A",
@@ -107,43 +108,14 @@ const CognitiveFlexibilityPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendWeekData(data, session.data.user.accessToken);
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (!isFinished) return;
 
     const data = { ...stats, reactionTime: timer };
     
-    mutate(data);
+    send(data);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
@@ -154,6 +126,10 @@ const CognitiveFlexibilityPage = () => {
     }
 
     if (round >= TOTAL_ROUNDS) {
+      setStats((prev) => ({
+        ...prev,
+        reactionTime: timer,
+      }));
       setIsFinished(true);
       return setCurrentItem(null);
     } else {
@@ -238,7 +214,7 @@ const CognitiveFlexibilityPage = () => {
   return (
     <div className="flex flex-col items-center gap-5">
       {isFinished ? (
-        <FinishScreen url="/week/1/inhibition" />
+        <FinishScreen isSending={isSending} url="/week/1/inhibition" />
       ) : !currentItem ? (
         <div>
           <IntroductionCF />

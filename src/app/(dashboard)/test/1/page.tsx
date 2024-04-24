@@ -8,10 +8,11 @@ import { EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 const LETTERS = [
   "A",
@@ -60,19 +61,12 @@ const PerformanceTestPageTwo = () => {
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [stats, setStats] = useState<{
-    totalWrongs: number;
-    resistanceWrongs: number;
-    reactionTime: number;
-  }>({
+  const [stats, setStats] = useState<PerformanceData>({
     totalWrongs: 0,
     resistanceWrongs: 0,
     reactionTime: 0,
+    totalAccuracy: 0,
   });
-
-  const session = useSession();
-
-  const router = useRouter();
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden") {
@@ -84,56 +78,20 @@ const PerformanceTestPageTwo = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendPerformanceTaskData({
-        accessToken: session.data.user.accessToken,
-        stats: { ...stats, totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs },
-        stepInfo: { step: 1, group: user.userDetails.Status },
-      });
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            PerformanceTaskStep: "2",
-          },
-        },
-      });
-    },
-    onSuccess: () => {
-      router.push("/test/2");
-    },
-  });
+  const { send, isSending } = useSendPerformanceTaskData();
 
   useEffect(() => {
     if (round === 0 || isFinished || (correct === 1 && isBreakActive)) {
@@ -144,7 +102,7 @@ const PerformanceTestPageTwo = () => {
       () => {
         nextRound();
       },
-      current ? DURATION : 500,
+      current ? DURATION : 500
     );
 
     return () => {
@@ -158,7 +116,10 @@ const PerformanceTestPageTwo = () => {
       return;
     }
 
-    mutate();
+    send({
+      stats,
+      step: 1,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
@@ -194,8 +155,8 @@ const PerformanceTestPageTwo = () => {
                 (percentage < 33
                   ? LETTERS.length / 3
                   : percentage < 66
-                    ? (LETTERS.length / 3) * 2
-                    : LETTERS.length),
+                  ? (LETTERS.length / 3) * 2
+                  : LETTERS.length)
             )
           ]
         : history[history.length - 2] || "A";
@@ -209,7 +170,7 @@ const PerformanceTestPageTwo = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -220,6 +181,10 @@ const PerformanceTestPageTwo = () => {
     if (history[history.length - 3] === current) {
       setIsCorrect(true);
       setCorrect((prev) => prev + 1);
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+      }));
     } else {
       setIsCorrect(false);
       setStats((prev) => ({ ...prev, totalWrongs: prev.totalWrongs + 1 }));
@@ -236,6 +201,7 @@ const PerformanceTestPageTwo = () => {
       totalWrongs: 0,
       resistanceWrongs: 0,
       reactionTime: 0,
+      totalAccuracy: 0,
     });
     setRound(1);
     setHistory([]);
@@ -245,7 +211,7 @@ const PerformanceTestPageTwo = () => {
   return (
     <div className="flex flex-col items-center py-10">
       {isFinished ? (
-        <FinishScreen url="/test/2" />
+        <FinishScreen isSending={isSending} url="/test/2" />
       ) : round === 0 ? (
         <div className="flex flex-col">
           <IntroductionsTestTwo />
@@ -274,7 +240,7 @@ const PerformanceTestPageTwo = () => {
                     "text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center",
                     {
                       "opacity-60": index !== 3,
-                    },
+                    }
                   )}
                 >
                   {letter}

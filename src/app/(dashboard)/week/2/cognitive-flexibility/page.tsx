@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
 import FinishScreen from "@/components/game/FinishScreen";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const data = {
   openMount: {
@@ -180,36 +181,7 @@ const WeekTwoGameTwoPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      sendWeekData(data, session.data.user.accessToken);
-
-      updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (!current || round === 0) return;
@@ -284,7 +256,7 @@ const WeekTwoGameTwoPage = () => {
     if (!isFinished) {
       return;
     }
-    mutate(stats);
+    send(stats);
     clearInterval(timeout!);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -345,7 +317,7 @@ const WeekTwoGameTwoPage = () => {
     <div>
       {isFinished && (
         <div className="flex justify-center items-center">
-          <FinishScreen url="/week/2/inhibition" />
+          <FinishScreen isSending={isSending} url="/week/2/inhibition" />
         </div>
       )}
       {round === 0 ? (

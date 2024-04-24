@@ -1,36 +1,51 @@
+"use client";
+
 import TestContainer from "@/components/game/TestContainer";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { getUser } from "@/lib/api/user";
-import { getAuthSession } from "@/lib/auth";
 import { ZodUser } from "@/lib/validators/user";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import React from "react";
+import { Loader2Icon } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
-const Layout = async ({ children }: Props) => {
-  const session = await getAuthSession();
-  const header = headers();
-  const pathname = header.get("next-url");
+const Layout = ({ children }: Props) => {
+  const { session, user, error } = useProtectedRoute();
+  const router = useRouter();
+  const pathname = usePathname();
 
   if (!session) {
-    redirect("/login");
+    router.push("/login");
+    return null;
   }
 
-  let user: ZodUser;
-  try {
-    user = await getUser({
-      accessToken: session.user.accessToken,
-      userId: session.user.id,
-    });
-  } catch (e) {
-    redirect("/login");
+  if (session.status === "loading") {
+    return <Loader2Icon size={64} className="animate-spin mx-auto" />;
+  }
+
+  if (error) {
+    router.push("/login?error=" + error);
+    return null;
+  }
+
+  if (!user || !user.userDetails.Status) {
+    return null;
   }
 
   if (!user.userDetails.Status.includes("PT")) {
-    redirect("/dashboard");
+    router.push("/dashboard");
+    return null;
+  }
+
+  const url = `/test/${user.userDetails.PerformanceTaskStep}`;
+
+  if (pathname !== url) {
+    router.push(url);
   }
 
   return <TestContainer>{children}</TestContainer>;
