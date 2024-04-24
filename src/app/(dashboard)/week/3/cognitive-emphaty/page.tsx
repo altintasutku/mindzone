@@ -172,16 +172,15 @@ const WeekThreeGameFourPage = () => {
             <div className='my-10 flex flex-col justify-center text-wrap'>
               {WeekThreeGameFourQuestions[round - 1].options.map(
                 (option, index) => (
-                  <Button
+                  <div
                     onClick={() => {
                       handleCheck(option);
                     }}
-                    variant={"outline"}
                     key={index}
-                    className='mr-4 my-1'
+                    className='mr-4 my-1 border border-slate-800 dark:border-slate-200 hover:bg-black/20 hover:dark:bg-white/20 rounded-md p-2 cursor-pointer'
                   >
                     {option}
-                  </Button>
+                  </div>
                 )
               )}
             </div>
@@ -199,16 +198,15 @@ const WeekThreeGameFourPage = () => {
             <div className='my-10 flex flex-col justify-center text-wrap'>
               {WeekThreeGameFourQuestions[round - 1].options.map(
                 (option, index) => (
-                  <Button
+                  <div
                     onClick={() => {
                       handleCheck(option);
                     }}
-                    variant={"outline"}
                     key={index}
-                    className='mr-4 my-1'
+                    className='mr-4 my-1 border border-slate-800 dark:border-slate-200 hover:bg-black/20 hover:dark:bg-white/20 rounded-md p-2 cursor-pointer'
                   >
                     {option}
-                  </Button>
+                  </div>
                 )
               )}
             </div>
@@ -223,16 +221,15 @@ const WeekThreeGameFourPage = () => {
             <div className='my-10 flex flex-col justify-center flex-wrap'>
               {WeekThreeGameFourQuestions[round - 1].options.map(
                 (option, index) => (
-                  <Button
+                  <div
                     onClick={() => {
                       handleCheck(option);
                     }}
-                    variant={"outline"}
                     key={index}
-                    className='mr-4 my-1'
+                    className='mr-4 my-1 border border-slate-800 dark:border-slate-200 hover:bg-black/20 hover:dark:bg-white/20 rounded-md p-2 cursor-pointer'
                   >
                     {option}
-                  </Button>
+                  </div>
                 )
               )}
             </div>

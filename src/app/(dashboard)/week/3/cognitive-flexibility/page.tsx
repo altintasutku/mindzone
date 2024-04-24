@@ -17,6 +17,7 @@ import { WeekData, sendWeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { Separator } from "@/components/ui/separator";
 
 const TOTAL_ROUNDS =
   datas.man.positive +
@@ -168,15 +169,25 @@ const WeekThreeGameTwoPage = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url='/week/3/inhibition' />
+        <FinishScreen url="/week/3/inhibition" />
       ) : round === 0 ? (
-        <div className='flex flex-col items-center'>
+        <div className="flex flex-col items-center">
           <WeekThreeGameTwoIntroductions />
 
           <Button onClick={nextRound}>Başla</Button>
         </div>
       ) : isCorrect === null ? (
         <div>
+          <div className={"flex justify-center"}>
+            <Image
+              loader={imageLoader}
+              src={`${currentData?.sex}/${currentData?.mod}/${currentData?.number}`}
+              alt={"Current Image"}
+              width={240}
+              height={240}
+            />
+          </div>
+          <Separator className="my-10" />
           <div className={"text-center font-semibold my-2"}>Seçenekler</div>
           <div className={"grid grid-cols-2 md:grid-cols-4 gap-3"}>
             {answers.map((answer, index) => (
@@ -194,15 +205,6 @@ const WeekThreeGameTwoPage = () => {
                 />
               </div>
             ))}
-          </div>
-          <div className={"flex justify-center mt-10"}>
-            <Image
-              loader={imageLoader}
-              src={`${currentData?.sex}/${currentData?.mod}/${currentData?.number}`}
-              alt={"Current Image"}
-              width={240}
-              height={240}
-            />
           </div>
         </div>
       ) : isCorrect ? (
