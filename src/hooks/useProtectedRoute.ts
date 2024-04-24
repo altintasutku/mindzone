@@ -3,10 +3,12 @@
 import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const useProtectedRoute = () => {
   const session = useSession();
+  const pathname = usePathname();
   const [user, setUser] = useState<ZodUser>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,12 +29,12 @@ export const useProtectedRoute = () => {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  }, [session, pathname]);
 
   return {
     user,
     session,
     isLoading,
     error,
-  }
+  };
 };

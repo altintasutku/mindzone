@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 import { Loader2Icon } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   url: string;
@@ -11,13 +9,13 @@ type Props = {
 };
 
 const FinishScreen = ({ url, isSending }: Props) => {
-  const router = useRouter();
-
   if (isSending) {
-    return <div>
-      <p>Verileriniz gönderiliyor. Lütfen bekleyin</p>
-      <Loader2Icon size={24} className="animate-spin mx-auto" />
-    </div>;
+    return (
+      <div>
+        <p>Verileriniz gönderiliyor. Lütfen bekleyin</p>
+        <Loader2Icon size={24} className="animate-spin mx-auto" />
+      </div>
+    );
   }
 
   return (
@@ -27,9 +25,9 @@ const FinishScreen = ({ url, isSending }: Props) => {
         <br />
         Bir sonraki egzersize geçebilirsiniz.
       </p>
-      <Button onClick={() => router.push(url)} className="my-3">
-        Sonraki Egzersize Geç
-      </Button>
+      <Link href={url}>
+        <Button className="my-3">Sonraki Egzersize Geç</Button>
+      </Link>
     </div>
   );
 };

@@ -2,13 +2,14 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { useProtectedRoute } from "./useProtectedRoute";
 import { updateUser } from "@/lib/api/user";
-import { usePathname, useRouter } from "next/navigation";
-import { weekGames } from "@/app/(dashboard)/week/layout";
 import { useState } from "react";
+import {
+  PerformanceData,
+  sendPerformanceTaskData,
+} from "@/lib/api/performanceTasks";
 
 export const useSendWeeklyData = () => {
   const { session, user } = useProtectedRoute();
-  const router = useRouter();
   const [isSending, setIsSending] = useState(false);
 
   const { mutate } = useMutation({
@@ -41,19 +42,61 @@ export const useSendWeeklyData = () => {
       }
     },
     onSuccess() {
-      const week = Math.ceil(parseInt(user!.userDetails.WeeklyStatus) / 5);
-      const gameName = weekGames[week - 1].at(
-        (parseInt(user!.userDetails.WeeklyStatus) % 5) - 1
-      );
-      const url = `/week/${week}/${gameName?.slug}`;
-
-      router.push(url);
       setIsSending(false);
     },
   });
 
   return {
     send: mutate,
-    isSending
+    isSending,
+  };
+};
+
+export const useSendPerformanceTaskData = () => {
+  const { session, user } = useProtectedRoute();
+  const [isSending, setIsSending] = useState(false);
+
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      stats,
+      step,
+    }: {
+      stats: PerformanceData;
+      step: number;
+    }) => {
+      if (!session.data || !user) {
+        return;
+      }
+
+      setIsSending(true);
+
+      await sendPerformanceTaskData({
+        accessToken: session.data.user.accessToken,
+        stats: { ...stats },
+        stepInfo: { step, group: user.userDetails.Status },
+      });
+
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            PerformanceTaskStep:
+              user.userDetails.PerformanceTaskStep === "5"
+                ? "1"
+                : parseInt(user.userDetails.PerformanceTaskStep) + 1 + "",
+          },
+        },
+      });
+    },
+    onSuccess() {
+      setIsSending(false);
+    },
+  });
+
+  return {
+    send: mutate,
+    isSending,
   };
 };

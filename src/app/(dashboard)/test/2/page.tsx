@@ -8,10 +8,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import {
+  PerformanceData,
+  sendPerformanceTaskData,
+} from "@/lib/api/performanceTasks";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 enum GO_NOGO {
   GO = "GO",
@@ -43,14 +47,11 @@ const PerformanceTestPageThree = () => {
 
   const [isTraining, setIsTraining] = useState(true);
 
-  const [stats, setStats] = useState<{
-    totalWrongs: number;
-    resistanceWrongs: number;
-    reactionTime: number;
-  }>({
+  const [stats, setStats] = useState<PerformanceData>({
     totalWrongs: 0,
     resistanceWrongs: 0,
     reactionTime: 0,
+    totalAccuracy: 0,
   });
 
   const handleVisibilityChange = () => {
@@ -63,14 +64,14 @@ const PerformanceTestPageThree = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,6 +81,7 @@ const PerformanceTestPageThree = () => {
     if (round >= TOTAL_ROUNDS) {
       setStats((prev) => ({
         ...prev,
+        totalAccuracy: corrects,
         reactionTime: timer,
       }));
       setIsFinished(true);
@@ -96,7 +98,7 @@ const PerformanceTestPageThree = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -108,12 +110,14 @@ const PerformanceTestPageThree = () => {
       () => {
         nextRound();
       },
-      current === GO_NOGO.NONE ? 500 : REACTION_TIME,
+      current === GO_NOGO.NONE ? 500 : REACTION_TIME
     );
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
+
+  const { send, isSending } = useSendPerformanceTaskData();
 
   useEffect(
     () => {
@@ -121,10 +125,13 @@ const PerformanceTestPageThree = () => {
         return;
       }
 
-      mutate();
+      send({
+        stats,
+        step: 2,
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isFinished],
+    [isFinished]
   );
 
   const handleClick = () => {
@@ -145,48 +152,10 @@ const PerformanceTestPageThree = () => {
     }
   };
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendPerformanceTaskData({
-        accessToken: session.data.user.accessToken,
-        stats: { ...stats, totalAccuracy: corrects },
-        stepInfo: { step: 2, group: user.userDetails.Status },
-      });
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            PerformanceTaskStep: "3",
-          },
-        },
-      });
-    },
-    onSuccess: () => {
-      router.push("/test/3");
-    },
-  });
-
   return (
     <div>
       {isFinished ? (
-        <FinishScreen url="/test/3" />
+        <FinishScreen isSending={isSending} url="/test/3" />
       ) : isTraining && round >= TRAINING_ROUNDS ? (
         <div>
           <p>
