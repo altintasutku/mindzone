@@ -1,6 +1,7 @@
 "use client";
 
 import TestContainer from "@/components/game/TestContainer";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
 import { Loader2Icon } from "lucide-react";
@@ -14,26 +15,9 @@ type Props = Readonly<{
 }>;
 
 const Layout = ({ children }: Props) => {
-  const session = useSession();
-  const pathname = usePathname();
+  const { session, user, error } = useProtectedRoute();
   const router = useRouter();
-  const [user, setUser] = React.useState<ZodUser>();
-
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      getUser({
-        accessToken: session.data.user.accessToken,
-        userId: session.data.user.id,
-      })
-        .then((res) => {
-          setUser(res);
-        })
-        .catch((e) => {
-          router.push("/login?error=user-not-found");
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  const pathname = usePathname();
 
   if (!session) {
     router.push("/login");
@@ -42,6 +26,11 @@ const Layout = ({ children }: Props) => {
 
   if (session.status === "loading") {
     return <Loader2Icon size={64} className="animate-spin mx-auto" />;
+  }
+
+  if (error) {
+    router.push("/login?error=" + error);
+    return null;
   }
 
   if (!user || !user.userDetails.Status) {
