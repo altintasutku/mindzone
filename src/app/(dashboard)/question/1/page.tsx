@@ -31,7 +31,7 @@ const options = [
 const QuestionTestOne = () => {
   const session = useSession();
   const router = useRouter();
-  
+
   const [answers, setAnswers] = React.useState<Record<string, number>>({});
   const [scoreBoard, setScoreBoard] = React.useState<Record<string, number>>(
     {}
