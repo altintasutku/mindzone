@@ -1,13 +1,12 @@
 import axios from "axios";
-import { userDetailsValidator, userValidator } from "../validators/user";
-import { z } from "zod";
+import { userValidator, ZodUser } from "../validators/user";
 
 export const updateUser = async ({
   accessToken,
   user,
 }: {
   accessToken: string;
-  user: z.infer<typeof userValidator>;
+  user: ZodUser;
 }) => {
   return (
     await axios.put(

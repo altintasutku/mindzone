@@ -3,7 +3,6 @@
 import { getUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const useProtectedRoute = () => {

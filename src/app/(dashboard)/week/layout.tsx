@@ -12,7 +12,7 @@ import {
 import { Loader2Icon } from "lucide-react";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
-const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames];
+export const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { session, user, error } = useProtectedRoute();

@@ -3,13 +3,22 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
 
 type Props = {
   url: string;
+  isSending: boolean;
 };
 
-const FinishScreen = ({ url }: Props) => {
+const FinishScreen = ({ url, isSending }: Props) => {
   const router = useRouter();
+
+  if (isSending) {
+    return <div>
+      <p>Verileriniz gönderiliyor. Lütfen bekleyin</p>
+      <Loader2Icon size={24} className="animate-spin mx-auto" />
+    </div>;
+  }
 
   return (
     <div>

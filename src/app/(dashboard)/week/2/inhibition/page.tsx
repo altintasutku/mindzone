@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useSession } from "next-auth/react";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const mods = { negative: 40, positive: 16 };
 
@@ -86,43 +87,14 @@ const WeekTwoGameThreePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      sendWeekData(data, session.data.user.accessToken);
-
-      updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (!isFinished) {
       return;
     }
 
-    mutate(stats);
+    send(stats);
 
     clearInterval(timeout!);
 
@@ -194,7 +166,7 @@ const WeekTwoGameThreePage = () => {
     <div>
       {isFinished ? (
         <div className="flex justify-center items-center">
-          <FinishScreen url="/week/2/cognitive-emphaty" />
+          <FinishScreen isSending={isSending} url="/week/2/cognitive-emphaty" />
         </div>
       ) : round === 0 ? (
         <div className="flex flex-col">

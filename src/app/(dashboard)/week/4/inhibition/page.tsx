@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { sendWeekData, WeekData } from "@/lib/api/week";
 import Image from "next/image";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 enum GO_NOGO {
   GO = "GO",
@@ -58,36 +59,7 @@ const WeekFourGameThreePage = () => {
     group: "W1",
   });
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendWeekData(data, session.data.user.accessToken);
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden") {
@@ -160,7 +132,7 @@ const WeekFourGameThreePage = () => {
       if (!isFinished) {
         return;
       }
-      mutate(stats);
+      send(stats);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isFinished]
@@ -206,8 +178,8 @@ const WeekFourGameThreePage = () => {
   return (
     <div>
       {isFinished ? (
-        <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/4/cognitive-emphaty' />
+        <div className="flex justify-center items-center">
+          <FinishScreen isSending={isSending} url="/week/4/cognitive-emphaty" />
         </div>
       ) : isTraining && round >= TRAINING_ROUNDS ? (
         <div>
@@ -215,8 +187,8 @@ const WeekFourGameThreePage = () => {
             <b>Eğitim bitti</b>. Şimdi gerçek test başlıyor. Hazır olduğunda
             başla butonuna tıkla.
           </p>
-          <Separator className='my-5' />
-          <div className='flex justify-center my-5'>
+          <Separator className="my-5" />
+          <div className="flex justify-center my-5">
             <Button
               onClick={() => {
                 setIsTraining(false);
@@ -236,27 +208,27 @@ const WeekFourGameThreePage = () => {
       ) : round === 0 ? (
         <div>
           <IntroductionTestThree />
-          <Separator className='my-5' />
+          <Separator className="my-5" />
 
-          <div className='flex justify-center my-5'>
+          <div className="flex justify-center my-5">
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className='min-h-96 flex flex-col justify-center items-center'>
+        <div className="min-h-96 flex flex-col justify-center items-center">
           {imageMode === null ? (
-            <div className=' h-[275px]'></div>
+            <div className=" h-[275px]"></div>
           ) : (
             <Image
               width={200}
               height={200}
-              alt='image'
+              alt="image"
               loader={imageLoader}
               src={`${imageMode}/${imageIndex}`}
             />
           )}
           <Button
-            className='px-10 my-5'
+            className="px-10 my-5"
             onClick={handleClick}
             disabled={current === GO_NOGO.NONE}
           >

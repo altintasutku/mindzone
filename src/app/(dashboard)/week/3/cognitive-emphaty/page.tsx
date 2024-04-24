@@ -10,6 +10,7 @@ import { sendWeekData, WeekData } from "@/lib/api/week";
 import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const WeekThreeGameFourPage = () => {
   const [isFinished, setIsFinished] = useState(false);
@@ -33,36 +34,7 @@ const WeekThreeGameFourPage = () => {
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendWeekData(data, session.data.user.accessToken);
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   const handleNext = () => {
     if (round >= MAX_ROUND) {
@@ -97,7 +69,7 @@ const WeekThreeGameFourPage = () => {
 
   useEffect(() => {
     if (isFinished) {
-      mutate(stats);
+      send(stats);
       clearInterval(timeout!);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,7 +121,7 @@ const WeekThreeGameFourPage = () => {
     <div>
       {isFinished ? (
         <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/3/inhibition' />
+          <FinishScreen isSending={isSending} url='/week/3/inhibition' />
         </div>
       ) : round === 0 ? (
         <div className='flex flex-col'>

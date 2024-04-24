@@ -11,11 +11,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import FinishScreen from "@/components/game/FinishScreen";
-import { useSession } from "next-auth/react";
-import { WeekData, sendWeekData } from "@/lib/api/week";
-import { useMutation } from "@tanstack/react-query";
-import { getUser, updateUser } from "@/lib/api/user";
-import { ZodUser } from "@/lib/validators/user";
+import { WeekData } from "@/lib/api/week";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_three/working_memory/${src}.jpg`;
@@ -25,7 +22,7 @@ const TOTAL_ROUNDS = 100;
 
 const WeekThreeGameOnePage = () => {
   const [level, setLevel] = useState<GameImage[]>();
-  const [round, setRound] = useState(0);
+  const [round, setRound] = useState(98);
 
   const [shownImages, setShownImages] = useState<boolean[]>([
     true,
@@ -37,8 +34,6 @@ const WeekThreeGameOnePage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const [isFinished, setIsFinished] = useState(false);
-
-  const session = useSession();
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -86,41 +81,12 @@ const WeekThreeGameOnePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      await sendWeekData(data, session.data.user.accessToken);
-
-      await updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (!isFinished) return;
 
-    mutate(stats);
+    send(stats);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
@@ -220,25 +186,25 @@ const WeekThreeGameOnePage = () => {
   };
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       {isFinished ? (
-        <div className='flex justify-center items-center'>
-          <FinishScreen url='/week/3/cognitive-flexibility' />
+        <div className="flex justify-center items-center">
+          {<FinishScreen isSending={isSending} url="/week/3/cognitive-flexibility" />}
         </div>
       ) : round === 0 ? (
-        <div className='flex flex-col items-center gap-10'>
+        <div className="flex flex-col items-center gap-10">
           <IntroductionWeekThreeGameOne />
 
           <Button onClick={handleNextRound}>Başla</Button>
         </div>
       ) : level ? (
-        <div className='min-h-56 space-y-10 w-full'>
+        <div className="min-h-56 space-y-10 w-full">
           {isCorrect === true ? (
-            <h1 className='text-2xl font-bold text-green-500 text-center col-span-4'>
+            <h1 className="text-2xl font-bold text-green-500 text-center col-span-4">
               Doğru
             </h1>
           ) : isCorrect === false ? (
-            <h1 className='text-2xl font-bold text-red-500 text-center col-span-4'>
+            <h1 className="text-2xl font-bold text-red-500 text-center col-span-4">
               Yanlış
             </h1>
           ) : isCorrect === null ? (
@@ -248,7 +214,7 @@ const WeekThreeGameOnePage = () => {
               {level.map((item, index) => (
                 <div
                   key={index}
-                  className='bg-primary rounded-md overflow-hidden cursor-pointer'
+                  className="bg-primary rounded-md overflow-hidden cursor-pointer"
                   onClick={() => handleClick(index)}
                 >
                   <Image
@@ -269,7 +235,7 @@ const WeekThreeGameOnePage = () => {
 
           <Progress
             value={(round * 100) / TOTAL_ROUNDS}
-            className='col-span-4'
+            className="col-span-4"
           />
         </div>
       ) : null}

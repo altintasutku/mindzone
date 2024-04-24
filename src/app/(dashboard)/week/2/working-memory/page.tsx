@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { getUser, updateUser } from "@/lib/api/user";
 import FinishScreen from "@/components/game/FinishScreen";
 import { ZodUser } from "@/lib/validators/user";
+import { useSendWeeklyData } from "@/hooks/useSendData";
 
 const MAXROUND = 52;
 
@@ -86,43 +87,14 @@ const WorkingMemory = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: WeekData) => {
-      if (!session.data) {
-        return;
-      }
-
-      let user: ZodUser;
-      try {
-        user = await getUser({
-          accessToken: session.data.user.accessToken,
-          userId: session.data.user.id,
-        });
-      } catch (e) {
-        return;
-      }
-
-      sendWeekData(data, session.data.user.accessToken);
-
-      updateUser({
-        accessToken: session.data.user.accessToken,
-        user: {
-          ...user,
-          userDetails: {
-            ...user.userDetails,
-            WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-          },
-        },
-      });
-    },
-  });
+  const { send, isSending } = useSendWeeklyData();
 
   useEffect(() => {
     if (!isFinished) {
       return;
     }
 
-    mutate(stats);
+    send(stats);
 
     clearInterval(timeout!);
 
@@ -242,7 +214,7 @@ const WorkingMemory = () => {
     <div>
       {isFinished ? (
         <div className="flex justify-center items-center">
-          <FinishScreen url="/week/2/cognitive-flexibility" />
+          <FinishScreen isSending={isSending} url="/week/2/cognitive-flexibility" />
         </div>
       ) : round === 0 ? (
         <div>
