@@ -86,6 +86,10 @@ export const useSendPerformanceTaskData = () => {
               user.userDetails.PerformanceTaskStep === "5"
                 ? "1"
                 : parseInt(user.userDetails.PerformanceTaskStep) + 1 + "",
+            Status:
+              user.userDetails.PerformanceTaskStep === "5"
+                ? "W1"
+                : user.userDetails.Status,
           },
         },
       });
