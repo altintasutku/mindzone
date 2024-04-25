@@ -33,7 +33,14 @@ export const useSendWeeklyData = () => {
             ...user,
             userDetails: {
               ...user.userDetails,
-              WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+              WeeklyStatus:
+                parseInt(user.userDetails.WeeklyStatus) >= 30
+                  ? "1"
+                  : parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+              Status:
+                parseInt(user.userDetails.WeeklyStatus) >= 30
+                  ? "S3"
+                  : user.userDetails.Status,
             },
           },
         });
