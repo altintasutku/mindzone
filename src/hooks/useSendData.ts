@@ -33,7 +33,14 @@ export const useSendWeeklyData = () => {
             ...user,
             userDetails: {
               ...user.userDetails,
-              WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+              WeeklyStatus:
+                parseInt(user.userDetails.WeeklyStatus) >= 30
+                  ? "1"
+                  : parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+              Status:
+                parseInt(user.userDetails.WeeklyStatus) >= 30
+                  ? "S3"
+                  : user.userDetails.Status,
             },
           },
         });
@@ -86,6 +93,14 @@ export const useSendPerformanceTaskData = () => {
               user.userDetails.PerformanceTaskStep === "5"
                 ? "1"
                 : parseInt(user.userDetails.PerformanceTaskStep) + 1 + "",
+            Status:
+              user.userDetails.PerformanceTaskStep === "5" &&
+              user.userDetails.Status === "PT1"
+                ? "S2"
+                : user.userDetails.PerformanceTaskStep === "5" &&
+                  user.userDetails.Status === "PT2"
+                ? "S4"
+                : user.userDetails.Status,
           },
         },
       });
