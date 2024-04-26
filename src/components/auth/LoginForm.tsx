@@ -46,7 +46,7 @@ const LoginFormInner = () => {
 
   return (
     <form className="gap-2 flex flex-col w-full sm:w-auto">
-      {error && (
+      {error && error !== "user-not-found" && (
         <p className="text-red-500 text-sm text-center">
           E-posta veya şifre hatalı
         </p>
