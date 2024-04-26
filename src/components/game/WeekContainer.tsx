@@ -49,7 +49,7 @@ const WeekContainer = ({ children, games }: Props) => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="bg-white dark:bg-zinc-900 m-5 p-4 rounded-md shadow min-w-[50%] w-full sm:max-w-[80%] lg:max-w-[60%]">
+      <div className="bg-white dark:bg-zinc-900 sm:m-5 p-4 rounded-md shadow min-w-[50%] w-full sm:max-w-[80%] lg:max-w-[60%]">
         <div className="min-h-96 flex justify-center items-center">
           {children}
         </div>
