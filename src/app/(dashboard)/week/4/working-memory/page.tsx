@@ -189,7 +189,7 @@ const WeekFourGameOnePage = () => {
   return (
     <div className='flex flex-col items-center py-10'>
       {isFinished ? (
-        <FinishScreen isSending={isSending} url='/week/5' />
+        <FinishScreen isSending={isSending} url='/week/4/cognitive-flexibility' />
       ) : round === 0 ? (
         <div className='flex flex-col'>
           <WeekFourGameOneIntroductions />

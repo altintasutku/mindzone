@@ -21,10 +21,14 @@ enum GO_NOGO {
   NONE = "NONE",
 }
 
-const REACTION_TIME = 1000;
+const REACTION_TIME = 2000;
 
 const TOTAL_ROUNDS = (15 * 60) / (REACTION_TIME / 1000 + 0.5);
 const TRAINING_ROUNDS = 20;
+
+const imageLoader = ({ src }: { src: string }) => {
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/inhibition/${src}.JPG`;
+};
 
 const WeekFourGameThreePage = () => {
   const { toast } = useToast();
@@ -169,10 +173,6 @@ const WeekFourGameThreePage = () => {
         totalErrorCount: prev.totalErrorCount + 1,
       }));
     }
-  };
-
-  const imageLoader = ({ src }: { src: string }) => {
-    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_two/inhibition/${src}.jpg`;
   };
 
   return (
