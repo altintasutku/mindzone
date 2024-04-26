@@ -153,25 +153,24 @@ const WeekFourGameFourPage = () => {
                   className='flex flex-col justify-center items-center'
                   key={index}
                 >
-                  <h2 className='font-bold my-5'>{question.title}</h2>
-                  <p className='my-3'>{question.information}</p>
+                  <h2 className='font-bold text-lg'>{question.title}</h2>
+                  <p className=''>{question.information}</p>
                   <p>{question.question}</p>
-                  <p className='my-10'>
-                    Lütfen {question.title}&apos;yi ne sıklıkta kullandığınızı
+                  <p className='mt-10'>
+                    Lütfen <b>{question.title}&apos;yi</b> ne sıklıkta kullandığınızı
                     işaretleyiniz.
                   </p>
                 </div>
               );
             }
           })}
-          <Separator className=' my-10' />
-          <div className='flex justify-center my-5'>
+          <div className='flex justify-center my-5 flex-wrap gap-4'>
             {Array.from({ length: 7 }, (_, index) => (
               <Button
-                className='mx-2'
                 key={index}
                 onClick={handleNext}
                 variant={"outline"}
+                className="font-bold text-xl"
               >
                 {index + 1}
               </Button>
