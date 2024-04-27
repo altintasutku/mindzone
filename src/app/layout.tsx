@@ -38,8 +38,22 @@ export default function RootLayout({ children }: Props) {
           disableTransitionOnChange
         >
           <div className="min-h-screen bg-white bg-grid-slate-200/60 dark:bg-[rgba(0,0,0,0.9)] dark:bg-grid-slate-700/40">
-            <Navbar />
-            {children}
+            {/* <Navbar /> */}
+            {/* {children} */}
+            <br />
+            <br />
+            <br />
+            <br />
+            <div className="bg-zinc-900 border-4 border-primary w-full md:max-w-[1200px] mx-auto rounded-md p-10">
+              <p className="font-semibold text-3xl">
+                Sistem çalışma altında lütfen daha sonra tekrar deneyiniz.
+              </p>
+              <small>Sabrınız için teşekkürler -Mindzone Ekibi</small>
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
             <Footer />
             <Toaster />
           </div>
