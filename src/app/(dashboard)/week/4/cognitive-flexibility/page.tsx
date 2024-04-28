@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import { ZodUser } from "@/lib/validators/user";
 import { useSendWeeklyData } from "@/hooks/useSendData";
 
-const TOTAL_ROUNDS = 150;
+const TOTAL_ROUNDS = 75;
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_four/cognitive_flexibility/${src}.jpg`;

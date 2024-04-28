@@ -20,7 +20,7 @@ const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_four/working_memory/${src}.JPG`;
 };
 
-const TOTAL_ROUNDS = 150;
+const TOTAL_ROUNDS = 75;
 const DURATION = 1500;
 const CHANCE_OF_IMAGE = 0.2;
 

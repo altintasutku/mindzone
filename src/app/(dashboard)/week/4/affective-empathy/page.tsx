@@ -10,6 +10,10 @@ import { useToast } from "@/components/ui/use-toast";
 import { WeekData } from "@/lib/api/week";
 import { useSendWeeklyData } from "@/hooks/useSendData";
 
+const imageLoader = ({ src }: { src: string }) => {
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_four/affective-emphaty/${src}.JPG`;
+};
+
 const WeekFourGameFivePage = () => {
   const { toast } = useToast();
 
@@ -128,10 +132,6 @@ const WeekFourGameFivePage = () => {
     send(stats);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
-
-  const imageLoader = ({ src }: { src: string }) => {
-    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_four/affective-emphaty/${src}.jpg`;
-  };
 
   return (
     <div>
