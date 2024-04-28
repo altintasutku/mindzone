@@ -151,9 +151,9 @@ const WeekFourGameFivePage = () => {
       ) : (
         <>
           <p>{week4Game5Questions[round - 1].question}</p>
-          <div className='flex flex-row justify-center mt-9'>
+          <div className='flex flex-row justify-center mt-9 flex-wrap gap-2'>
             {image.map((item, index) => (
-              <div key={index} className='mx-2'>
+              <div key={index}>
                 <Image
                   onClick={() => handleSelect(item)}
                   className=' rounded-lg'
