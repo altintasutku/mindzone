@@ -27,20 +27,20 @@ type Props = Readonly<{
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body
         className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
         <Providers
-          attribute="class"
-          defaultTheme="system"
+          attribute='class'
+          defaultTheme='system'
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen bg-white bg-grid-slate-200/60 dark:bg-[rgba(0,0,0,0.9)] dark:bg-grid-slate-700/40">
-            {/* <Navbar /> */}
-            {/* {children} */}
-            <br />
+          <div className='min-h-screen bg-white bg-grid-slate-200/60 dark:bg-[rgba(0,0,0,0.9)] dark:bg-grid-slate-700/40'>
+            <Navbar />
+            {children}
+            {/* <br />
             <br />
             <br />
             <br />
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: Props) {
             <br />
             <br />
             <br />
-            <br />
+            <br /> */}
             <Footer />
             <Toaster />
           </div>
