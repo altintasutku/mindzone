@@ -187,14 +187,13 @@ const WeekFourGameFourPage = () => {
                   key={index}
                 >
                   <h2 className='font-bold my-5'>{question.title}</h2>
-                  <div className='flex flex-row my-2'>
+                  <div className='flex flex-row my-2 gap-2 justify-center flex-wrap'>
                     {question.options.map((option, index) => (
                       <Button
                         key={index}
                         onClick={() => {
                           handleCheck(option);
                         }}
-                        className='mx-2'
                         variant='outline'
                       >
                         {option}
