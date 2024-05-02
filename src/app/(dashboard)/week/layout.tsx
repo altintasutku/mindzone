@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { calculateDaysDiff } from "@/lib/utils";
 import {
+  weekFiveGames,
   weekFourGames,
   weekOneGames,
   weekThreeGames,
@@ -12,7 +13,7 @@ import {
 import { Loader2Icon } from "lucide-react";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
-export const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames];
+export const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames, weekFiveGames];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { session, user, error } = useProtectedRoute();

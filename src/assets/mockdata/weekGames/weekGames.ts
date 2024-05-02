@@ -109,3 +109,31 @@ export const weekFourGames: Game[] = [
     week: "4",
   },
 ];
+
+export const weekFiveGames: Game[] = [
+  {
+    isCompleted: false,
+    slug: "working-memory",
+    week: "5",
+  },
+  {
+    isCompleted: false,
+    slug: "cognitive-flexibility",
+    week: "5",
+  },
+  {
+    isCompleted: false,
+    slug: "inhibition",
+    week: "5",
+  },
+  {
+    isCompleted: false,
+    slug: "cognitive-emphaty",
+    week: "5",
+  },
+  {
+    isCompleted: false,
+    slug: "affective-empathy",
+    week: "5",
+  },
+];
