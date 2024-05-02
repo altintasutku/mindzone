@@ -22,7 +22,7 @@ const TOTAL_ROUNDS = 100;
 
 const WeekThreeGameOnePage = () => {
   const [level, setLevel] = useState<GameImage[]>();
-  const [round, setRound] = useState(98);
+  const [round, setRound] = useState(0);
 
   const [shownImages, setShownImages] = useState<boolean[]>([
     true,
