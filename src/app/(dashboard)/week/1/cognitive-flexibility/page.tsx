@@ -52,7 +52,7 @@ enum CorrectState {
 
 const CORRECT_DURATION = 800;
 
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 100;
 
 const CognitiveFlexibilityPage = () => {
   const [correctState, setCorrectState] = useState<CorrectState>(

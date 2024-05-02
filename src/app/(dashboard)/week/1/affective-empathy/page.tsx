@@ -17,7 +17,7 @@ const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/affective_emphaty/${src}.JPG`;
 };
 
-const MAX_ROUND = 120;
+const MAX_ROUND = 100;
 
 const AffectiveEmpathyPage = () => {
   const [round, setRound] = useState(0);

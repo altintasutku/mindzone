@@ -37,7 +37,7 @@ enum CorrectState {
 
 const CORRECT_DURATION = 1000;
 
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 150;
 
 const InhibitionPage = () => {
   const [round, setRound] = useState<number>(0);

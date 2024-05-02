@@ -32,7 +32,7 @@ const itemImageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_one/director_task/${src}.png`;
 };
 
-const TOTAL_ROUNDS = 200;
+const TOTAL_ROUNDS = 100;
 
 const game = new DirectorGame(TOTAL_ROUNDS);
 
