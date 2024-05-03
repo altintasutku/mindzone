@@ -7,21 +7,29 @@ import {
   weekFiveGames,
   weekFourGames,
   weekOneGames,
+  weekSixGames,
   weekThreeGames,
   weekTwoGames,
 } from "@/assets/mockdata/weekGames/weekGames";
 import { Loader2Icon } from "lucide-react";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
-export const weekGames = [weekOneGames, weekTwoGames, weekThreeGames, weekFourGames, weekFiveGames];
+export const weekGames = [
+  weekOneGames,
+  weekTwoGames,
+  weekThreeGames,
+  weekFourGames,
+  weekFiveGames,
+  weekSixGames,
+];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { session, user, error } = useProtectedRoute();
   const router = useRouter();
   const pathname = usePathname();
 
-  if(session.status === "loading") {
-    return <Loader2Icon size={64} className="animate-spin mx-auto" />;
+  if (session.status === "loading") {
+    return <Loader2Icon size={64} className='animate-spin mx-auto' />;
   }
 
   if (error) {
