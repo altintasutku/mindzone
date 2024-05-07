@@ -188,7 +188,7 @@ const QuestionTestTwo = () => {
           userDetails: {
             ...user.userDetails,
             PerformanceTaskStep: "1",
-            Status: "W1",
+            Status: user.userDetails.Status === "S2" ? "W1" : "F",
           },
         },
       });
