@@ -12,6 +12,7 @@ import {calculateDaysDiff} from "@/lib/utils";
 type Props = Readonly<{
     searchParams: {
         error?: string;
+        status?: string;
     };
 }>;
 
@@ -34,13 +35,15 @@ const DashboardPage = async ({searchParams}: Props) => {
         redirect("/login");
     }
 
-    if (user.userDetails.Status === "S1" || user.userDetails.Status === "S3") {
+    if (user.userDetails.Status === "S1" 
+    // || user.userDetails.Status === "S3"
+) {
         redirect("/question/1");
     } else if (user.userDetails.Status.includes("PT")) {
         redirect(`/test/${user.userDetails.PerformanceTaskStep}`);
     } else if (
-        user.userDetails.Status === "S2" ||
-        user.userDetails.Status === "S4"
+        user.userDetails.Status === "S2" 
+        // ||user.userDetails.Status === "S4"
     ) {
         redirect("/question/2");
     }
@@ -58,6 +61,7 @@ const DashboardPage = async ({searchParams}: Props) => {
                     <span>Hafta henüz başlamadı. <b>{remainingDay} gün</b> sonra tekrar deneyiniz.</span>
                 </div>
             )}
+
 
             <WeeklyTasks/>
         </div>

@@ -5,7 +5,9 @@ import { Loader2Icon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
-type Props = Readonly<{ children: React.ReactNode }>;
+type Props = Readonly<{
+  children: React.ReactNode;
+}>;
 
 export default function DashboardLayout({ children }: Props) {
   const { session, user, error } = useProtectedRoute();
@@ -31,15 +33,17 @@ export default function DashboardLayout({ children }: Props) {
   }
 
   if (
-    (user.userDetails.Status.includes("S1") ||
-      user.userDetails.Status.includes("S3")) &&
+    // (
+    user.userDetails.Status.includes("S1") &&
+    // ||  user.userDetails.Status.includes("S3"))
     pathname !== "/question/1"
   ) {
     router.push("/question/1");
     return null;
   } else if (
-    (user.userDetails.Status.includes("S2") ||
-      user.userDetails.Status.includes("S3")) &&
+    // (
+    user.userDetails.Status.includes("S2") &&
+    //  || user.userDetails.Status.includes("S3"))
     pathname !== "/question/2"
   ) {
     router.push("/question/2");
@@ -49,6 +53,15 @@ export default function DashboardLayout({ children }: Props) {
     !pathname.includes("/test")
   ) {
     router.push(`/test/${user.userDetails.PerformanceTaskStep}`);
+    return null;
+  }
+
+  if (
+    user.userDetails.Status.includes("S3") ||
+    user.userDetails.Status.includes("S4") ||
+    user.userDetails.Status.includes("PT2")
+  ) {
+    router.push("/?status=week-finished&nav=true");
     return null;
   }
 
