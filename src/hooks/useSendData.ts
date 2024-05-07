@@ -35,7 +35,7 @@ export const useSendWeeklyData = () => {
               ...user.userDetails,
               WeeklyStatus:
                 parseInt(user.userDetails.WeeklyStatus) >= 30
-                  ? "1"
+                  ? "30"
                   : parseInt(user.userDetails.WeeklyStatus) + 1 + "",
               Status:
                 parseInt(user.userDetails.WeeklyStatus) >= 30
