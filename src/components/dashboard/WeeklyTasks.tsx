@@ -38,7 +38,7 @@ const WeeklyTasks = async () => {
     return (
         <section className="dark:bg-zinc-900 shadow text-center pt-5 rounded-md space-y-5">
             <h1 className="font-semibold text-xl">Haftalık Görevlerim</h1>
-            {parseInt(user.userDetails.UserType) === 0 || parseInt(user.userDetails.UserType) === 1 && (
+            {parseInt(user.userDetails.UserType) === 0 && (
                 <div className={"flex items-center justify-center gap-4 p-4 bg-blue-500 text-white mx-10 rounded-md"}>
                     <InfoIcon />
                     Egzersizlerimiz sizler için hazırlanıyor. Yakında başlayacaksınız!
