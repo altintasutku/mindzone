@@ -29,7 +29,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   if (session.status === "loading") {
-    return <Loader2Icon size={64} className='animate-spin mx-auto' />;
+    return <Loader2Icon size={64} className="animate-spin mx-auto" />;
   }
 
   if (error) {
@@ -41,7 +41,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     return null;
   }
 
-  if (parseInt(user.userDetails.UserType) === 0) {
+  if (
+    parseInt(user.userDetails.UserType) === 0 ||
+    parseInt(user.userDetails.UserType) === 1
+  ) {
     router.push("/dashboard");
     return null;
   }
