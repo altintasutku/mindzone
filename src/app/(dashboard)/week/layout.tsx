@@ -42,8 +42,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (
-    parseInt(user.userDetails.UserType) === 0 ||
-    parseInt(user.userDetails.UserType) === 1
+    parseInt(user.userDetails.UserType) === 0
   ) {
     router.push("/dashboard");
     return null;
