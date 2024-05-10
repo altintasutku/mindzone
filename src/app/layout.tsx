@@ -38,9 +38,9 @@ export default function RootLayout({ children }: Props) {
           disableTransitionOnChange
         >
           <div className='min-h-screen bg-white bg-grid-slate-200/60 dark:bg-[rgba(0,0,0,0.9)] dark:bg-grid-slate-700/40'>
-            {/* <Navbar />
-            {children} */}
-            <br />
+            <Navbar />
+            {children}
+            {/* <br />
             <br />
             <br />
             <br />
@@ -53,9 +53,9 @@ export default function RootLayout({ children }: Props) {
             <br />
             <br />
             <br />
-            <br />
-            {/* <Footer />
-            <Toaster /> */}
+            <br /> */}
+            <Footer />
+            <Toaster />
           </div>
         </Providers>
       </body>
