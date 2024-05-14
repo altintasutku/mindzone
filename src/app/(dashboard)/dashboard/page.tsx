@@ -36,14 +36,14 @@ const DashboardPage = async ({searchParams}: Props) => {
     }
 
     if (user.userDetails.Status === "S1" 
-    // || user.userDetails.Status === "S3"
+    || user.userDetails.Status === "S3"
 ) {
         redirect("/question/1");
     } else if (user.userDetails.Status.includes("PT")) {
         redirect(`/test/${user.userDetails.PerformanceTaskStep}`);
     } else if (
         user.userDetails.Status === "S2" 
-        // ||user.userDetails.Status === "S4"
+        ||user.userDetails.Status === "S4"
     ) {
         redirect("/question/2");
     }
