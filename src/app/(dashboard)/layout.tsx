@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: Props) {
     return null;
   } else if (
     (user.userDetails.Status.includes("S2") ||
-      user.userDetails.Status.includes("S3")) &&
+      user.userDetails.Status.includes("S4")) &&
     pathname !== "/question/2"
   ) {
     router.push("/question/2");
