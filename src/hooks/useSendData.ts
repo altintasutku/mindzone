@@ -26,27 +26,27 @@ export const useSendWeeklyData = () => {
         console.error(e);
       }
 
-      try {
-        await updateUser({
-          accessToken: session.data.user.accessToken,
-          user: {
-            ...user,
-            userDetails: {
-              ...user.userDetails,
-              WeeklyStatus:
-                parseInt(user.userDetails.WeeklyStatus) >= 30
-                  ? "30"
-                  : parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-              Status:
-                parseInt(user.userDetails.WeeklyStatus) >= 30
-                  ? "S3"
-                  : user.userDetails.Status,
-            },
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      // try {
+      //   await updateUser({
+      //     accessToken: session.data.user.accessToken,
+      //     user: {
+      //       ...user,
+      //       userDetails: {
+      //         ...user.userDetails,
+      //         WeeklyStatus:
+      //           parseInt(user.userDetails.WeeklyStatus) >= 30
+      //             ? "30"
+      //             : parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+      //         Status:
+      //           parseInt(user.userDetails.WeeklyStatus) >= 30
+      //             ? "S3"
+      //             : user.userDetails.Status,
+      //       },
+      //     },
+      //   });
+      // } catch (e) {
+      //   console.error(e);
+      // }
     },
     onSuccess() {
       setIsSending(false);
@@ -98,9 +98,9 @@ export const useSendPerformanceTaskData = () => {
               user.userDetails.Status === "PT1"
                 ? "S2"
                 : user.userDetails.PerformanceTaskStep === "5" &&
-                  user.userDetails.Status === "PT2"
-                ? "S4"
-                : user.userDetails.Status,
+                    user.userDetails.Status === "PT2"
+                  ? "S4"
+                  : user.userDetails.Status,
           },
         },
       });
