@@ -9,6 +9,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { WeekData } from "@/lib/api/week";
 import { useSendWeeklyData } from "@/hooks/useSendData";
 import WeekSixGameFiveIntroductions from "./_introductions";
+import { updateUser } from "@/lib/api/user";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+import { useSession } from "next-auth/react";
 
 const imageLoader = ({ src }: { src: string }) => {
   return `${process.env.NEXT_PUBLIC_IMAGE_URL}/weekGames/week_four/affective-emphaty/${src}.JPG`;
@@ -16,6 +19,7 @@ const imageLoader = ({ src }: { src: string }) => {
 
 const WeekFourGameFivePage = () => {
   const { toast } = useToast();
+  const { user, session } = useProtectedRoute();
 
   const TOTAL_ROUNDS = week4Game5Questions.length;
 
@@ -49,7 +53,7 @@ const WeekFourGameFivePage = () => {
         setMyTimeout(
           setInterval(() => {
             setTimer((prev) => prev + 10);
-          }, 10)
+          }, 10),
         );
       }
     }
@@ -59,14 +63,14 @@ const WeekFourGameFivePage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false
+      false,
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false
+        false,
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,7 +91,7 @@ const WeekFourGameFivePage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10)
+        }, 10),
       );
     }
     setRound((prev) => prev + 1);
@@ -126,40 +130,61 @@ const WeekFourGameFivePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
+  const s3toUser = async () => {
+    if (!session.data || !user) return;
+
+    try {
+      await updateUser({
+        accessToken: session.data.user.accessToken,
+        user: {
+          ...user,
+          userDetails: {
+            ...user.userDetails,
+            WeeklyStatus: "0",
+            Status: "S3",
+          },
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     if (!isFinished) return;
 
     send(stats);
+    s3toUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
   return (
     <div>
       {isFinished ? (
-        <div className='flex justify-center items-center'>
-          <FinishScreen isSending={isSending} url='/week/5/' />
+        <div className="flex justify-center items-center">
+          <FinishScreen isSending={isSending} url="/question/1" />
         </div>
       ) : round === 0 ? (
         <div>
           <WeekSixGameFiveIntroductions />
-          <Separator className='my-5' />
+          <Separator className="my-5" />
 
-          <div className='flex justify-center my-5'>
+          <div className="flex justify-center my-5">
             <Button onClick={handleNext}>Başla</Button>
           </div>
         </div>
       ) : (
         <>
           <p>{week4Game5Questions[round - 1].question}</p>
-          <div className='flex flex-row justify-center mt-9 flex-wrap gap-2'>
+          <div className="flex flex-row justify-center mt-9 flex-wrap gap-2">
             {image.map((item, index) => (
               <div key={index}>
                 <Image
                   onClick={() => handleSelect(item)}
-                  className=' rounded-lg'
+                  className=" rounded-lg"
                   src={`${round}/${item}`}
                   loader={imageLoader}
-                  alt='image'
+                  alt="image"
                   width={100}
                   height={100}
                 />
