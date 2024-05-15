@@ -52,7 +52,12 @@ export default function DashboardLayout({ children }: Props) {
   ) {
     router.push(`/test/${user.userDetails.PerformanceTaskStep}`);
     return null;
+  } else if (user.userDetails.Status === "F" && pathname !== "/finish") {
+    router.push("/finish");
+    return null;
   }
+
+  console.log(user.userDetails.Status, pathname);
 
   return <>{children}</>;
 }
