@@ -137,7 +137,7 @@ const QuestionTestTwo = () => {
               .reduce((acc, item) => acc + item.score, 0),
             subType: i,
             type: 2,
-            group: "S2",
+            group:user.userDetails.Status,
           },
           session.data.user.accessToken
         );
@@ -151,7 +151,7 @@ const QuestionTestTwo = () => {
               .reduce((acc, item) => acc + item.score, 0),
             subType: i,
             type: 3,
-            group: "S2",
+            group: user.userDetails.Status,
           },
           session.data.user.accessToken
         );
@@ -164,7 +164,7 @@ const QuestionTestTwo = () => {
             .reduce((acc, item) => acc + item.score, 0),
           subType: null,
           type: 4,
-          group: "S2",
+          group: user.userDetails.Status,
         },
         session.data.user.accessToken
       );
@@ -176,7 +176,7 @@ const QuestionTestTwo = () => {
             .reduce((acc, item) => acc + item.score, 0),
           subType: null,
           type: 5,
-          group: "S2",
+          group: user.userDetails.Status,
         },
         session.data.user.accessToken
       );
