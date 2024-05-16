@@ -127,10 +127,22 @@ const WeekThreeGameTwoPage = () => {
 
     if (currentRule === Rules.sex && answer.sex === currentData.sex) {
       setIsCorrect(true);
+      setStats({
+        ...stats,
+        totalAccuracy: stats.totalAccuracy + 1,
+      });
     } else if (currentRule === Rules.mod && answer.mod === currentData.mod) {
       setIsCorrect(true);
+      setStats({
+        ...stats,
+        totalAccuracy: stats.totalAccuracy + 1,
+      });
     } else {
       setIsCorrect(false);
+      setStats({
+        ...stats,
+        totalErrorCount: stats.totalErrorCount + 1,
+      });
     }
 
     setTimeout(() => {

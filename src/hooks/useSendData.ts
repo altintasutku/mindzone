@@ -26,27 +26,20 @@ export const useSendWeeklyData = () => {
         console.error(e);
       }
 
-      // try {
-      //   await updateUser({
-      //     accessToken: session.data.user.accessToken,
-      //     user: {
-      //       ...user,
-      //       userDetails: {
-      //         ...user.userDetails,
-      //         WeeklyStatus:
-      //           parseInt(user.userDetails.WeeklyStatus) >= 30
-      //             ? "30"
-      //             : parseInt(user.userDetails.WeeklyStatus) + 1 + "",
-      //         Status:
-      //           parseInt(user.userDetails.WeeklyStatus) >= 30
-      //             ? "S3"
-      //             : user.userDetails.Status,
-      //       },
-      //     },
-      //   });
-      // } catch (e) {
-      //   console.error(e);
-      // }
+      try {
+        await updateUser({
+          accessToken: session.data.user.accessToken,
+          user: {
+            ...user,
+            userDetails: {
+              ...user.userDetails,
+              WeeklyStatus: parseInt(user.userDetails.WeeklyStatus) + 1 + "",
+            },
+          },
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
     onSuccess() {
       setIsSending(false);

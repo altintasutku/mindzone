@@ -140,7 +140,6 @@ const WeekFourGameFivePage = () => {
           ...user,
           userDetails: {
             ...user.userDetails,
-            WeeklyStatus: "0",
             Status: "S3",
           },
         },
