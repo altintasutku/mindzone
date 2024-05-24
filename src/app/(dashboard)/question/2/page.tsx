@@ -2,7 +2,7 @@
 
 import { stepTwoQuestions } from "@/assets/mockdata/survey/questions";
 import { Button } from "@/components/ui/button";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Progress } from "@/components/ui/progress";
 import { sendQuestionData } from "@/lib/api/questions";
 import { getUser, updateUser } from "@/lib/api/user";
@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ZodUser } from "@/lib/validators/user";
+import { Loader2Icon } from "lucide-react";
 const das = ["Hiçbir Zaman", "Bazen ve ara sıra", "Oldukça sık", "Her zaman"];
 
 const iri = [
@@ -50,7 +51,7 @@ const QuestionTestTwo = () => {
   const router = useRouter();
   const session = useSession();
 
-  const iriReverseIndex = [25, 26, 29, 34, 35, 36, 37, 40, 41];
+  const iriReverseIndex = useMemo(() => [25, 26, 29, 34, 35, 36, 37, 40, 41], []);
 
   const handleAnswer = (
     questionId: string,
@@ -343,9 +344,9 @@ const QuestionTestTwo = () => {
           onClick={() => {
             mutate();
           }}
-          disabled={Object.keys(answers).length !== stepTwoQuestions.length}
+          disabled={Object.keys(answers).length !== stepTwoQuestions.length || isPending}
         >
-          Tamamla
+          {isPending ? <Loader2Icon className="animate-spin"/> : "Tamamla"}
         </Button>
       </nav>
     </div>
