@@ -56,7 +56,7 @@ export const useSendPerformanceTaskData = () => {
   const { session, user } = useProtectedRoute();
   const [isSending, setIsSending] = useState(false);
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: async ({
       stats,
       step,
@@ -82,18 +82,7 @@ export const useSendPerformanceTaskData = () => {
           ...user,
           userDetails: {
             ...user.userDetails,
-            PerformanceTaskStep:
-              user.userDetails.PerformanceTaskStep === "5"
-                ? "1"
-                : parseInt(user.userDetails.PerformanceTaskStep) + 1 + "",
-            Status:
-              user.userDetails.PerformanceTaskStep === "5" &&
-              user.userDetails.Status === "PT1"
-                ? "S2"
-                : user.userDetails.PerformanceTaskStep === "5" &&
-                    user.userDetails.Status === "PT2"
-                  ? "S4"
-                  : user.userDetails.Status,
+            PerformanceTaskStep: parseInt(user.userDetails.PerformanceTaskStep) + 1 + "",
           },
         },
       });
@@ -104,7 +93,7 @@ export const useSendPerformanceTaskData = () => {
   });
 
   return {
-    send: mutate,
+    send: mutateAsync,
     isSending,
   };
 };
