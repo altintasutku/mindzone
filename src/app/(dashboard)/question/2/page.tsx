@@ -41,12 +41,14 @@ const QuestionTestTwo = () => {
   const [pages, setPages] = React.useState(1);
 
   const [scoreBoard, setScoreBoard] = React.useState<
-    {
-      type: number;
-      subType: number;
-      score: number;
-    }[]
+  {
+    type: number;
+    subType: number;
+    score: number;
+  }[]
   >([]);
+  
+  console.log("🚀 ~ QuestionTestTwo ~ scoreBoard:", scoreBoard);
 
   const router = useRouter();
   const session = useSession();
@@ -60,6 +62,13 @@ const QuestionTestTwo = () => {
     subType: number,
     optionIndex: number
   ) => {
+    if (answers.hasOwnProperty(questionId)) {
+      setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+      setScoreBoard((prev) =>
+        prev.filter((item) => item.type === type && item.subType !== subType)
+      );
+    }
+    
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
     if (type === 2) {
       setScoreBoard((prev) => [
