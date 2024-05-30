@@ -9,7 +9,9 @@ import FinishScreen from "@/components/game/FinishScreen";
 import { CheckCheckIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PerformanceData } from "@/lib/api/performanceTasks";
+import { InitPerformanceData, PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { getUser, updateUser } from "@/lib/api/user";
+import { ZodUser } from "@/lib/validators/user";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 type CurrentModType = {
@@ -67,13 +69,7 @@ const PerformanceTestPageFour = () => {
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [stats, setStats] = useState<PerformanceData>({
-    totalWrongs: 0,
-    resistanceWrongs: 0,
-    reactionTime: 0,
-    totalAccuracy: 0,
-    missing: 0,
-  });
+  const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
   const [totalPoint, setTotalPoint] = useState(0);
 

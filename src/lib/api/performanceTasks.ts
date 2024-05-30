@@ -6,6 +6,17 @@ export type PerformanceData = {
   reactionTime: number;
   totalAccuracy: number;
   missing: number;
+  accuracyReactionTime: number;
+  errorReactionTime: number;
+}
+
+export const InitPerformanceData: PerformanceData = {
+  totalWrongs: 0,
+  resistanceWrongs: 0,
+  reactionTime: 0,
+  totalAccuracy: 0,
+  accuracyReactionTime: 0,
+  errorReactionTime: 0,
 };
 
 export const sendPerformanceTaskData = async ({

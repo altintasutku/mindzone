@@ -72,7 +72,7 @@ export const useSendPerformanceTaskData = () => {
 
       await sendPerformanceTaskData({
         accessToken: session.data.user.accessToken,
-        stats: { ...stats },
+        stats,
         stepInfo: { step, group: user.userDetails.Status },
       });
 

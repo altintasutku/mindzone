@@ -6,7 +6,10 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PerformanceData } from "@/lib/api/performanceTasks";
+import {
+  InitPerformanceData,
+  PerformanceData,
+} from "@/lib/api/performanceTasks";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 const LETTERS = [
@@ -54,15 +57,11 @@ const PerformanceTestPageTwo = () => {
 
   const [history, setHistory] = useState<string[]>([]);
 
+  const [roundStartTime, setRoundStartTime] = useState<Date>(new Date());
+
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [stats, setStats] = useState<PerformanceData>({
-    totalWrongs: 0,
-    resistanceWrongs: 0,
-    reactionTime: 0,
-    totalAccuracy: 0,
-    missing: 0,
-  });
+  const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden") {
@@ -158,6 +157,8 @@ const PerformanceTestPageTwo = () => {
         : history[history.length - 2] || "A";
     setCurrent(letter);
 
+    setRoundStartTime(new Date());
+
     if (history.length < 4) setHistory((prev) => [...prev, letter]);
     else {
       setHistory((prev) => [...prev.slice(1, 5), letter]);
@@ -174,16 +175,23 @@ const PerformanceTestPageTwo = () => {
   const handleAnswer = () => {
     if (!current || history.length < 3) return;
 
+    const diffTime = new Date().getTime() - roundStartTime.getTime();
+
     if (history[history.length - 3] === current) {
       setIsCorrect(true);
       setCorrect((prev) => prev + 1);
       setStats((prev) => ({
         ...prev,
         totalAccuracy: prev.totalAccuracy + 1,
+        accuracyReactionTime: prev.accuracyReactionTime + diffTime,
       }));
     } else {
       setIsCorrect(false);
-      setStats((prev) => ({ ...prev, totalWrongs: prev.totalWrongs + 1 }));
+      setStats((prev) => ({
+        ...prev,
+        totalWrongs: prev.totalWrongs + 1,
+        errorReactionTime: prev.errorReactionTime + diffTime,
+      }));
     }
 
     setTimeout(() => {
@@ -193,13 +201,7 @@ const PerformanceTestPageTwo = () => {
 
   const finishBreak = () => {
     setCorrect(0);
-    setStats({
-      totalWrongs: 0,
-      resistanceWrongs: 0,
-      reactionTime: 0,
-      totalAccuracy: 0,
-      missing: 0,
-    });
+    setStats(InitPerformanceData);
     setRound(1);
     setHistory([]);
     setIsBreakActive(false);
