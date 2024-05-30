@@ -61,6 +61,13 @@ const PerformanceTestOnePage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const correctToats = () => {
+    const diff = new Date().getTime() - roundStartTime.getTime();
+
+    setStats((prev) => ({
+      ...prev,
+      totalAccuracy: prev.totalAccuracy + 1,
+      accuracyReactionTime: prev.accuracyReactionTime + diff,
+    }));
     setIsCorrect(true);
     setTimeout(() => {
       setIsCorrect(null);
@@ -74,14 +81,18 @@ const PerformanceTestOnePage = () => {
       setIsCorrect(null);
       nextRound();
     }, CORRECT_DURATION);
+    const diff = new Date().getTime() - roundStartTime.getTime();
 
     setStats((prev) => ({
       ...prev,
       totalWrongs: prev.totalWrongs + 1,
       resistanceWrongs:
         round % 10 === 2 ? prev.resistanceWrongs + 1 : prev.resistanceWrongs,
+      errorReactionTime: prev.errorReactionTime + diff,
     }));
   };
+
+  const [roundStartTime, setRoundStartTime] = useState<Date>(new Date());
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -147,7 +158,6 @@ const PerformanceTestOnePage = () => {
       });
       setStats((prev) => ({
         ...prev,
-        totalAccuracy: TOTAL_ROUNDS - stats.totalWrongs,
         reactionTime: timer,
       }));
       setIsFinished(true);
@@ -160,6 +170,9 @@ const PerformanceTestOnePage = () => {
     else setCurrentRule(Rules.shape);
     setRound((prev) => prev + 1);
     setCurrentShape(generateRandomImage());
+    
+    setRoundStartTime(new Date());
+
     if (!timeout) {
       setMyTimeout(
         setInterval(() => {

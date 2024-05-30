@@ -30,8 +30,6 @@ const PerformanceTestPageThree = () => {
 
   const [current, setCurrent] = React.useState<GO_NOGO>(GO_NOGO.NONE);
 
-  const [corrects, setCorrects] = useState<number>(0);
-
   const [round, setRound] = React.useState(0);
 
   const [isFinished, setIsFinished] = React.useState(false);
@@ -43,6 +41,8 @@ const PerformanceTestPageThree = () => {
   const router = useRouter();
 
   const [isTraining, setIsTraining] = useState(true);
+
+  const [roundStartTime, setRoundStartTime] = useState<Date>(new Date());
 
   const [isClicked, setIsClicked] = useState(false);
 
@@ -75,7 +75,6 @@ const PerformanceTestPageThree = () => {
     if (round >= TOTAL_ROUNDS) {
       setStats((prev) => ({
         ...prev,
-        totalAccuracy: corrects,
         reactionTime: timer,
       }));
       setIsFinished(true);
@@ -87,6 +86,8 @@ const PerformanceTestPageThree = () => {
     if (current === GO_NOGO.NONE)
       setCurrent(Math.random() > 0.3 ? GO_NOGO.GO : GO_NOGO.NOGO);
     else setCurrent(GO_NOGO.NONE);
+
+    setRoundStartTime(new Date());
 
     if (!timeout && round >= TRAINING_ROUNDS) {
       setMyTimeout(
@@ -135,8 +136,14 @@ const PerformanceTestPageThree = () => {
   );
 
   const handleClick = () => {
+    const diffTime = new Date().getTime() - roundStartTime.getTime();
+
     if (current === GO_NOGO.GO) {
-      setCorrects((prev) => prev + 1);
+      setStats((prev) => ({
+        ...prev,
+        totalAccuracy: prev.totalAccuracy + 1,
+        accuracyReactionTime: prev.accuracyReactionTime + diffTime,
+      }));
       nextRound();
     } else {
       toast({
@@ -148,6 +155,7 @@ const PerformanceTestPageThree = () => {
       setStats((prev) => ({
         ...prev,
         totalWrongs: prev.totalWrongs + 1,
+        errorReactionTime: prev.errorReactionTime + diffTime,
       }));
     }
   };
