@@ -57,7 +57,5 @@ export default function DashboardLayout({ children }: Props) {
     return null;
   }
 
-  console.log(user.userDetails.Status, pathname);
-
   return <>{children}</>;
 }

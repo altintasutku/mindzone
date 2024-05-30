@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 
 import { useMutation } from "@tanstack/react-query";
 import {
+  InitPerformanceData,
   PerformanceData,
   sendPerformanceTaskData,
 } from "@/lib/api/performanceTasks";
@@ -40,12 +41,7 @@ const Page = () => {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const [stats, setStats] = useState<PerformanceData>({
-    totalWrongs: 0,
-    resistanceWrongs: 0,
-    reactionTime: 0,
-    totalAccuracy: 0,
-  });
+  const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
   const [timer, setTimer] = useState<number>(0);
   let timeout: NodeJS.Timeout;
