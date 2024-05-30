@@ -165,6 +165,7 @@ const PerformanceTestPageThree = () => {
                 setIsTraining(false);
                 setTimer(0);
                 nextRound();
+                setStats(InitPerformanceData);
               }}
             >
               Başla
