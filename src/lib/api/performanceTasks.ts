@@ -5,6 +5,7 @@ export type PerformanceData = {
   resistanceWrongs: number;
   reactionTime: number;
   totalAccuracy: number;
+  missing: number;
   accuracyReactionTime: number;
   errorReactionTime: number;
 }

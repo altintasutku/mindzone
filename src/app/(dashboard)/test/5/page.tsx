@@ -40,7 +40,6 @@ const Page = () => {
   const { user } = useProtectedRoute();
 
   const [isLoaded, setIsLoaded] = useState(false);
-
   const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
   const [timer, setTimer] = useState<number>(0);
@@ -162,18 +161,18 @@ const Page = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen isSending={isSending} url="/question/2" />
+        <FinishScreen isSending={isSending} url='/question/2' />
       ) : round === 0 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <IntroductionTestFive />
-          <Button className="my-5 w-24" onClick={handleNext}>
+          <Button className='my-5 w-24' onClick={handleNext}>
             Başla
           </Button>
         </div>
       ) : isTutorial && round == 2 ? (
-        <div className="flex flex-col items-center">
+        <div className='flex flex-col items-center'>
           <p>Tebrikler deneme bitti! Şimdi devam edelim</p>
-          <Button className="my-5 w-24" onClick={() => setIsTutorial(false)}>
+          <Button className='my-5 w-24' onClick={() => setIsTutorial(false)}>
             Devam
           </Button>
         </div>
@@ -190,7 +189,7 @@ const Page = () => {
           >
             {currentQuestion.answers[0]}
           </AnswerButton>
-          <div className="col-span-2"></div>
+          <div className='col-span-2'></div>
           <AnswerButton
             isCorrect={isCorrect}
             handleAnswer={handleAnswer}
@@ -200,22 +199,22 @@ const Page = () => {
           </AnswerButton>
 
           <div></div>
-          <div className="relative col-span-2">
+          <div className='relative col-span-2'>
             {isCorrect === null ? (
               <></>
             ) : isCorrect ? (
-              <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500">
+              <div className='absolute inset-0 text-xl font-semibold flex justify-center items-center text-green-500'>
                 Doğru
               </div>
             ) : (
-              <div className="absolute inset-0 text-xl font-semibold flex justify-center items-center text-red-500">
+              <div className='absolute inset-0 text-xl font-semibold flex justify-center items-center text-red-500'>
                 Yanlış
               </div>
             )}
             <Image
               loader={loader}
               src={currentQuestion.path}
-              alt="testFiveImage"
+              alt='testFiveImage'
               onLoad={() => setIsLoaded(true)}
               className={cn("w-full rounded-md", {
                 "opacity-0": isCorrect !== null,
@@ -233,7 +232,7 @@ const Page = () => {
           >
             {currentQuestion.answers[2]}
           </AnswerButton>
-          <div className="col-span-2"></div>
+          <div className='col-span-2'></div>
           <AnswerButton
             isCorrect={isCorrect}
             handleAnswer={handleAnswer}
@@ -267,7 +266,7 @@ const AnswerButton = ({
           handleAnswer(idx);
         }
       }}
-      className="text-wrap cursor-pointer flex justify-center items-center text-center bg-slate-100 dark:bg-slate-600 rounded-md"
+      className='text-wrap cursor-pointer flex justify-center items-center text-center bg-slate-100 dark:bg-slate-600 rounded-md'
     >
       {children}
     </div>

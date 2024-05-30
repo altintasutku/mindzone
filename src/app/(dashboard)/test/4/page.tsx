@@ -7,7 +7,6 @@ import IntroductionTestFour from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import FinishScreen from "@/components/game/FinishScreen";
 import { CheckCheckIcon } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { InitPerformanceData, PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
@@ -104,26 +103,34 @@ const PerformanceTestPageFour = () => {
     }
   };
 
-    const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-            location.reload()
-        }
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      location.reload();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false
+      );
     };
-
-    useEffect(() => {
-        document.addEventListener("visibilitychange", handleVisibilityChange, false);
-
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange, false);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleOption = (option: number) => {
     setTotalPoint((prev) => prev + option);
 
     handleNext();
   };
-  
+
   const { send, isSending } = useSendPerformanceTaskData();
 
   useEffect(() => {

@@ -17,6 +17,7 @@ import { getUser, updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
 import { ZodUser } from "@/lib/validators/user";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
+import { stat } from "fs";
 
 enum GO_NOGO {
   GO = "GO",
@@ -47,6 +48,8 @@ const PerformanceTestPageThree = () => {
   const router = useRouter();
 
   const [isTraining, setIsTraining] = useState(true);
+
+  const [isClicked, setIsClicked] = useState(false);
 
   const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
@@ -104,6 +107,14 @@ const PerformanceTestPageThree = () => {
 
     const timer = setTimeout(
       () => {
+        if (!isClicked) {
+          if (current === GO_NOGO.GO) {
+            setStats((prev) => ({
+              ...prev,
+              missing: prev.missing + 1,
+            }));
+          }
+        }
         nextRound();
       },
       current === GO_NOGO.NONE ? 500 : REACTION_TIME
@@ -151,15 +162,15 @@ const PerformanceTestPageThree = () => {
   return (
     <div>
       {isFinished ? (
-        <FinishScreen isSending={isSending} url="/test/3" />
+        <FinishScreen isSending={isSending} url='/test/3' />
       ) : isTraining && round >= TRAINING_ROUNDS ? (
         <div>
           <p>
             <b>Eğitim bitti</b>. Şimdi gerçek test başlıyor. Hazır olduğunda
             başla butonuna tıkla.
           </p>
-          <Separator className="my-5" />
-          <div className="flex justify-center my-5">
+          <Separator className='my-5' />
+          <div className='flex justify-center my-5'>
             <Button
               onClick={() => {
                 setIsTraining(false);
@@ -175,21 +186,21 @@ const PerformanceTestPageThree = () => {
       ) : round === 0 ? (
         <div>
           <IntroductionTestThree />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : (
-        <div className="min-h-96 flex flex-col justify-center items-center">
-          <div className="h-24">
+        <div className='min-h-96 flex flex-col justify-center items-center'>
+          <div className='h-24'>
             {current === GO_NOGO.GO ? (
-              <div className="text-green-500 text-4xl flex justify-center items-center">
+              <div className='text-green-500 text-4xl flex justify-center items-center'>
                 Git
               </div>
             ) : current === GO_NOGO.NOGO ? (
-              <div className="text-red-500 text-4xl flex justify-center items-center">
+              <div className='text-red-500 text-4xl flex justify-center items-center'>
                 Gitme
               </div>
             ) : (
@@ -197,7 +208,7 @@ const PerformanceTestPageThree = () => {
             )}
           </div>
           <Button
-            className="px-10"
+            className='px-10'
             onClick={handleClick}
             disabled={current === GO_NOGO.NONE}
           >
