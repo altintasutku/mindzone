@@ -17,6 +17,7 @@ export const InitPerformanceData: PerformanceData = {
   totalAccuracy: 0,
   accuracyReactionTime: 0,
   errorReactionTime: 0,
+  missing: 0,
 };
 
 export const sendPerformanceTaskData = async ({

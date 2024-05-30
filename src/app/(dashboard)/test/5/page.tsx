@@ -2,22 +2,19 @@
 
 import { performanceTestFiveQuestions } from "@/assets/mockdata/performaceTests/performanceTestFive";
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import IntroductionTestFive from "./_introductions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import FinishScreen from "@/components/game/FinishScreen";
 import { useSession } from "next-auth/react";
 
-import { useMutation } from "@tanstack/react-query";
 import {
   InitPerformanceData,
   PerformanceData,
-  sendPerformanceTaskData,
 } from "@/lib/api/performanceTasks";
-import { getUser, updateUser } from "@/lib/api/user";
+import { updateUser } from "@/lib/api/user";
 import { useRouter } from "next/navigation";
-import { ZodUser } from "@/lib/validators/user";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
