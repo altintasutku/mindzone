@@ -7,12 +7,9 @@ import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import IntroductionsTestOne from "./_introductions";
-import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { InitPerformanceData, PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { ZodUser } from "@/lib/validators/user";
-import { getUser, updateUser } from "@/lib/api/user";
+import { InitPerformanceData, PerformanceData } from "@/lib/api/performanceTasks";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 const imageColors = ["red", "green", "blue", "yellow"];

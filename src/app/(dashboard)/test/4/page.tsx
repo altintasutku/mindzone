@@ -9,9 +9,7 @@ import FinishScreen from "@/components/game/FinishScreen";
 import { CheckCheckIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { InitPerformanceData, PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { getUser, updateUser } from "@/lib/api/user";
-import { ZodUser } from "@/lib/validators/user";
+import { InitPerformanceData, PerformanceData } from "@/lib/api/performanceTasks";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 type CurrentModType = {
