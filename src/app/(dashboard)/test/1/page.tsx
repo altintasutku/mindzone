@@ -6,12 +6,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { getUser, updateUser } from "@/lib/api/user";
-import { useRouter } from "next/navigation";
-import { ZodUser } from "@/lib/validators/user";
+import { PerformanceData } from "@/lib/api/performanceTasks";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 const LETTERS = [
@@ -209,30 +204,30 @@ const PerformanceTestPageTwo = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
+    <div className='flex flex-col items-center py-10'>
       {isFinished ? (
-        <FinishScreen isSending={isSending} url="/test/2" />
+        <FinishScreen isSending={isSending} url='/test/2' />
       ) : round === 0 ? (
-        <div className="flex flex-col">
+        <div className='flex flex-col'>
           <IntroductionsTestTwo />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
       ) : correct === 1 && isBreakActive ? (
-        <div className="flex flex-col items-center gap-4">
+        <div className='flex flex-col items-center gap-4'>
           <div>
-            <span className="text-green-500">Tebrikler! Doğru bildin.</span>{" "}
+            <span className='text-green-500'>Tebrikler! Doğru bildin.</span>{" "}
             Deneme bitti hadi oyuna geçelim
           </div>
           <Button onClick={finishBreak}>Devam Et</Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-7 justify-center items-center w-full">
+        <div className='flex flex-col gap-7 justify-center items-center w-full'>
           {correct < 1 && isBreakActive ? (
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               {history.map((letter, index) => (
                 <span
                   key={letter + index}
@@ -248,14 +243,14 @@ const PerformanceTestPageTwo = () => {
               ))}
             </div>
           ) : (
-            <span className="text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center">
+            <span className='text-3xl font-bold min-h-20 min-w20 bg-yellow-600 rounded-sm p-5 aspect-square flex justify-center items-center'>
               {current}
             </span>
           )}
 
           <Button
             onClick={handleAnswer}
-            variant="outline"
+            variant='outline'
             className={cn("flex justify-center px-16 py-4", {
               "bg-green-500 text-white hover:bg-green-500": isCorrect === true,
               "bg-red-500 text-white hover:bg-red-500": isCorrect === false,

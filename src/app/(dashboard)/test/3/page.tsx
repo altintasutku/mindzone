@@ -10,7 +10,10 @@ import IntroductionsTestOne from "./_introductions";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import {
+  PerformanceData,
+  sendPerformanceTaskData,
+} from "@/lib/api/performanceTasks";
 import { ZodUser } from "@/lib/validators/user";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
@@ -93,6 +96,7 @@ const PerformanceTestOnePage = () => {
     resistanceWrongs: 0,
     reactionTime: 0,
     totalAccuracy: 0,
+    missing: 0,
   });
 
   const [currentShape, setCurrentShape] = useState<{
@@ -114,14 +118,14 @@ const PerformanceTestOnePage = () => {
     document.addEventListener(
       "visibilitychange",
       handleVisibilityChange,
-      false,
+      false
     );
 
     return () => {
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange,
-        false,
+        false
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,7 +176,7 @@ const PerformanceTestOnePage = () => {
       setMyTimeout(
         setInterval(() => {
           setTimer((prev) => prev + 10);
-        }, 10),
+        }, 10)
       );
     }
   };
@@ -191,15 +195,15 @@ const PerformanceTestOnePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
+    <div className='flex flex-col items-center py-10'>
       {isFinished ? (
-        <FinishScreen isSending={isSending} url="/test/4" />
+        <FinishScreen isSending={isSending} url='/test/4' />
       ) : round === 0 ? (
-        <div className="flex flex-col">
+        <div className='flex flex-col'>
           <IntroductionsTestOne />
-          <Separator className="my-5" />
+          <Separator className='my-5' />
 
-          <div className="flex justify-center my-5">
+          <div className='flex justify-center my-5'>
             <Button onClick={nextRound}>Başla</Button>
           </div>
         </div>
@@ -207,30 +211,30 @@ const PerformanceTestOnePage = () => {
         <>
           {isCorrect === null && currentShape ? (
             <Image
-              className="border border-stone-200 rounded-md"
+              className='border border-stone-200 rounded-md'
               loader={imageLoader}
               src={`${currentShape.number}${currentShape.color}${currentShape.shape}`}
-              alt="random"
+              alt='random'
               width={100}
               height={100}
             />
           ) : isCorrect === true ? (
-            <div className="text-green-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center">
+            <div className='text-green-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center'>
               Doğru
             </div>
           ) : isCorrect === false ? (
-            <div className="text-red-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center">
+            <div className='text-red-500 text-xl font-semibold w-[100px] h-[100px] flex justify-center items-center'>
               Yanlış
             </div>
           ) : null}
-          <Separator className="my-5 opacity-50" />
-          <small className="test-sm opacity-65 mb-2">Seçenekler</small>
-          <div className="grid grid-cols-2 sm:flex gap-4">
+          <Separator className='my-5 opacity-50' />
+          <small className='test-sm opacity-65 mb-2'>Seçenekler</small>
+          <div className='grid grid-cols-2 sm:flex gap-4'>
             {answers.map((answer, index) => (
               <Image
                 key={index}
                 loader={imageLoader}
-                className="border border-slate-400 rounded-md cursor-pointer hover:shadow-md hover:border-slate-700 transition duration-300 ease-in-out"
+                className='border border-slate-400 rounded-md cursor-pointer hover:shadow-md hover:border-slate-700 transition duration-300 ease-in-out'
                 src={`${answer.number}${answer.color}${answer.shape}`}
                 alt={`${answer.number}${answer.color}${answer.shape}`}
                 width={100}

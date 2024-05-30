@@ -5,19 +5,15 @@ export type PerformanceData = {
   resistanceWrongs: number;
   reactionTime: number;
   totalAccuracy: number;
-}
+  missing: number;
+};
 
 export const sendPerformanceTaskData = async ({
   stats,
   accessToken,
   stepInfo,
 }: {
-  stats: {
-    totalWrongs: number;
-    resistanceWrongs: number;
-    reactionTime: number;
-    totalAccuracy: number;
-  };
+  stats: PerformanceData;
   accessToken: string;
   stepInfo: { step: number; group: string };
 }) => {

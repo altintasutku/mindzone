@@ -7,12 +7,9 @@ import IntroductionTestFour from "./_introductions";
 import { Separator } from "@/components/ui/separator";
 import FinishScreen from "@/components/game/FinishScreen";
 import { CheckCheckIcon } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
-import { getUser, updateUser } from "@/lib/api/user";
-import { ZodUser } from "@/lib/validators/user";
+import { PerformanceData } from "@/lib/api/performanceTasks";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
 
 type CurrentModType = {
@@ -75,6 +72,7 @@ const PerformanceTestPageFour = () => {
     resistanceWrongs: 0,
     reactionTime: 0,
     totalAccuracy: 0,
+    missing: 0,
   });
 
   const [totalPoint, setTotalPoint] = useState(0);
@@ -109,26 +107,34 @@ const PerformanceTestPageFour = () => {
     }
   };
 
-    const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-            location.reload()
-        }
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      location.reload();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false
+      );
     };
-
-    useEffect(() => {
-        document.addEventListener("visibilitychange", handleVisibilityChange, false);
-
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange, false);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleOption = (option: number) => {
     setTotalPoint((prev) => prev + option);
 
     handleNext();
   };
-  
+
   const { send, isSending } = useSendPerformanceTaskData();
 
   useEffect(() => {
