@@ -10,7 +10,7 @@ import IntroductionsTestOne from "./_introductions";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
+import { InitPerformanceData, PerformanceData, sendPerformanceTaskData } from "@/lib/api/performanceTasks";
 import { ZodUser } from "@/lib/validators/user";
 import { getUser, updateUser } from "@/lib/api/user";
 import { useSendPerformanceTaskData } from "@/hooks/useSendData";
@@ -88,12 +88,7 @@ const PerformanceTestOnePage = () => {
 
   const [timer, setTimer] = useState<number>(0);
   const [timeout, setMyTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [stats, setStats] = useState<PerformanceData>({
-    totalWrongs: 0,
-    resistanceWrongs: 0,
-    reactionTime: 0,
-    totalAccuracy: 0,
-  });
+  const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
   const [currentShape, setCurrentShape] = useState<{
     number: string;

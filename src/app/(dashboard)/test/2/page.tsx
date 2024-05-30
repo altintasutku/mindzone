@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import {
+  InitPerformanceData,
   PerformanceData,
   sendPerformanceTaskData,
 } from "@/lib/api/performanceTasks";
@@ -47,12 +48,7 @@ const PerformanceTestPageThree = () => {
 
   const [isTraining, setIsTraining] = useState(true);
 
-  const [stats, setStats] = useState<PerformanceData>({
-    totalWrongs: 0,
-    resistanceWrongs: 0,
-    reactionTime: 0,
-    totalAccuracy: 0,
-  });
+  const [stats, setStats] = useState<PerformanceData>(InitPerformanceData);
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden") {
