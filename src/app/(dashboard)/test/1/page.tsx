@@ -61,6 +61,7 @@ const PerformanceTestPageTwo = () => {
     resistanceWrongs: 0,
     reactionTime: 0,
     totalAccuracy: 0,
+    missing: 0,
   });
 
   const handleVisibilityChange = () => {
@@ -197,6 +198,7 @@ const PerformanceTestPageTwo = () => {
       resistanceWrongs: 0,
       reactionTime: 0,
       totalAccuracy: 0,
+      missing: 0,
     });
     setRound(1);
     setHistory([]);
