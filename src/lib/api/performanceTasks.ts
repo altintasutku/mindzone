@@ -8,7 +8,7 @@ export type PerformanceData = {
   missing: number;
   accuracyReactionTime: number;
   errorReactionTime: number;
-}
+};
 
 export const InitPerformanceData: PerformanceData = {
   totalWrongs: 0,
@@ -36,6 +36,7 @@ export const sendPerformanceTaskData = async ({
       totalAccuracy: stats.totalAccuracy, // total corrects
       reactionTime: stats.reactionTime / 1000, // milisecond to second
       ...stepInfo,
+      missingReactionTime: stats.missing,
     },
     {
       headers: {
