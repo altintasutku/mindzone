@@ -95,6 +95,13 @@ const PerformanceTestPageTwo = () => {
 
     const timeout = setTimeout(
       () => {
+        if (history[history.length - 3] === current) {
+          setStats((prev) => ({
+            ...prev,
+            missing: prev.missing + 1,
+          }));
+        }
+
         nextRound();
       },
       current ? DURATION : 500
@@ -103,6 +110,11 @@ const PerformanceTestPageTwo = () => {
     return () => {
       clearTimeout(timeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round]);
+
+  useEffect(() => {
+    console.log(stats.missing);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round]);
 
@@ -184,6 +196,7 @@ const PerformanceTestPageTwo = () => {
         ...prev,
         totalAccuracy: prev.totalAccuracy + 1,
         accuracyReactionTime: prev.accuracyReactionTime + diffTime,
+        missing: prev.missing - 1,
       }));
     } else {
       setIsCorrect(false);
