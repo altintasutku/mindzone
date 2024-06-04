@@ -32,10 +32,13 @@ export const sendPerformanceTaskData = async ({
   const { status } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/api/performance-tasks`,
     {
-      totalErrorCount: stats.totalWrongs, // total wrongs
-      totalAccuracy: stats.totalAccuracy, // total corrects
+      totalErrorCount: stats.totalWrongs,
+      totalAccuracy: stats.totalAccuracy,
       reactionTime: stats.reactionTime / 1000, // milisecond to second
-      ...stepInfo,
+      step: stepInfo.step,
+      group: stepInfo.group,
+      accuracyReactionTime: stats.accuracyReactionTime / 1000,
+      errorReactionTime: stats.errorReactionTime / 1000,
       missingReactionTime: stats.missing,
     },
     {
