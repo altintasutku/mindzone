@@ -48,12 +48,11 @@ const QuestionTestTwo = () => {
   }[]
   >([]);
   
-  console.log("🚀 ~ QuestionTestTwo ~ scoreBoard:", scoreBoard);
-
+  console.log("🚀 ~ QuestionTestTwo ~ scoreBoard:", scoreBoard)
   const router = useRouter();
   const session = useSession();
 
-  const iriReverseIndex = useMemo(() => [25, 26, 29, 34, 35, 36, 37, 40, 41], []);
+  const iriReverseIndex = useMemo(() => ["24", "25", "28", "33", "34", "35", "36", "39", "40"], []);
 
   const handleAnswer = (
     questionId: string,
@@ -68,7 +67,7 @@ const QuestionTestTwo = () => {
         prev.filter((item) => item.type === type && item.subType !== subType)
       );
     }
-    
+
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
     if (type === 2) {
       setScoreBoard((prev) => [
@@ -82,7 +81,7 @@ const QuestionTestTwo = () => {
     }
     if (type === 3) {
       let score = 0;
-      if (iriReverseIndex.includes(optionIndex)) {
+      if (iriReverseIndex.includes(questionId)) {
         score = 4 - optionIndex;
       } else {
         score = optionIndex;
@@ -216,15 +215,14 @@ const QuestionTestTwo = () => {
           .map((question, index) => (
             <li key={index} className='flex flex-col gap-4'>
               <p className='text-center text-lg font-semibold'>
-                {question.question.split("\n").map((item, index) => {
+                {question.question.split("\n").map((item, idx) => {
                   return (
-                    <span key={index}>
-                      {index !== 0 ? (
+                    <span key={idx}>
+                      {idx !== 0 ? (
                         <>
                           <br /> <br />
                         </>
                       ) : null}
-
                       {item}
                     </span>
                   );
