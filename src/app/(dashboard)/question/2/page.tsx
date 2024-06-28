@@ -41,13 +41,14 @@ const QuestionTestTwo = () => {
   const [pages, setPages] = React.useState(1);
 
   const [scoreBoard, setScoreBoard] = React.useState<
-  {
-    type: number;
-    subType: number;
-    score: number;
-  }[]
+    {
+      type: number;
+      subType: number;
+      score: number;
+      id: string;
+    }[]
   >([]);
-  
+
   console.log("🚀 ~ QuestionTestTwo ~ scoreBoard:", scoreBoard)
   const router = useRouter();
   const session = useSession();
@@ -64,7 +65,7 @@ const QuestionTestTwo = () => {
     if (answers.hasOwnProperty(questionId)) {
       setAnswers((prev) => ({ ...prev, [questionId]: answer }));
       setScoreBoard((prev) =>
-        prev.filter((item) => item.type === type && item.subType !== subType)
+        prev.filter((item) => item.id !== questionId)
       );
     }
 
@@ -76,6 +77,7 @@ const QuestionTestTwo = () => {
           type,
           subType,
           score: optionIndex,
+          id: questionId,
         },
       ]);
     }
@@ -92,6 +94,7 @@ const QuestionTestTwo = () => {
           type,
           subType,
           score,
+          id: questionId,
         },
       ]);
     }
@@ -102,6 +105,7 @@ const QuestionTestTwo = () => {
           type,
           subType,
           score: optionIndex,
+          id: questionId,
         },
       ]);
     }
@@ -112,6 +116,7 @@ const QuestionTestTwo = () => {
           type,
           subType,
           score: optionIndex,
+          id: questionId,
         },
       ]);
     }
@@ -146,7 +151,7 @@ const QuestionTestTwo = () => {
               .reduce((acc, item) => acc + item.score, 0),
             subType: i,
             type: 2,
-            group:user.userDetails.Status,
+            group: user.userDetails.Status,
           },
           session.data.user.accessToken
         );
@@ -353,7 +358,7 @@ const QuestionTestTwo = () => {
           }}
           disabled={Object.keys(answers).length !== stepTwoQuestions.length || isPending}
         >
-          {isPending ? <Loader2Icon className="animate-spin"/> : "Tamamla"}
+          {isPending ? <Loader2Icon className="animate-spin" /> : "Tamamla"}
         </Button>
       </nav>
     </div>
